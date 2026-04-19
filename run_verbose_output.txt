@@ -1,0 +1,344 @@
+[ +105 ms] Artifact Instance of 'MaterialFonts' is not required, skipping update.
+[   +2 ms] Artifact Instance of 'GradleWrapper' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[        ] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterSdk' is not required, skipping update.
+[        ] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IosUsbArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FontSubsetArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'PubDependencies' is not required, skipping update.
+[        ] executing: [C:\flutter2/] git -c log.showSignature=false log HEAD -n 1 --pretty=format:%ad --date=iso
+[  +61 ms] Exit code 0 from: git -c log.showSignature=false log HEAD -n 1 --pretty=format:%ad --date=iso
+[        ] 2026-03-03 16:03:22 -0800
+[  +34 ms] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterWebSdk' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterEngineStamp' is not required, skipping update.
+[        ] Artifact Instance of 'LegacyCanvasKitRemover' is not required, skipping update.
+[   +2 ms] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[ +121 ms] Artifact Instance of 'AndroidGenSnapshotArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'AndroidInternalBuildArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'IOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterEngineStamp' is not required, skipping update.
+[   +4 ms] Artifact Instance of 'WindowsEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxEngineArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'LinuxFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'MacOSFuchsiaSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerSDKArtifacts' is not required, skipping update.
+[        ] Artifact Instance of 'FlutterRunnerDebugSymbols' is not required, skipping update.
+[  +55 ms] executing: [C:\Users\memja\OneDrive - uokerbala.edu.iq\Desktop\the ai\outo platfrom/] C:\flutter2\bin\cache\dart-sdk\bin\dart pub --suppress-analytics --directory . get --example
+Resolving dependencies...
+Downloading packages...
+  flutter_markdown 0.7.7+1 (discontinued replaced by flutter_markdown_plus)
+  meta 1.17.0 (1.18.1 available)
+  win32 5.15.0 (6.0.0 available)
+Got dependencies!
+1 package is discontinued.
+2 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+[ +914 ms] Found plugin url_launcher at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher-6.3.2\
+[   +4 ms] Found plugin url_launcher_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_windows-3.1.5\
+[   +4 ms] Found plugin url_launcher_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_web-2.4.2\
+[   +2 ms] Found plugin url_launcher_macos at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_macos-3.2.5\
+[   +1 ms] Found plugin url_launcher_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_linux-3.2.2\
+[   +5 ms] Found plugin url_launcher_ios at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_ios-6.4.1\
+[   +2 ms] Found plugin url_launcher_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_android-6.3.28\
+[   +2 ms] Found plugin shared_preferences at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.5.4\
+[   +1 ms] Found plugin shared_preferences_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_windows-2.4.1\
+[   +2 ms] Found plugin path_provider_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[   +5 ms] Found plugin shared_preferences_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.3\
+[   +2 ms] Found plugin shared_preferences_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[   +1 ms] Found plugin path_provider_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +2 ms] Found plugin shared_preferences_foundation at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.6\
+[   +1 ms] Found plugin shared_preferences_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.4.21\
+[   +1 ms] Found plugin record at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record-6.2.0\
+[   +1 ms] Found plugin record_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_windows-1.0.7\
+[   +2 ms] Found plugin record_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_web-1.3.0\
+[   +1 ms] Found plugin record_macos at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_macos-1.2.1\
+[   +1 ms] Found plugin record_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_linux-1.3.0\
+[   +1 ms] Found plugin record_ios at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_ios-1.2.0\
+[   +1 ms] Found plugin record_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_android-1.5.1\
+[   +3 ms] Found plugin permission_handler at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler-12.0.1\
+[   +1 ms] Found plugin permission_handler_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_windows-0.2.1\
+[   +2 ms] Found plugin permission_handler_html at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_html-0.1.3+5\
+[   +1 ms] Found plugin permission_handler_apple at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_apple-9.4.7\
+[   +1 ms] Found plugin permission_handler_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_android-13.0.1\
+[   +1 ms] Found plugin path_provider at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[   +1 ms] Found plugin path_provider_foundation at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.6.0\
+[   +8 ms] Found plugin path_provider_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.22\
+[   +1 ms] Found plugin local_auth at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\local_auth-3.0.1\
+[   +1 ms] Found plugin local_auth_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\local_auth_windows-2.0.1\
+[   +1 ms] Found plugin local_auth_darwin at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\local_auth_darwin-2.0.3\
+[   +1 ms] Found plugin local_auth_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\local_auth_android-2.0.5\
+[        ] Found plugin flutter_plugin_android_lifecycle at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.33\
+[   +3 ms] Found plugin geolocator at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator-14.0.2\
+[        ] Found plugin geolocator_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_windows-0.2.5\
+[   +1 ms] Found plugin geolocator_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_web-4.1.3\
+[   +1 ms] Found plugin geolocator_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_linux-0.2.4\
+[   +1 ms] Found plugin package_info_plus at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\package_info_plus-9.0.0\
+[  +10 ms] Found plugin geolocator_apple at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_apple-2.3.13\
+[   +1 ms] Found plugin geolocator_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_android-5.0.2\
+[   +1 ms] Found plugin flutter_windowmanager at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_windowmanager-0.2.0\
+[   +1 ms] Found plugin flutter_secure_storage at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage-10.0.0\
+[        ] Found plugin flutter_secure_storage_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage_windows-4.1.0\
+[   +1 ms] Found plugin flutter_secure_storage_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage_web-2.1.0\
+[   +1 ms] Found plugin flutter_secure_storage_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage_linux-3.0.0\
+[   +1 ms] Found plugin flutter_secure_storage_darwin at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage_darwin-0.2.0\
+[        ] Found plugin flutter_screen_recording at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_screen_recording-2.0.24\
+[        ] Found plugin flutter_screen_recording_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_screen_recording_web-1.0.8\
+[   +2 ms] Found plugin flutter_foreground_task at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_foreground_task-9.2.1\
+[  +45 ms] Found plugin url_launcher at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher-6.3.2\
+[        ] Found plugin url_launcher_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_windows-3.1.5\
+[   +2 ms] Found plugin url_launcher_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_web-2.4.2\
+[   +1 ms] Found plugin url_launcher_macos at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_macos-3.2.5\
+[        ] Found plugin url_launcher_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_linux-3.2.2\
+[        ] Found plugin url_launcher_ios at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_ios-6.4.1\
+[        ] Found plugin url_launcher_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_android-6.3.28\
+[   +1 ms] Found plugin shared_preferences at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.5.4\
+[   +1 ms] Found plugin shared_preferences_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_windows-2.4.1\
+[   +2 ms] Found plugin path_provider_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[   +3 ms] Found plugin shared_preferences_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.3\
+[        ] Found plugin shared_preferences_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[        ] Found plugin path_provider_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +1 ms] Found plugin shared_preferences_foundation at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.6\
+[        ] Found plugin shared_preferences_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.4.21\
+[   +1 ms] Found plugin record at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record-6.2.0\
+[   +1 ms] Found plugin record_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_windows-1.0.7\
+[   +1 ms] Found plugin record_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_web-1.3.0\
+[        ] Found plugin record_macos at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_macos-1.2.1\
+[        ] Found plugin record_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_linux-1.3.0\
+[        ] Found plugin record_ios at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_ios-1.2.0\
+[        ] Found plugin record_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_android-1.5.1\
+[   +1 ms] Found plugin permission_handler at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler-12.0.1\
+[        ] Found plugin permission_handler_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_windows-0.2.1\
+[   +1 ms] Found plugin permission_handler_html at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_html-0.1.3+5\
+[        ] Found plugin permission_handler_apple at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_apple-9.4.7\
+[   +1 ms] Found plugin permission_handler_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_android-13.0.1\
+[   +1 ms] Found plugin path_provider at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[        ] Found plugin path_provider_foundation at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.6.0\
+[   +5 ms] Found plugin path_provider_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.22\
+[        ] Found plugin local_auth at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\local_auth-3.0.1\
+[        ] Found plugin local_auth_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\local_auth_windows-2.0.1\
+[   +1 ms] Found plugin local_auth_darwin at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\local_auth_darwin-2.0.3\
+[   +1 ms] Found plugin local_auth_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\local_auth_android-2.0.5\
+[   +1 ms] Found plugin flutter_plugin_android_lifecycle at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.33\
+[   +2 ms] Found plugin geolocator at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator-14.0.2\
+[        ] Found plugin geolocator_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_windows-0.2.5\
+[   +1 ms] Found plugin geolocator_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_web-4.1.3\
+[        ] Found plugin geolocator_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_linux-0.2.4\
+[   +1 ms] Found plugin package_info_plus at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\package_info_plus-9.0.0\
+[   +6 ms] Found plugin geolocator_apple at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_apple-2.3.13\
+[        ] Found plugin geolocator_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_android-5.0.2\
+[        ] Found plugin flutter_windowmanager at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_windowmanager-0.2.0\
+[        ] Found plugin flutter_secure_storage at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage-10.0.0\
+[        ] Found plugin flutter_secure_storage_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage_windows-4.1.0\
+[   +1 ms] Found plugin flutter_secure_storage_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage_web-2.1.0\
+[   +1 ms] Found plugin flutter_secure_storage_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage_linux-3.0.0\
+[        ] Found plugin flutter_secure_storage_darwin at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage_darwin-0.2.0\
+[        ] Found plugin flutter_screen_recording at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_screen_recording-2.0.24\
+[        ] Found plugin flutter_screen_recording_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_screen_recording_web-1.0.8\
+[   +1 ms] Found plugin flutter_foreground_task at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_foreground_task-9.2.1\
+[  +11 ms] Skipping generating web_plugin_registrant.dart because it is up-to-date.
+[  +22 ms] Found plugin url_launcher at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher-6.3.2\
+[        ] Found plugin url_launcher_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_windows-3.1.5\
+[   +1 ms] Found plugin url_launcher_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_web-2.4.2\
+[   +2 ms] Found plugin url_launcher_macos at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_macos-3.2.5\
+[        ] Found plugin url_launcher_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_linux-3.2.2\
+[        ] Found plugin url_launcher_ios at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_ios-6.4.1\
+[        ] Found plugin url_launcher_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_android-6.3.28\
+[        ] Found plugin shared_preferences at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.5.4\
+[        ] Found plugin shared_preferences_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_windows-2.4.1\
+[   +1 ms] Found plugin path_provider_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[   +2 ms] Found plugin shared_preferences_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.3\
+[        ] Found plugin shared_preferences_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[        ] Found plugin path_provider_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +1 ms] Found plugin shared_preferences_foundation at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.6\
+[        ] Found plugin shared_preferences_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.4.21\
+[        ] Found plugin record at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record-6.2.0\
+[        ] Found plugin record_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_windows-1.0.7\
+[   +1 ms] Found plugin record_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_web-1.3.0\
+[        ] Found plugin record_macos at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_macos-1.2.1\
+[        ] Found plugin record_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_linux-1.3.0\
+[        ] Found plugin record_ios at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_ios-1.2.0\
+[        ] Found plugin record_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_android-1.5.1\
+[   +2 ms] Found plugin permission_handler at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler-12.0.1\
+[        ] Found plugin permission_handler_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_windows-0.2.1\
+[   +1 ms] Found plugin permission_handler_html at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_html-0.1.3+5\
+[        ] Found plugin permission_handler_apple at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_apple-9.4.7\
+[        ] Found plugin permission_handler_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_android-13.0.1\
+[        ] Found plugin path_provider at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[   +1 ms] Found plugin path_provider_foundation at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.6.0\
+[   +5 ms] Found plugin path_provider_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.22\
+[        ] Found plugin local_auth at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\local_auth-3.0.1\
+[        ] Found plugin local_auth_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\local_auth_windows-2.0.1\
+[   +1 ms] Found plugin local_auth_darwin at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\local_auth_darwin-2.0.3\
+[   +1 ms] Found plugin local_auth_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\local_auth_android-2.0.5\
+[        ] Found plugin flutter_plugin_android_lifecycle at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.33\
+[   +2 ms] Found plugin geolocator at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator-14.0.2\
+[        ] Found plugin geolocator_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_windows-0.2.5\
+[   +1 ms] Found plugin geolocator_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_web-4.1.3\
+[        ] Found plugin geolocator_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_linux-0.2.4\
+[        ] Found plugin package_info_plus at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\package_info_plus-9.0.0\
+[   +5 ms] Found plugin geolocator_apple at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_apple-2.3.13\
+[   +1 ms] Found plugin geolocator_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_android-5.0.2\
+[   +1 ms] Found plugin flutter_windowmanager at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_windowmanager-0.2.0\
+[   +1 ms] Found plugin flutter_secure_storage at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage-10.0.0\
+[        ] Found plugin flutter_secure_storage_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage_windows-4.1.0\
+[   +1 ms] Found plugin flutter_secure_storage_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage_web-2.1.0\
+[        ] Found plugin flutter_secure_storage_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage_linux-3.0.0\
+[        ] Found plugin flutter_secure_storage_darwin at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage_darwin-0.2.0\
+[        ] Found plugin flutter_screen_recording at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_screen_recording-2.0.24\
+[        ] Found plugin flutter_screen_recording_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_screen_recording_web-1.0.8\
+[   +1 ms] Found plugin flutter_foreground_task at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_foreground_task-9.2.1\
+[   +6 ms] Generating C:\Users\memja\OneDrive - uokerbala.edu.iq\Desktop\the ai\outo platfrom\android\app\src\main\java\io\flutter\plugins\GeneratedPluginRegistrant.java
+[   +1 ms] Skipping generating GeneratedPluginRegistrant.java because it is up-to-date.
+[   +3 ms] Skipping generating generated_plugin_registrant.h because it is up-to-date.
+[        ] Skipping generating generated_plugin_registrant.cc because it is up-to-date.
+[        ] Skipping generating generated_plugins.cmake because it is up-to-date.
+[   +1 ms] Skipping generating generated_plugin_registrant.h because it is up-to-date.
+[        ] Skipping generating generated_plugin_registrant.cc because it is up-to-date.
+[   +1 ms] Skipping generating generated_plugins.cmake because it is up-to-date.
+[   +1 ms] Skipping generating GeneratedPluginRegistrant.h because it is up-to-date.
+[        ] Skipping generating GeneratedPluginRegistrant.m because it is up-to-date.
+[        ] Skipping generating GeneratedPluginRegistrant.swift because it is up-to-date.
+[ +110 ms] Launching lib\main.dart on Chrome in debug mode...
+[  +73 ms] Initializing file store
+[   +1 ms] Done initializing file store
+[  +12 ms] gen_localizations: Starting due to {InvalidatedReasonKind.inputChanged: The following inputs have updated contents: C:\flutter2\packages\flutter_tools\lib\src\build_system\targets\localizations.dart,C:\Users\memja\OneDrive - uokerbala.edu.iq\Desktop\the ai\outo platfrom\l10n.yaml,C:\Users\memja\OneDrive - uokerbala.edu.iq\Desktop\the ai\outo platfrom\lib\l10n\app_ar.arb,C:\Users\memja\OneDrive - uokerbala.edu.iq\Desktop\the ai\outo platfrom\lib\l10n\app_en.arb,C:\Users\memja\OneDrive - uokerbala.edu.iq\Desktop\the ai\outo platfrom\lib\l10n\app_localizations_ar.dart,C:\Users\memja\OneDrive - uokerbala.edu.iq\Desktop\the ai\outo platfrom\lib\l10n\app_localizations_en.dart,C:\Users\memja\OneDrive - uokerbala.edu.iq\Desktop\the ai\outo platfrom\lib\l10n\app_localizations.dart}
+[  +82 ms] Skipping target: gen_dart_plugin_registrant
+[ +538 ms] gen_localizations: Complete
+[   +1 ms] Skipping target: _composite
+[   +1 ms] complete
+[        ] Updating assets
+[        ] runHooks() with {TargetFile: C:\Users\memja\OneDrive - uokerbala.edu.iq\Desktop\the ai\outo platfrom\lib\main.dart, BuildMode: debug} and TargetPlatform.web_javascript
+[        ] runHooks() - will perform dart build
+[        ] Initializing file store
+[        ] Done initializing file store
+[   +8 ms] Skipping target: dart_build
+[        ] Persisting file store
+[   +2 ms] Done persisting file store
+[   +3 ms] runHooks() - done
+[ +135 ms] Waiting for connection from debug service on Chrome...
+[  +29 ms] Found plugin url_launcher at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher-6.3.2\
+[        ] Found plugin url_launcher_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_windows-3.1.5\
+[   +1 ms] Found plugin url_launcher_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_web-2.4.2\
+[   +1 ms] Found plugin url_launcher_macos at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_macos-3.2.5\
+[        ] Found plugin url_launcher_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_linux-3.2.2\
+[        ] Found plugin url_launcher_ios at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_ios-6.4.1\
+[        ] Found plugin url_launcher_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\url_launcher_android-6.3.28\
+[        ] Found plugin shared_preferences at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences-2.5.4\
+[        ] Found plugin shared_preferences_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_windows-2.4.1\
+[   +1 ms] Found plugin path_provider_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_windows-2.3.0\
+[   +2 ms] Found plugin shared_preferences_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_web-2.4.3\
+[        ] Found plugin shared_preferences_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_linux-2.4.1\
+[        ] Found plugin path_provider_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_linux-2.2.1\
+[   +1 ms] Found plugin shared_preferences_foundation at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_foundation-2.5.6\
+[        ] Found plugin shared_preferences_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\shared_preferences_android-2.4.21\
+[        ] Found plugin record at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record-6.2.0\
+[        ] Found plugin record_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_windows-1.0.7\
+[   +1 ms] Found plugin record_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_web-1.3.0\
+[        ] Found plugin record_macos at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_macos-1.2.1\
+[        ] Found plugin record_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_linux-1.3.0\
+[        ] Found plugin record_ios at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_ios-1.2.0\
+[        ] Found plugin record_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\record_android-1.5.1\
+[   +1 ms] Found plugin permission_handler at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler-12.0.1\
+[        ] Found plugin permission_handler_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_windows-0.2.1\
+[   +1 ms] Found plugin permission_handler_html at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_html-0.1.3+5\
+[        ] Found plugin permission_handler_apple at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_apple-9.4.7\
+[        ] Found plugin permission_handler_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\permission_handler_android-13.0.1\
+[        ] Found plugin path_provider at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider-2.1.5\
+[        ] Found plugin path_provider_foundation at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_foundation-2.6.0\
+[   +5 ms] Found plugin path_provider_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\path_provider_android-2.2.22\
+[        ] Found plugin local_auth at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\local_auth-3.0.1\
+[        ] Found plugin local_auth_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\local_auth_windows-2.0.1\
+[   +1 ms] Found plugin local_auth_darwin at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\local_auth_darwin-2.0.3\
+[   +1 ms] Found plugin local_auth_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\local_auth_android-2.0.5\
+[        ] Found plugin flutter_plugin_android_lifecycle at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_plugin_android_lifecycle-2.0.33\
+[   +2 ms] Found plugin geolocator at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator-14.0.2\
+[        ] Found plugin geolocator_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_windows-0.2.5\
+[   +1 ms] Found plugin geolocator_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_web-4.1.3\
+[        ] Found plugin geolocator_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_linux-0.2.4\
+[        ] Found plugin package_info_plus at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\package_info_plus-9.0.0\
+[   +4 ms] Found plugin geolocator_apple at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_apple-2.3.13\
+[        ] Found plugin geolocator_android at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\geolocator_android-5.0.2\
+[        ] Found plugin flutter_windowmanager at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_windowmanager-0.2.0\
+[        ] Found plugin flutter_secure_storage at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage-10.0.0\
+[        ] Found plugin flutter_secure_storage_windows at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage_windows-4.1.0\
+[   +1 ms] Found plugin flutter_secure_storage_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage_web-2.1.0\
+[        ] Found plugin flutter_secure_storage_linux at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage_linux-3.0.0\
+[        ] Found plugin flutter_secure_storage_darwin at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_secure_storage_darwin-0.2.0\
+[        ] Found plugin flutter_screen_recording at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_screen_recording-2.0.24\
+[        ] Found plugin flutter_screen_recording_web at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_screen_recording_web-1.0.8\
+[   +1 ms] Found plugin flutter_foreground_task at C:\Users\memja\AppData\Local\Pub\Cache\hosted\pub.dev\flutter_foreground_task-9.2.1\
+[  +30 ms] shaderc command: [C:\flutter2\bin\cache\artifacts\engine\windows-x64\impellerc.exe, --sksl, --iplr, --json, --sl=build\flutter_assets\shaders/ink_sparkle.frag, --spirv=build\flutter_assets\shaders/ink_sparkle.frag.spirv, --input=C:\flutter2\packages\flutter\lib\src\material\shaders\ink_sparkle.frag, --input-type=frag, --include=C:\flutter2\packages\flutter\lib\src\material\shaders, --include=C:\flutter2\bin\cache\artifacts\engine\windows-x64\shader_lib]
+[        ] shaderc command: [C:\flutter2\bin\cache\artifacts\engine\windows-x64\impellerc.exe, --sksl, --iplr, --json, --sl=build\flutter_assets\shaders/stretch_effect.frag, --spirv=build\flutter_assets\shaders/stretch_effect.frag.spirv, --input=C:\flutter2\packages\flutter\lib\src\material\shaders\stretch_effect.frag, --input-type=frag, --include=C:\flutter2\packages\flutter\lib\src\material\shaders, --include=C:\flutter2\bin\cache\artifacts\engine\windows-x64\shader_lib]
+[ +293 ms] Warning: In index.html:37: Flutter's service worker is deprecated and will be removed in a future Flutter release. See https://github.com/flutter/flutter/issues/156910 for more details.
+[   +1 ms] Warning: In index.html:46: "FlutterLoader.loadEntrypoint" is deprecated. Use "FlutterLoader.load" instead. See https://docs.flutter.dev/platform-integration/web/initialization for more details.
+[        ] <- reset
+[   +4 ms] C:\flutter2\bin\cache\dart-sdk\bin\dartaotruntime.exe C:\flutter2\bin\cache\dart-sdk\bin\snapshots\frontend_server_aot.dart.snapshot --sdk-root C:\flutter2\bin\cache\flutter_web_sdk/ --incremental --target=dartdevc --experimental-emit-debug-metadata -DFLUTTER_VERSION=3.41.4 -DFLUTTER_CHANNEL=stable -DFLUTTER_GIT_URL=https://github.com/flutter/flutter.git -DFLUTTER_FRAMEWORK_REVISION=ff37bef603 -DFLUTTER_ENGINE_REVISION=e4b8dca3f1 -DFLUTTER_DART_VERSION=3.11.1 --output-dill C:\Users\memja\AppData\Local\Temp\flutter_tools.a19ea4a9\flutter_tool.8e49bd70\app.dill --packages C:\Users\memja\OneDrive - uokerbala.edu.iq\Desktop\the ai\outo platfrom\.dart_tool\package_config.json -Ddart.vm.profile=false -Ddart.vm.product=false --enable-asserts --track-widget-creation --filesystem-root C:\Users\memja\AppData\Local\Temp\flutter_tools.a19ea4a9\flutter_tools.1ffc64ce --filesystem-scheme org-dartlang-app --initialize-from-dill build\8730b13ca0249799964d0a71255a8f3b.cache.dill.track.dill --platform file:///C:/flutter2/bin/cache/flutter_web_sdk/kernel/ddc_outline.dill --verbosity=error --dartdevc-canary --dartdevc-module-format=ddc
+[  +36 ms] <- compile org-dartlang-app:/web_entrypoint.dart
+[+2779 ms] lib/main.dart:434:24: Error: The getter 'AppConfig' isn't defined for the type '_WelcomeScreenState'.
+[        ]  - '_WelcomeScreenState' is from 'package:student_quiz_app/main.dart' ('lib/main.dart').
+[        ] Try correcting the name to the name of an existing getter, or defining a getter or field named 'AppConfig'.
+[        ]       final baseHost = AppConfig.productionHost.isNotEmpty 
+[        ]                        ^^^^^^^^^
+[        ] lib/main.dart:435:13: Error: The getter 'AppConfig' isn't defined for the type '_WelcomeScreenState'.
+[        ]  - '_WelcomeScreenState' is from 'package:student_quiz_app/main.dart' ('lib/main.dart').
+[        ] Try correcting the name to the name of an existing getter, or defining a getter or field named 'AppConfig'.
+[        ]           ? AppConfig.productionHost 
+[        ]             ^^^^^^^^^
+[+20170 ms] Waiting for connection from debug service on Chrome... (completed in 23.4s)
+[        ] Synced 0.0MB.
+[        ] Failed to compile application.
+[   +1 ms] "flutter run" took 25,830ms.
+[  +49 ms] 
+           #0      throwToolExit (package:flutter_tools/src/base/common.dart:34:3)
+           #1      RunCommand.runCommand (package:flutter_tools/src/commands/run.dart:910:9)
+           <asynchronous suspension>
+           #2      FlutterCommand.run.<anonymous closure> (package:flutter_tools/src/runner/flutter_command.dart:1590:27)
+           <asynchronous suspension>
+           #3      AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+           <asynchronous suspension>
+           #4      CommandRunner.runCommand (package:args/command_runner.dart:212:13)
+           <asynchronous suspension>
+           #5      FlutterCommandRunner.runCommand.<anonymous closure> (package:flutter_tools/src/runner/flutter_command_runner.dart:496:9)
+           <asynchronous suspension>
+           #6      AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+           <asynchronous suspension>
+           #7      FlutterCommandRunner.runCommand (package:flutter_tools/src/runner/flutter_command_runner.dart:431:5)
+           <asynchronous suspension>
+           #8      FlutterCommandRunner.run.<anonymous closure> (package:flutter_tools/src/runner/flutter_command_runner.dart:307:33)
+           <asynchronous suspension>
+           #9      run.<anonymous closure>.<anonymous closure> (package:flutter_tools/runner.dart:104:11)
+           <asynchronous suspension>
+           #10     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+           <asynchronous suspension>
+           #11     main (package:flutter_tools/executable.dart:103:3)
+           <asynchronous suspension>
+
+
+[        ] Running 3 shutdown hooks
+[  +17 ms] Shutdown hooks complete
+[ +257 ms] exiting with code 1

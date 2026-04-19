@@ -1,0 +1,178 @@
+{
+  "welcomeTitle": "Welcome to Student Quiz",
+  "welcomeSubtitle": "Test your knowledge and get graded instantly!",
+  "enterName": "Enter your name",
+  "startQuiz": "Start Quiz",
+  "teacherLogin": "Teacher Login",
+  "enterNameError": "Please enter your name to start",
+  "question": "Question",
+  "ofTotal": "of {total}",
+  "@ofTotal": {
+    "placeholders": {
+      "total": {}
+    }
+  },
+  "quizCompleted": "Quiz Completed!",
+  "correctAnswers": "Correct Answers",
+  "timeTaken": "Time Taken",
+  "backToStart": "Back to Start",
+  "loginTitle": "Teacher Login",
+  "username": "Username",
+  "password": "Password",
+  "login": "Login",
+  "invalidLogin": "Invalid username or password",
+  "unknownError": "An error occurred. Please try again.",
+  "timeRemaining": "Time Remaining: {minutes}:{seconds}",
+  "@timeRemaining": {
+    "placeholders": {
+      "minutes": {},
+      "seconds": {}
+    }
+  },
+  "offlineBanner": "⚠️ Offline Mode – Using Cached Data",
+  "selectExam": "Select Exam",
+  "pleaseSelectExam": "Please select an Exam",
+  "pleaseEnterAccessCode": "Please enter your Access Code",
+  "accessCode": "Secret Access Code",
+  "loginWithTelegram": "Login with Telegram",
+  "invalidAccessCode": "Invalid or unenrolled Access Code.",
+  "vpnDetected": "Access Denied: VPN usage detected.",
+  "biometricFailed": "Access Denied: Identity not verified.",
+  "examNotStarted": "Exam has not started yet. Starts at: {date}",
+  "@examNotStarted": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "examEnded": "Exam has ended. Ended at: {date}",
+  "@examEnded": {
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "confirmSubmit": "Confirm Submission",
+  "answeredOf": "You answered {answered} of {total} questions.",
+  "@answeredOf": {
+    "placeholders": {
+      "answered": {},
+      "total": {}
+    }
+  },
+  "unansweredWarning": "⚠️ You have {count} unanswered questions!",
+  "@unansweredWarning": {
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "confirmSubmitQuestion": "Are you sure you want to submit?",
+  "goBack": "Go Back",
+  "submit": "Submit",
+  "submitQuiz": "Submit Quiz",
+  "previous": "Previous",
+  "next": "Next",
+  "nextSave": "Next / Save",
+  "typeAnswerHere": "Type your answer here",
+  "questionNavigation": "Question Navigation",
+  "reviewAnswers": "Review Answers",
+  "answerCorrect": "Correct!",
+  "answerWrong": "Wrong!",
+  "endExam": "End Exam",
+  "studentLogin": "Student Login",
+  "createAccount": "Create Account",
+  "fullName": "Full Name",
+  "phoneNumber": "Phone Number",
+  "signUp": "Sign Up",
+  "dontHaveAccount": "Don't have an account?",
+  "alreadyHaveAccount": "Already have an account? Login",
+  "adminTeacherLogin": "Admin / Teacher Login",
+  "orLabel": "OR",
+  "myProfile": "My Profile",
+  "myGrades": "My Grades",
+  "availableExams": "Available Exams",
+  "noExamsAvailable": "No exams available at the moment.",
+  "start": "Start",
+  "helloStudent": "Hello, {name}!",
+  "@helloStudent": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "readyForChallenge": "Ready for your next challenge?",
+  "enterPhoneAndPassword": "Please enter both phone number and password",
+  "telegramBrowserError": "Could not open browser to Telegram",
+  "profileUpdated": "Profile updated",
+  "updateFailed": "Update failed",
+  "notLoggedIn": "Not logged in",
+  "bio": "Bio",
+  "cancel": "Cancel",
+  "save": "Save",
+  "editProfile": "Edit Profile",
+  "darkMode": "Dark Mode",
+  "toggleAppearance": "Toggle app appearance",
+  "quizHistory": "Quiz History",
+  "noQuizzesCompleted": "No quizzes completed yet.",
+  "viewAllHistory": "View All History",
+  "myQuizHistory": "My Quiz History",
+  "noResultsFound": "No results found yet.",
+  "generalQuiz": "General Quiz",
+  "unknownDate": "Unknown Date",
+  "questionsCount": "{correct} / {total} Questions",
+  "@questionsCount": {
+    "placeholders": {
+      "correct": {},
+      "total": {}
+    }
+  },
+  "leaderboard": "Leaderboard",
+  "noScoresYet": "No scores yet for this exam!",
+  "examInstructions": "Exam Instructions",
+  "rulesAndParameters": "Rules & Parameters",
+  "timeLimit": "Time Limit",
+  "minutesTotalLimit": "{limit} Minutes Total Limit",
+  "@minutesTotalLimit": {
+    "placeholders": {
+      "limit": {}
+    }
+  },
+  "perQuestionLimit": "Per-Question Limit",
+  "secondsPerQuestionLimit": "{limit} Seconds per question. Unanswered questions will be marked incorrect.",
+  "@secondsPerQuestionLimit": {
+    "placeholders": {
+      "limit": {}
+    }
+  },
+  "randomized": "Randomized",
+  "randomizedDesc": "Questions and options appear in a completely random order for every student.",
+  "locationTracking": "Location Tracking",
+  "locationTrackingDesc": "Your GPS coordinates will be captured when submitting this exam.",
+  "noVpnAllowed": "No VPN Allowed",
+  "noVpnAllowedDesc": "Active VPN/Proxy connections will instantly flag and block access.",
+  "biometricVerification": "Biometric Verification",
+  "biometricVerificationDesc": "You must verify your identity via FaceID or Fingerprint OS sensors to enter.",
+  "screenProtection": "Screen Protection",
+  "screenRecordDesc": "Your screen will be recorded during the entire exam.",
+  "preventScreenshotsDesc": "Screenshots and screen recording boundaries are disabled internally for this exam.",
+  "verifyingContext": "Verifying Context...",
+  "acceptBeginExam": "I Accept, Begin Exam",
+  "essayHint": "Write your essay here...",
+  "campaignRules": "Campaign Rules & Scoring",
+  "speedAccuracy": "Speed & Accuracy",
+  "speedAccuracyDesc": "Earn 100 Base Points per correct answer. Get +10 Bonus Points for every second left on the clock!",
+  "comboMultipliers": "Combo Multipliers",
+  "comboMultipliersDesc": "Answer correctly in a row to build a Combo! 2-in-a-row grants 1.2x points. 5-in-a-row triggers a 2.0x score multiplier! (Levels 1-25 grant up to 3.0x!)",
+  "trainingLevels": "Levels 1 - 50 (Training)",
+  "trainingLevelsDesc": "No negative penalties. Earning just 50% of the max score grants 1 Star. You only need 18 Stars every 10 levels to unlock the next Chapter.",
+  "hardcoreLevels": "Levels 51-200 (Hardcore)",
+  "hardcoreLevelsDesc": "Incorrect answers instantly deduct 50 points and break your combo! You must maintain a precise 60% passing rate. Chapters require a brutal 24 Stars to unlock.",
+  "iUnderstand": "I Understand",
+  "campaignTab": "Campaign",
+  "essaysTab": "Essays",
+  "examsTab": "Exams",
+  "globalStoryPoints": "Global Story Points",
+  "analyticsTab": "Analytics",
+  "noAvailableExams": "No exams available for analytics.",
+  "totalStudents": "Total Students",
+  "averageScore": "Avg Score",
+  "passRate": "Pass Rate",
+  "distractorAnalysis": "Distractor Analysis"
+}
