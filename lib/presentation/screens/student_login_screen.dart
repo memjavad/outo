@@ -26,6 +26,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
   final _nameController = TextEditingController();
   bool _isLogin = true;
   bool _isLoadingTg = false;
+  bool _obscurePassword = true;
   Timer? _pollingTimer;
   String? _tgSessionId;
 
@@ -302,8 +303,20 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
                                   decoration: InputDecoration(
                                     hintText: '••••••••',
                                     prefixIcon: Icon(LucideIcons.lock, color: colorScheme.onSurfaceVariant),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _obscurePassword ? LucideIcons.eyeOff : LucideIcons.eye,
+                                        color: colorScheme.onSurfaceVariant,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _obscurePassword = !_obscurePassword;
+                                        });
+                                      },
+                                      tooltip: _obscurePassword ? 'Show password' : 'Hide password',
+                                    ),
                                   ),
-                                  obscureText: true,
+                                  obscureText: _obscurePassword,
                                   textDirection: TextDirection.ltr,
                                 ),
                               ],
