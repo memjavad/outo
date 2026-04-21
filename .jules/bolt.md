@@ -1,0 +1,3 @@
+## 2026-04-21 - [PHPUnit Environment Mismatch]
+**Learning:** Composer installs a phpunit version requiring PHP >= 8.4.1, while the local environment has PHP 8.3.6. Editing files inside the `vendor/` directory (like `phpunit` or `platform_check.php`) to bypass version constraints is an anti-pattern, generates large git diffs, and introduces unacceptable side effects that will block the PR.
+**Action:** When facing a PHP version mismatch with `phpunit`, download a compatible `phpunit.phar` (e.g., `wget -O phpunit.phar https://phar.phpunit.de/phpunit-10.5.phar`) and run tests using `php phpunit.phar`. Do not commit the `.phar` file to the repository, and ensure temporary test caches (like `.phpunit.cache/`) are added to `.gitignore` and removed from tracking.
