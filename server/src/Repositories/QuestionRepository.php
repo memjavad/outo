@@ -20,6 +20,29 @@ class QuestionRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
+    private function attachOptions(array &$questions): void {
+        if (empty($questions)) return;
+
+        $questionIds = array_column($questions, 'id');
+        $optionsByQuestion = [];
+
+        $chunks = array_chunk($questionIds, 500);
+        foreach ($chunks as $chunk) {
+            $inQuery = implode(',', array_fill(0, count($chunk), '?'));
+            $stmt = $this->db->prepare("SELECT * FROM options WHERE question_id IN ($inQuery) ORDER BY option_index ASC");
+            $stmt->execute($chunk);
+            $allOptions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+            foreach ($allOptions as $option) {
+                $optionsByQuestion[$option['question_id']][] = $option;
+            }
+        }
+
+        foreach ($questions as &$q) {
+            $q['options'] = $optionsByQuestion[$q['id']] ?? [];
+        }
+    }
+
     public function getByExamId(int $examId, bool $randomize = false): array {
         $sql = "SELECT * FROM questions WHERE exam_id = ?";
         $sql .= $randomize ? " ORDER BY RAND()" : " ORDER BY created_at ASC";
@@ -27,9 +50,7 @@ class QuestionRepository {
         $stmt->execute([$examId]);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
-        foreach ($questions as &$q) {
-            $q['options'] = $this->getOptions($q['id']);
-        }
+        $this->attachOptions($questions);
         return $questions;
     }
     
@@ -39,9 +60,7 @@ class QuestionRepository {
         $stmt = $this->db->query($sql);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
-        foreach ($questions as &$q) {
-            $q['options'] = $this->getOptions($q['id']);
-        }
+        $this->attachOptions($questions);
         return $questions;
     }
 
