@@ -1,0 +1,3 @@
+🎯 What: Tests were missing for AnalyticsService methods: getExamKPIs and getDistractorAnalysis.
+📊 Coverage: Added tests to ensure data calculates and groups properly, and edge cases like division-by-zero on empty exams evaluate safely.
+✨ Result: Reliable calculation of the platform KPIs and options distractors for analytics.
