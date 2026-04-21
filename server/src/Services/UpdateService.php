@@ -30,6 +30,18 @@ class UpdateService {
             throw new Exception("Failed to open ZIP file");
         }
 
+        // Validate all files in the ZIP for path traversal vulnerabilities
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $entryName = $zip->getNameIndex($i);
+            if (strpos($entryName, '../') !== false ||
+                strpos($entryName, '..\\') !== false ||
+                substr($entryName, 0, 1) === '/' ||
+                preg_match('/^[a-zA-Z]:[\\\\\/]/', $entryName)) {
+                $zip->close();
+                throw new Exception("Insecure ZIP archive detected. Directory traversal or absolute paths are not allowed.");
+            }
+        }
+
         $firstFileName = $zip->getNameIndex(0);
         $hasRootDir = false;
         $rootDirName = '';
@@ -47,25 +59,25 @@ class UpdateService {
             }
         }
 
-        if ($hasRootDir) {
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                $entryName = $zip->getNameIndex($i);
-                $targetFileName = substr($entryName, strlen($rootDirName));
-                if (empty($targetFileName)) continue;
-                
-                $fullPath = $this->rootPath . '/' . $targetFileName;
-                if (substr($entryName, -1) === '/') {
-                    if (!is_dir($fullPath)) mkdir($fullPath, 0755, true);
-                } else {
-                    $dir = dirname($fullPath);
-                    if (!is_dir($dir)) mkdir($dir, 0755, true);
-                    copy("zip://".$zipPath."#".$entryName, $fullPath);
+        // Extract files manually to ensure paths are controlled
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $entryName = $zip->getNameIndex($i);
+            $targetFileName = $hasRootDir ? substr($entryName, strlen($rootDirName)) : $entryName;
+
+            if (empty($targetFileName)) continue;
+
+            $fullPath = $this->rootPath . '/' . $targetFileName;
+
+            if (substr($entryName, -1) === '/') {
+                if (!is_dir($fullPath)) {
+                    mkdir($fullPath, 0755, true);
                 }
-            }
-        } else {
-            if (!$zip->extractTo($this->rootPath)) {
-                $zip->close();
-                throw new Exception("Extraction failed. Check file permissions.");
+            } else {
+                $dir = dirname($fullPath);
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0755, true);
+                }
+                copy("zip://".$zipPath."#".$entryName, $fullPath);
             }
         }
         
