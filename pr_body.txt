@@ -1,0 +1,12 @@
+🎯 **What:**
+Removed `server/debug_prod.php` and several other exposed debugging, testing, and migration scripts (such as `check_db.php`, `view_logs.php`, `update_db.php`) that were inadvertently left in the production web root.
+
+⚠️ **Risk:**
+These scripts present a critical Information Disclosure and System Compromise risk. For example:
+- `debug_prod.php` reveals internal application flows and stack traces.
+- `check_db.php` dumps all user data, including password hashes, directly to the screen.
+- `view_logs.php` exposes internal server error logs.
+Any unauthenticated attacker could discover and exploit these files to steal sensitive user data, reverse-engineer the backend logic, or trigger unintended database operations.
+
+🛡️ **Solution:**
+Permanently deleted the aforementioned debug and testing scripts from the repository. Moving forward, these files should not be deployed to production environments.
