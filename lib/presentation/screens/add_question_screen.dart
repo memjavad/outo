@@ -49,7 +49,10 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         examId: _selectedExam?.id,
         question: _questionController.text,
-        imageUrl: _imageUrlController.text.isNotEmpty ? _imageUrlController.text : null,
+        imageUrl:
+            _imageUrlController.text.isNotEmpty
+                ? _imageUrlController.text
+                : null,
         questionType: _questionType,
         options: _optionControllers.map((c) => c.text).toList(),
         correctAnswerIndex: _correctAnswerIndex,
@@ -73,9 +76,7 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add Question'),
-      ),
+      appBar: AppBar(title: const Text('Add Question')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Form(
@@ -86,23 +87,9 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
               if (_isLoadingExams)
                 const Center(child: CircularProgressIndicator())
               else ...[
-                DropdownButtonFormField<Exam?>(
-                  initialValue: _selectedExam,
-                  decoration: const InputDecoration(
-                    labelText: 'Assign to Exam (Optional)',
-                    border: OutlineInputBorder(),
-                    prefixIcon: Icon(Icons.assignment),
-                  ),
-                  items: [
-                    const DropdownMenuItem<Exam?>(
-                      value: null,
-                      child: Text('Global Question Bank (Unassigned)'),
-                    ),
-                    ..._exams.map((e) => DropdownMenuItem(
-                          value: e,
-                          child: Text(e.title),
-                        )),
-                  ],
+                _ExamDropdown(
+                  exams: _exams,
+                  selectedExam: _selectedExam,
                   onChanged: (val) => setState(() => _selectedExam = val),
                 ),
                 const SizedBox(height: 24),
@@ -113,8 +100,11 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                   labelText: 'Question Text',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Please enter a question' : null,
+                validator:
+                    (value) =>
+                        value == null || value.isEmpty
+                            ? 'Please enter a question'
+                            : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -126,18 +116,8 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              DropdownButtonFormField<String>(
-                initialValue: _questionType,
-                decoration: const InputDecoration(
-                  labelText: 'Question Type',
-                  border: OutlineInputBorder(),
-                ),
-                items: const [
-                  DropdownMenuItem(value: 'single', child: Text('Single Choice')),
-                  DropdownMenuItem(value: 'multiple', child: Text('Multiple Choice (Checkboxes)')),
-                  DropdownMenuItem(value: 'true_false', child: Text('True / False')),
-                  DropdownMenuItem(value: 'short_answer', child: Text('Short Answer (Text)')),
-                ],
+              _QuestionTypeDropdown(
+                questionType: _questionType,
                 onChanged: (val) {
                   setState(() {
                     _questionType = val!;
@@ -152,68 +132,18 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                 },
               ),
               const SizedBox(height: 24),
-              const Text('Options / Answer', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              const Text(
+                'Options / Answer',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
               const SizedBox(height: 8),
-              if (_questionType == 'short_answer') ...[
-                const Text('Provide the EXACT text answer you expect students to type:'),
-                const SizedBox(height: 8),
-                TextFormField(
-                  controller: _optionControllers[0],
-                  decoration: const InputDecoration(
-                    labelText: 'Expected Correct Answer',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) => value == null || value.isEmpty ? 'Please enter the answer' : null,
-                ),
-              ] else if (_questionType == 'true_false') ...[
-                for (int i = 0; i < 2; i++)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: Row(
-                      children: [
-                        Radio<int>(
-                          value: i,
-                          groupValue: _correctAnswerIndex,
-                          onChanged: (int? value) => setState(() => _correctAnswerIndex = value!),
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            controller: _optionControllers[i],
-                            readOnly: true,
-                            decoration: InputDecoration(
-                              labelText: 'Option ${i + 1}',
-                              border: const OutlineInputBorder(),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-              ] else ...[
-                for (int i = 0; i < 4; i++)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 16.0),
-                    child: Row(
-                      children: [
-                        Radio<int>(
-                          value: i,
-                          groupValue: _correctAnswerIndex,
-                          onChanged: (int? value) => setState(() => _correctAnswerIndex = value!),
-                        ),
-                        Expanded(
-                          child: TextFormField(
-                            controller: _optionControllers[i],
-                            decoration: InputDecoration(
-                              labelText: 'Option ${i + 1}',
-                              border: const OutlineInputBorder(),
-                            ),
-                            validator: (value) => value == null || value.isEmpty ? 'Please enter an option' : null,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-              ],
+              _OptionsSection(
+                questionType: _questionType,
+                optionControllers: _optionControllers,
+                correctAnswerIndex: _correctAnswerIndex,
+                onCorrectAnswerChanged:
+                    (val) => setState(() => _correctAnswerIndex = val!),
+              ),
               const SizedBox(height: 32),
               ElevatedButton(
                 onPressed: _saveQuestion,
@@ -232,4 +162,171 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
   }
 }
 
+class _ExamDropdown extends StatelessWidget {
+  final List<Exam> exams;
+  final Exam? selectedExam;
+  final ValueChanged<Exam?> onChanged;
 
+  const _ExamDropdown({
+    required this.exams,
+    this.selectedExam,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField<Exam?>(
+      initialValue: selectedExam,
+      decoration: const InputDecoration(
+        labelText: 'Assign to Exam (Optional)',
+        border: OutlineInputBorder(),
+        prefixIcon: Icon(Icons.assignment),
+      ),
+      items: [
+        const DropdownMenuItem<Exam?>(
+          value: null,
+          child: Text('Global Question Bank (Unassigned)'),
+        ),
+        ...exams.map((e) => DropdownMenuItem(value: e, child: Text(e.title))),
+      ],
+      onChanged: onChanged,
+    );
+  }
+}
+
+class _QuestionTypeDropdown extends StatelessWidget {
+  final String questionType;
+  final ValueChanged<String?> onChanged;
+
+  const _QuestionTypeDropdown({
+    required this.questionType,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButtonFormField<String>(
+      initialValue: questionType,
+      decoration: const InputDecoration(
+        labelText: 'Question Type',
+        border: OutlineInputBorder(),
+      ),
+      items: const [
+        DropdownMenuItem(value: 'single', child: Text('Single Choice')),
+        DropdownMenuItem(
+          value: 'multiple',
+          child: Text('Multiple Choice (Checkboxes)'),
+        ),
+        DropdownMenuItem(value: 'true_false', child: Text('True / False')),
+        DropdownMenuItem(
+          value: 'short_answer',
+          child: Text('Short Answer (Text)'),
+        ),
+      ],
+      onChanged: onChanged,
+    );
+  }
+}
+
+class _OptionsSection extends StatelessWidget {
+  final String questionType;
+  final List<TextEditingController> optionControllers;
+  final int correctAnswerIndex;
+  final ValueChanged<int?> onCorrectAnswerChanged;
+
+  const _OptionsSection({
+    required this.questionType,
+    required this.optionControllers,
+    required this.correctAnswerIndex,
+    required this.onCorrectAnswerChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (questionType == 'short_answer') {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text(
+            'Provide the EXACT text answer you expect students to type:',
+          ),
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: optionControllers[0],
+            decoration: const InputDecoration(
+              labelText: 'Expected Correct Answer',
+              border: OutlineInputBorder(),
+            ),
+            validator:
+                (value) =>
+                    value == null || value.isEmpty
+                        ? 'Please enter the answer'
+                        : null,
+          ),
+        ],
+      );
+    } else if (questionType == 'true_false') {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (int i = 0; i < 2; i++)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: Row(
+                children: [
+                  Radio<int>(
+                    value: i,
+                    groupValue: correctAnswerIndex,
+                    onChanged: onCorrectAnswerChanged,
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      controller: optionControllers[i],
+                      readOnly: true,
+                      decoration: InputDecoration(
+                        labelText: 'Option ${i + 1}',
+                        border: const OutlineInputBorder(),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      );
+    } else {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (int i = 0; i < 4; i++)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: Row(
+                children: [
+                  Radio<int>(
+                    value: i,
+                    groupValue: correctAnswerIndex,
+                    onChanged: onCorrectAnswerChanged,
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      controller: optionControllers[i],
+                      decoration: InputDecoration(
+                        labelText: 'Option ${i + 1}',
+                        border: const OutlineInputBorder(),
+                      ),
+                      validator:
+                          (value) =>
+                              value == null || value.isEmpty
+                                  ? 'Please enter an option'
+                                  : null,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      );
+    }
+  }
+}
