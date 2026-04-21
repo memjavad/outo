@@ -1,0 +1,3 @@
+## 2026-04-21 - Mocking Database for PHPUnit Tests
+**Learning:** Hardcoded database connections (like `mysql:` inside `Database.php`) prevent testing in isolated environments or CI. When injecting a database mock is impossible via standard constructor dependency injection, `ReflectionClass` can be used to set the private database property to an in-memory SQLite PDO instance, enabling fully isolated unit tests.
+**Action:** Use `ReflectionClass` in PHPUnit `setUp` methods to inject an in-memory `sqlite::memory:` PDO connection to bypass hardcoded DB connection strings for legacy service classes.
