@@ -34,15 +34,27 @@ class ResultRepository {
         if (!empty($data['answers_json'])) {
             $parsed = json_decode($data['answers_json'], true);
             if (is_array($parsed)) {
-                $respStmt = $this->db->prepare("INSERT INTO student_responses (result_id, exam_id, question_id, selected_option_index) VALUES (?, ?, ?, ?)");
+                $values = [];
+                $params = [];
                 foreach ($parsed as $qId => $selectedOption) {
                     if (is_numeric($qId) && is_numeric($selectedOption)) {
-                        $respStmt->execute([
-                            $resultId,
-                            $data['exam_id'],
-                            (int)$qId,
-                            (int)$selectedOption
-                        ]);
+                        $values[] = "(?, ?, ?, ?)";
+                        $params[] = $resultId;
+                        $params[] = $data['exam_id'];
+                        $params[] = (int)$qId;
+                        $params[] = (int)$selectedOption;
+                    }
+                }
+
+                if (!empty($values)) {
+                    $chunkSize = 100;
+                    $valueChunks = array_chunk($values, $chunkSize);
+                    $paramChunks = array_chunk($params, $chunkSize * 4);
+
+                    foreach ($valueChunks as $index => $chunk) {
+                        $sql = "INSERT INTO student_responses (result_id, exam_id, question_id, selected_option_index) VALUES " . implode(', ', $chunk);
+                        $respStmt = $this->db->prepare($sql);
+                        $respStmt->execute($paramChunks[$index]);
                     }
                 }
             }
