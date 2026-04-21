@@ -114,10 +114,9 @@ class ExamService {
 
             $qId = $questionRepo->createQuestion($questionData);
             
-            foreach ($opts as $idx => $optText) {
-                if (!empty($optText)) {
-                    $questionRepo->createOption($qId, $optText, $idx);
-                }
+            $filteredOpts = array_filter($opts, fn($optText) => !empty($optText));
+            if (!empty($filteredOpts)) {
+                $questionRepo->createOptionsBulk($qId, $filteredOpts);
             }
             $count++;
         }
