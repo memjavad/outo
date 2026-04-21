@@ -1,0 +1,3 @@
+## 2024-05-18 - Avoid script artifacts and properly follow issue specifications
+**Learning:** During codebase cleanups, I should be careful not to commit any intermediate python scripts. Also I should use simple search/replace logic that comprehensively catches all targets (in this case `FlutterScreenRecording`) rather than being overly specific to just `startRecordScreenAndAudio`, while also addressing the exact code snippet requested.
+**Action:** When removing code blocks, ensure any helper scripts are properly removed using `rm` in the same shell command block, and stage ONLY the target modified files using `git add <target_files>`. Verify differences closely.
