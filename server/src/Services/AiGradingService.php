@@ -75,15 +75,7 @@ class AiGradingService {
 
         $url = "https://generativelanguage.googleapis.com/v1beta/models/{$this->model}:generateContent?key={$this->apiKey}";
 
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
-        curl_setopt($ch, CURLOPT_TIMEOUT, 45); // Give AI sufficient time
-        
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        [$response, $httpCode] = $this->executeRequest($url, $postData);
 
         if ($httpCode !== 200) {
             $errorDiagnostic = "AiGradingService Error ($httpCode): " . $response . "\nPayload sent: " . json_encode($postData);
@@ -121,5 +113,22 @@ class AiGradingService {
             file_put_contents(__DIR__ . '/../../ai_debug.log', date('[Y-m-d H:i:s] ') . $crashMsg . "\n", FILE_APPEND);
             return null;
         }
+    }
+
+    /**
+     * Executes the HTTP request. Extracted for testability.
+     * @return array [responseString, httpCode]
+     */
+    protected function executeRequest(string $url, array $postData): array {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+        curl_setopt($ch, CURLOPT_TIMEOUT, 45); // Give AI sufficient time
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        return [$response, $httpCode];
     }
 }
