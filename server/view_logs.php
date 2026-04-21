@@ -1,4 +1,12 @@
 <?php
+session_start();
+
+// Ensure only admins can access this file directly
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+    http_response_code(401);
+    die("Unauthorized access. Admins only.");
+}
+
 // Live Server Logs Viewer
 $logFile = __DIR__ . '/logs/error.log';
 $logs = @file_get_contents($logFile);
