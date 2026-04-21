@@ -27,8 +27,24 @@ class QuestionRepository {
         $stmt->execute([$examId]);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
+        if (empty($questions)) {
+            return [];
+        }
+
+        $questionIds = array_column($questions, 'id');
+        $placeholders = implode(',', array_fill(0, count($questionIds), '?'));
+
+        $stmt = $this->db->prepare("SELECT * FROM options WHERE question_id IN ($placeholders) ORDER BY question_id ASC, option_index ASC");
+        $stmt->execute($questionIds);
+        $allOptions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+        $optionsByQuestion = [];
+        foreach ($allOptions as $opt) {
+            $optionsByQuestion[$opt['question_id']][] = $opt;
+        }
+
         foreach ($questions as &$q) {
-            $q['options'] = $this->getOptions($q['id']);
+            $q['options'] = $optionsByQuestion[$q['id']] ?? [];
         }
         return $questions;
     }
@@ -39,8 +55,24 @@ class QuestionRepository {
         $stmt = $this->db->query($sql);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
+        if (empty($questions)) {
+            return [];
+        }
+
+        $questionIds = array_column($questions, 'id');
+        $placeholders = implode(',', array_fill(0, count($questionIds), '?'));
+
+        $stmt = $this->db->prepare("SELECT * FROM options WHERE question_id IN ($placeholders) ORDER BY question_id ASC, option_index ASC");
+        $stmt->execute($questionIds);
+        $allOptions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+        $optionsByQuestion = [];
+        foreach ($allOptions as $opt) {
+            $optionsByQuestion[$opt['question_id']][] = $opt;
+        }
+
         foreach ($questions as &$q) {
-            $q['options'] = $this->getOptions($q['id']);
+            $q['options'] = $optionsByQuestion[$q['id']] ?? [];
         }
         return $questions;
     }
