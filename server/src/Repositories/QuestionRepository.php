@@ -27,10 +27,7 @@ class QuestionRepository {
         $stmt->execute([$examId]);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
-        foreach ($questions as &$q) {
-            $q['options'] = $this->getOptions($q['id']);
-        }
-        return $questions;
+        return $this->attachOptionsToQuestions($questions);
     }
     
     public function getAll(bool $randomize = false): array {
@@ -39,9 +36,31 @@ class QuestionRepository {
         $stmt = $this->db->query($sql);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
-        foreach ($questions as &$q) {
-            $q['options'] = $this->getOptions($q['id']);
+        return $this->attachOptionsToQuestions($questions);
+    }
+
+
+    private function attachOptionsToQuestions(array $questions): array {
+        if (empty($questions)) {
+            return [];
         }
+
+        $questionIds = array_column($questions, 'id');
+        $placeholders = implode(',', array_fill(0, count($questionIds), '?'));
+
+        $stmt = $this->db->prepare("SELECT * FROM options WHERE question_id IN ($placeholders) ORDER BY question_id ASC, option_index ASC");
+        $stmt->execute($questionIds);
+        $allOptions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+        $optionsByQuestionId = [];
+        foreach ($allOptions as $option) {
+            $optionsByQuestionId[$option['question_id']][] = $option;
+        }
+
+        foreach ($questions as &$q) {
+            $q['options'] = $optionsByQuestionId[$q['id']] ?? [];
+        }
+
         return $questions;
     }
 
