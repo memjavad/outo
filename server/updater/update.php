@@ -35,9 +35,44 @@ try {
 
     $zip = new ZipArchive;
     if ($zip->open($zipPath) === TRUE) {
-        // Extract over the main server folder
-        if (!$zip->extractTo($extractPath)) {
-            throw new Exception("Failed to extract files directly to the server folder.");
+        // Extract over the main server folder safely
+        $realExtractPath = realpath($extractPath);
+        if ($realExtractPath === false) {
+            $zip->close();
+            throw new Exception("Invalid root path.");
+        }
+
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $entryName = $zip->getNameIndex($i);
+
+            // Basic sanitization
+            if (strpos($entryName, '../') !== false || strpos($entryName, '..\\') !== false || strpos($entryName, '/') === 0) {
+                $zip->close();
+                throw new Exception("Security Error: Path traversal detected.");
+            }
+
+            $fullPath = $extractPath . '/' . $entryName;
+
+            if (substr($entryName, -1) === '/') {
+                if (!is_dir($fullPath)) mkdir($fullPath, 0755, true);
+                $realDir = realpath($fullPath);
+            } else {
+                $dir = dirname($fullPath);
+                if (!is_dir($dir)) mkdir($dir, 0755, true);
+                $realDir = realpath($dir);
+            }
+
+            if ($realDir === false || (strpos($realDir, $realExtractPath . DIRECTORY_SEPARATOR) !== 0 && $realDir !== $realExtractPath)) {
+                $zip->close();
+                throw new Exception("Security Error: Path traversal detected outside root.");
+            }
+
+            if (substr($entryName, -1) !== '/') {
+                if (!copy("zip://" . $zipPath . "#" . $entryName, $fullPath)) {
+                    $zip->close();
+                    throw new Exception("Extraction failed for file: " . $entryName);
+                }
+            }
         }
         $zip->close();
     } else {

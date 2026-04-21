@@ -1,0 +1,4 @@
+## 2024-04-21 - Zip Slip Vulnerability in PHP Update Mechanism
+**Vulnerability:** Path Traversal during ZIP extraction in PHP (`ZipArchive::extractTo` and manual manual unpacking without `realpath` boundaries).
+**Learning:** `ZipArchive::extractTo()` does not inherently prevent path traversal when extracting ZIP files. Files inside a zip can be named with `../` and extract outside the destination directory. Furthermore, manual extraction needs strict verification.
+**Prevention:** Avoid `extractTo()`. Always iterate over files in `ZipArchive` manually, check for traversal strings like `../`, `..\`, and absolute paths `/`. Use `realpath()` on the resolved destination path and ensure it strictly starts with the `realpath()` of the intended extraction root directory before using `mkdir` or `copy`.

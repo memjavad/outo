@@ -36,36 +36,63 @@ class UpdateService {
         
         if ($firstFileName && strpos($firstFileName, '/') !== false) {
             $parts = explode('/', $firstFileName);
-            $rootDirName = $parts[0] . '/';
-            $hasRootDir = true;
-            
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                if (strpos($zip->getNameIndex($i), $rootDirName) !== 0) {
-                    $hasRootDir = false;
-                    break;
+            // Ignore traversal attempts when determining root dir
+            if ($parts[0] !== '..' && $parts[0] !== '.') {
+                $rootDirName = $parts[0] . '/';
+                $hasRootDir = true;
+
+                for ($i = 0; $i < $zip->numFiles; $i++) {
+                    if (strpos($zip->getNameIndex($i), $rootDirName) !== 0) {
+                        $hasRootDir = false;
+                        break;
+                    }
                 }
             }
         }
 
-        if ($hasRootDir) {
-            for ($i = 0; $i < $zip->numFiles; $i++) {
-                $entryName = $zip->getNameIndex($i);
+        $realRootPath = realpath($this->rootPath);
+        if ($realRootPath === false) {
+            $zip->close();
+            throw new Exception("Invalid root path.");
+        }
+
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $entryName = $zip->getNameIndex($i);
+
+            if ($hasRootDir) {
                 $targetFileName = substr($entryName, strlen($rootDirName));
                 if (empty($targetFileName)) continue;
-                
-                $fullPath = $this->rootPath . '/' . $targetFileName;
-                if (substr($entryName, -1) === '/') {
-                    if (!is_dir($fullPath)) mkdir($fullPath, 0755, true);
-                } else {
-                    $dir = dirname($fullPath);
-                    if (!is_dir($dir)) mkdir($dir, 0755, true);
-                    copy("zip://".$zipPath."#".$entryName, $fullPath);
-                }
+            } else {
+                $targetFileName = $entryName;
             }
-        } else {
-            if (!$zip->extractTo($this->rootPath)) {
+
+            // Basic sanitization
+            if (strpos($targetFileName, '../') !== false || strpos($targetFileName, '..\\') !== false || strpos($targetFileName, '/') === 0) {
                 $zip->close();
-                throw new Exception("Extraction failed. Check file permissions.");
+                throw new Exception("Security Error: Path traversal detected.");
+            }
+
+            $fullPath = $this->rootPath . '/' . $targetFileName;
+
+            if (substr($entryName, -1) === '/') {
+                if (!is_dir($fullPath)) mkdir($fullPath, 0755, true);
+                $realDir = realpath($fullPath);
+            } else {
+                $dir = dirname($fullPath);
+                if (!is_dir($dir)) mkdir($dir, 0755, true);
+                $realDir = realpath($dir);
+            }
+
+            if ($realDir === false || (strpos($realDir, $realRootPath . DIRECTORY_SEPARATOR) !== 0 && $realDir !== $realRootPath)) {
+                $zip->close();
+                throw new Exception("Security Error: Path traversal detected outside root.");
+            }
+
+            if (substr($entryName, -1) !== '/') {
+                if (!copy("zip://" . $zipPath . "#" . $entryName, $fullPath)) {
+                    $zip->close();
+                    throw new Exception("Extraction failed. Check file permissions for: " . $targetFileName);
+                }
             }
         }
         
