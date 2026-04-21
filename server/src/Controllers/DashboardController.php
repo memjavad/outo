@@ -115,8 +115,28 @@ class DashboardController extends BaseController {
         $aiModel = $settings['ai_model'] ?? 'gemini-3.0-flash';
 
         // Calculate Grade Distribution
+        $gradeDistributionData = [];
+        try {
+            $gradeDistributionData = $this->pdo->query("
+                SELECT grade, COUNT(*) as count
+                FROM (
+                    SELECT grade FROM results
+                    UNION ALL
+                    SELECT grade FROM essay_results
+                ) AS combined_grades
+                GROUP BY grade
+            ")->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\PDOException $err) {
+            error_log("Failed to fetch grade distribution: " . $err->getMessage());
+        }
+
         $grades = ['A'=>0, 'B'=>0, 'C'=>0, 'D'=>0, 'F'=>0];
-        foreach($results as $res) if(isset($grades[$res['grade']])) $grades[$res['grade']]++;
+        foreach($gradeDistributionData as $row) {
+            if(isset($grades[$row['grade']])) {
+                $grades[$row['grade']] = (int)$row['count'];
+            }
+        }
+
         $gradeDistribution = [];
         foreach ($grades as $grade => $count) {
             $gradeDistribution[] = ['grade' => $grade, 'count' => $count];
