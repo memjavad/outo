@@ -116,9 +116,7 @@ class ExamController extends BaseController {
 
             $questionId = $questionRepo->createQuestion($questionData);
 
-            foreach ($options as $index => $text) {
-                $questionRepo->createOption($questionId, $text, $index);
-            }
+            $questionRepo->createOptions($questionId, $options);
 
             $db->commit();
             return $this->json($response, ["status" => "success", "id" => $questionId, "question" => $questionText, "imageUrl" => $imageUrl]);
@@ -334,9 +332,7 @@ class ExamController extends BaseController {
             $questionRepo->updateQuestion((int)$id, $questionData);
 
             $questionRepo->deleteOptions((int)$id);
-            foreach ($options as $index => $text) {
-                $questionRepo->createOption((int)$id, $text, $index);
-            }
+            $questionRepo->createOptions((int)$id, $options);
 
             $db->commit();
             return $this->json($response, ["status" => "success", "message" => "Question updated", "imageUrl" => $imageUrl]);
