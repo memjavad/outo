@@ -35,6 +35,15 @@ try {
 
     $zip = new ZipArchive;
     if ($zip->open($zipPath) === TRUE) {
+        // Validate all files in the ZIP for path traversal and absolute paths
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $filename = $zip->getNameIndex($i);
+            if (str_contains($filename, '../') || str_contains($filename, '..\\') || str_starts_with($filename, '/') || str_starts_with($filename, '\\')) {
+                $zip->close();
+                throw new Exception("Security Error: Invalid file path detected in ZIP archive.");
+            }
+        }
+
         // Extract over the main server folder
         if (!$zip->extractTo($extractPath)) {
             throw new Exception("Failed to extract files directly to the server folder.");
