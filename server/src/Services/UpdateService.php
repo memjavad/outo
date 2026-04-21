@@ -72,7 +72,7 @@ class UpdateService {
         $zip->close();
 
         if ($newVersion) {
-            $this->settingsRepo->update('system_version', $newVersion);
+            $this->settingsRepo->updateMany(['system_version' => $newVersion]);
         }
 
         return [
