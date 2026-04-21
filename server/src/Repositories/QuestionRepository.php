@@ -27,9 +27,27 @@ class QuestionRepository {
         $stmt->execute([$examId]);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
-        foreach ($questions as &$q) {
-            $q['options'] = $this->getOptions($q['id']);
+        if (empty($questions)) {
+            return [];
         }
+
+        $questionIds = array_column($questions, 'id');
+        $placeholders = implode(',', array_fill(0, count($questionIds), '?'));
+
+        $sqlOpts = "SELECT * FROM options WHERE question_id IN ($placeholders) ORDER BY option_index ASC";
+        $stmtOpts = $this->db->prepare($sqlOpts);
+        $stmtOpts->execute($questionIds);
+        $allOptions = $stmtOpts->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+        $optionsByQuestion = [];
+        foreach ($allOptions as $opt) {
+            $optionsByQuestion[$opt['question_id']][] = $opt;
+        }
+
+        foreach ($questions as &$q) {
+            $q['options'] = $optionsByQuestion[$q['id']] ?? [];
+        }
+
         return $questions;
     }
     
@@ -39,9 +57,27 @@ class QuestionRepository {
         $stmt = $this->db->query($sql);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
-        foreach ($questions as &$q) {
-            $q['options'] = $this->getOptions($q['id']);
+        if (empty($questions)) {
+            return [];
         }
+
+        $questionIds = array_column($questions, 'id');
+        $placeholders = implode(',', array_fill(0, count($questionIds), '?'));
+
+        $sqlOpts = "SELECT * FROM options WHERE question_id IN ($placeholders) ORDER BY option_index ASC";
+        $stmtOpts = $this->db->prepare($sqlOpts);
+        $stmtOpts->execute($questionIds);
+        $allOptions = $stmtOpts->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+        $optionsByQuestion = [];
+        foreach ($allOptions as $opt) {
+            $optionsByQuestion[$opt['question_id']][] = $opt;
+        }
+
+        foreach ($questions as &$q) {
+            $q['options'] = $optionsByQuestion[$q['id']] ?? [];
+        }
+
         return $questions;
     }
 
