@@ -20,6 +20,35 @@ class QuestionRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
+    private function attachOptions(array $questions): array {
+        if (empty($questions)) {
+            return [];
+        }
+
+        $questionIds = array_column($questions, 'id');
+        $optionsByQuestionId = array_fill_keys($questionIds, []);
+
+        // Chunking the IDs to avoid exceeding database limits on IN clause (SQLite limit is usually 999)
+        $chunks = array_chunk($questionIds, 500);
+        foreach ($chunks as $chunk) {
+            $placeholders = implode(',', array_fill(0, count($chunk), '?'));
+            $sql = "SELECT * FROM options WHERE question_id IN ($placeholders) ORDER BY question_id ASC, option_index ASC";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($chunk);
+            $options = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+            foreach ($options as $opt) {
+                $optionsByQuestionId[$opt['question_id']][] = $opt;
+            }
+        }
+
+        foreach ($questions as &$q) {
+            $q['options'] = $optionsByQuestionId[$q['id']] ?? [];
+        }
+
+        return $questions;
+    }
+
     public function getByExamId(int $examId, bool $randomize = false): array {
         $sql = "SELECT * FROM questions WHERE exam_id = ?";
         $sql .= $randomize ? " ORDER BY RAND()" : " ORDER BY created_at ASC";
@@ -27,10 +56,7 @@ class QuestionRepository {
         $stmt->execute([$examId]);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
-        foreach ($questions as &$q) {
-            $q['options'] = $this->getOptions($q['id']);
-        }
-        return $questions;
+        return $this->attachOptions($questions);
     }
     
     public function getAll(bool $randomize = false): array {
@@ -39,10 +65,7 @@ class QuestionRepository {
         $stmt = $this->db->query($sql);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
-        foreach ($questions as &$q) {
-            $q['options'] = $this->getOptions($q['id']);
-        }
-        return $questions;
+        return $this->attachOptions($questions);
     }
 
     public function getOptions(int $questionId): array {
