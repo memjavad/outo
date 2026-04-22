@@ -1,0 +1,1 @@
+## 2024-05-23 - Tooltips in Flutter\n**Learning:** In Flutter apps, `IconButton` widgets without textual labels should use the `tooltip` property. This serves a dual purpose: it provides visual help text on long-press/hover and acts as the accessible label for screen readers.\n**Action:** Always add `tooltip` to icon-only buttons to enhance accessibility and usability.

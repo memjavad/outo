@@ -39,8 +39,14 @@ class _PendingStudentsScreenState extends State<PendingStudentsScreen> {
         title: const Text('Approve Student'),
         content: Text('Allow ${student.name} to join the platform?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-          ElevatedButton(onPressed: () => Navigator.pop(ctx, true), child: const Text('Approve')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Approve'),
+          ),
         ],
       ),
     );
@@ -51,9 +57,9 @@ class _PendingStudentsScreenState extends State<PendingStudentsScreen> {
       if (success) {
         _loadPending();
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Student approved')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Student approved')));
         }
       }
     }
@@ -66,10 +72,16 @@ class _PendingStudentsScreenState extends State<PendingStudentsScreen> {
         title: const Text('Reject Student'),
         content: Text('Delete ${student.name}\'s registration?'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
-            onPressed: () => Navigator.pop(ctx, true), 
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+            onPressed: () => Navigator.pop(ctx, true),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
             child: const Text('Reject'),
           ),
         ],
@@ -82,9 +94,9 @@ class _PendingStudentsScreenState extends State<PendingStudentsScreen> {
       if (success) {
         _loadPending();
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Student rejected')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('Student rejected')));
         }
       }
     }
@@ -93,7 +105,7 @@ class _PendingStudentsScreenState extends State<PendingStudentsScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     if (_isLoading) return const Center(child: CircularProgressIndicator());
     if (_pending.isEmpty) {
       return Center(
@@ -102,7 +114,11 @@ class _PendingStudentsScreenState extends State<PendingStudentsScreen> {
           children: [
             const Icon(Icons.people_outline, size: 64, color: Colors.grey),
             const SizedBox(height: 16),
-            Text(l10n.localeName == 'ar' ? 'لا يوجد طلاب بانتظار الموافقة' : 'No pending registrations'),
+            Text(
+              l10n.localeName == 'ar'
+                  ? 'لا يوجد طلاب بانتظار الموافقة'
+                  : 'No pending registrations',
+            ),
           ],
         ),
       );
@@ -117,17 +133,22 @@ class _PendingStudentsScreenState extends State<PendingStudentsScreen> {
           final student = _pending[index];
           return Card(
             child: ListTile(
-              title: Text(student.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+              title: Text(
+                student.name,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
               subtitle: Text(student.phone),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
                     icon: const Icon(Icons.check_circle, color: Colors.green),
+                    tooltip: l10n.localeName == 'ar' ? 'قبول' : 'Approve',
                     onPressed: () => _approve(student),
                   ),
                   IconButton(
                     icon: const Icon(Icons.cancel, color: Colors.red),
+                    tooltip: l10n.localeName == 'ar' ? 'رفض' : 'Reject',
                     onPressed: () => _reject(student),
                   ),
                 ],

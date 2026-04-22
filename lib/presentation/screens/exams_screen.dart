@@ -35,7 +35,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
   Future<void> _showAddExamDialog() async {
     final titleController = TextEditingController();
     final descController = TextEditingController();
-    
+
     final result = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -45,18 +45,27 @@ class _ExamsScreenState extends State<ExamsScreen> {
           children: [
             TextField(
               controller: titleController,
-              decoration: const InputDecoration(labelText: 'Exam Title', border: OutlineInputBorder()),
+              decoration: const InputDecoration(
+                labelText: 'Exam Title',
+                border: OutlineInputBorder(),
+              ),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: descController,
-              decoration: const InputDecoration(labelText: 'Description (Optional)', border: OutlineInputBorder()),
+              decoration: const InputDecoration(
+                labelText: 'Description (Optional)',
+                border: OutlineInputBorder(),
+              ),
               maxLines: 2,
             ),
           ],
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
             onPressed: () => Navigator.pop(ctx, true),
             child: const Text('Create'),
@@ -69,11 +78,19 @@ class _ExamsScreenState extends State<ExamsScreen> {
       if (!mounted) return;
       final service = Provider.of<QuizService>(context, listen: false);
       final messenger = ScaffoldMessenger.of(context);
-      final success = await service.addExam(titleController.text, description: descController.text);
+      final success = await service.addExam(
+        titleController.text,
+        description: descController.text,
+      );
       if (success) {
         _loadExams();
         if (mounted) {
-          messenger.showSnackBar(const SnackBar(content: Text('Exam created successfully'), backgroundColor: Colors.green));
+          messenger.showSnackBar(
+            const SnackBar(
+              content: Text('Exam created successfully'),
+              backgroundColor: Colors.green,
+            ),
+          );
         }
       }
     }
@@ -86,9 +103,15 @@ class _ExamsScreenState extends State<ExamsScreen> {
         title: const Text('Delete Exam'),
         content: Text('Delete "${exam.title}"? This cannot be undone.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
             onPressed: () => Navigator.pop(ctx, true),
             child: const Text('Delete'),
           ),
@@ -104,7 +127,12 @@ class _ExamsScreenState extends State<ExamsScreen> {
       if (success) {
         _loadExams();
         if (mounted) {
-          messenger.showSnackBar(const SnackBar(content: Text('Exam deleted'), backgroundColor: Colors.green));
+          messenger.showSnackBar(
+            const SnackBar(
+              content: Text('Exam deleted'),
+              backgroundColor: Colors.green,
+            ),
+          );
         }
       }
     }
@@ -118,65 +146,83 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
     return Scaffold(
       body: _exams.isEmpty
-        ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.assignment_outlined, size: 80, color: Colors.grey[400]),
-                const SizedBox(height: 16),
-                Text('No exams created yet', style: TextStyle(fontSize: 20, color: Colors.grey[600])),
-                const SizedBox(height: 24),
-                ElevatedButton.icon(
-                  onPressed: _showAddExamDialog,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Create First Exam'),
-                ),
-              ],
-            ),
-          )
-        : RefreshIndicator(
-            onRefresh: _loadExams,
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: _exams.length,
-              itemBuilder: (context, index) {
-                final exam = _exams[index];
-                return Card(
-                  elevation: 2,
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(16),
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.blue.withValues(alpha: 0.1),
-                      child: const Icon(Icons.assignment, color: Colors.blue),
-                    ),
-                    title: Text(exam.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                    subtitle: exam.description != null && exam.description!.isNotEmpty
-                        ? Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: Text(exam.description!),
-                          )
-                        : null,
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete_outline, color: Colors.red),
-                      onPressed: () => _deleteExam(exam),
-                    ),
-                    onTap: () {
-                      // Navigate to Question Bank filtered by this exam (stretch goal)
-                    },
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.assignment_outlined,
+                    size: 80,
+                    color: Colors.grey[400],
                   ),
-                );
-              },
+                  const SizedBox(height: 16),
+                  Text(
+                    'No exams created yet',
+                    style: TextStyle(fontSize: 20, color: Colors.grey[600]),
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton.icon(
+                    onPressed: _showAddExamDialog,
+                    icon: const Icon(Icons.add),
+                    label: const Text('Create First Exam'),
+                  ),
+                ],
+              ),
+            )
+          : RefreshIndicator(
+              onRefresh: _loadExams,
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16),
+                itemCount: _exams.length,
+                itemBuilder: (context, index) {
+                  final exam = _exams[index];
+                  return Card(
+                    elevation: 2,
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(16),
+                      leading: CircleAvatar(
+                        backgroundColor: Colors.blue.withValues(alpha: 0.1),
+                        child: const Icon(Icons.assignment, color: Colors.blue),
+                      ),
+                      title: Text(
+                        exam.title,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      subtitle:
+                          exam.description != null &&
+                              exam.description!.isNotEmpty
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(exam.description!),
+                            )
+                          : null,
+                      trailing: IconButton(
+                        icon: const Icon(
+                          Icons.delete_outline,
+                          color: Colors.red,
+                        ),
+                        tooltip: 'Delete Exam',
+                        onPressed: () => _deleteExam(exam),
+                      ),
+                      onTap: () {
+                        // Navigate to Question Bank filtered by this exam (stretch goal)
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-      floatingActionButton: _exams.isNotEmpty ? FloatingActionButton(
-        onPressed: _showAddExamDialog,
-        tooltip: 'Create New Exam',
-        child: const Icon(Icons.add),
-      ) : null,
+      floatingActionButton: _exams.isNotEmpty
+          ? FloatingActionButton(
+              onPressed: _showAddExamDialog,
+              tooltip: 'Create New Exam',
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 }
-
-
-
