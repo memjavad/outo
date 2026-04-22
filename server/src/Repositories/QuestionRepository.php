@@ -20,6 +20,31 @@ class QuestionRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
+    private function attachOptionsToQuestions(array $questions): array {
+        if (empty($questions)) return [];
+
+        $questionIds = array_column($questions, 'id');
+        $optionsByQuestionId = array_fill_keys($questionIds, []);
+
+        $chunks = array_chunk($questionIds, 900); // Prevent exceeding DB placeholder limits
+        foreach ($chunks as $chunk) {
+            $placeholders = implode(',', array_fill(0, count($chunk), '?'));
+            $stmt = $this->db->prepare("SELECT * FROM options WHERE question_id IN ($placeholders) ORDER BY option_index ASC");
+            $stmt->execute($chunk);
+            $options = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+
+            foreach ($options as $opt) {
+                $optionsByQuestionId[$opt['question_id']][] = $opt;
+            }
+        }
+
+        foreach ($questions as &$q) {
+            $q['options'] = $optionsByQuestionId[$q['id']] ?? [];
+        }
+
+        return $questions;
+    }
+
     public function getByExamId(int $examId, bool $randomize = false): array {
         $sql = "SELECT * FROM questions WHERE exam_id = ?";
         $sql .= $randomize ? " ORDER BY RAND()" : " ORDER BY created_at ASC";
@@ -27,10 +52,7 @@ class QuestionRepository {
         $stmt->execute([$examId]);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
-        foreach ($questions as &$q) {
-            $q['options'] = $this->getOptions($q['id']);
-        }
-        return $questions;
+        return $this->attachOptionsToQuestions($questions);
     }
     
     public function getAll(bool $randomize = false): array {
@@ -39,10 +61,7 @@ class QuestionRepository {
         $stmt = $this->db->query($sql);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
-        foreach ($questions as &$q) {
-            $q['options'] = $this->getOptions($q['id']);
-        }
-        return $questions;
+        return $this->attachOptionsToQuestions($questions);
     }
 
     public function getOptions(int $questionId): array {
