@@ -1,0 +1,1 @@
+## 2024-05-24 - [Hardcoded Secrets]\n**Vulnerability:** Hardcoded DB credentials and JWT secret in config\n**Learning:** Credentials were left in code instead of strictly loading from environment variables or enforcing .env existence.\n**Prevention:** Throw an error when secrets are missing instead of falling back to insecure hardcoded defaults.
