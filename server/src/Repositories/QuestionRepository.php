@@ -65,6 +65,29 @@ class QuestionRepository {
         return $stmt->execute([$questionId, $text, $index]);
     }
     
+    /**
+     * Bolt Optimization: Replaces individual inserts with a single bulk insert
+     * Impact: Eliminates N+1 queries when saving question options. For a question
+     * with 4 options, reduces queries from 4 to 1, improving insertion speed.
+     */
+    public function createOptionsBulk(int $questionId, array $optionsMap): bool {
+        if (empty($optionsMap)) return true;
+
+        $placeholders = [];
+        $values = [];
+
+        foreach ($optionsMap as $index => $text) {
+            $placeholders[] = "(?, ?, ?)";
+            $values[] = $questionId;
+            $values[] = $text;
+            $values[] = $index;
+        }
+
+        $sql = "INSERT INTO options (question_id, option_text, option_index) VALUES " . implode(', ', $placeholders);
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute($values);
+    }
+
     public function updateQuestion(int $id, array $data): bool {
         if (empty($data)) return true;
         $fields = [];
