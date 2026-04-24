@@ -22,8 +22,8 @@ class Config {
             'db_host' => $_ENV['DB_HOST'] ?? 'localhost',
             'db_name' => $_ENV['DB_NAME'] ?? 's_ss',
             'db_user' => $_ENV['DB_USER'] ?? 's_ss',
-            'db_pass' => $_ENV['DB_PASS'] ?? 'LI!9tWdp^2qFCDce',
-            'jwt_secret' => $_ENV['JWT_SECRET'] ?? 'sdgfdbvbnghjghjfghdfgdFGDFGDFHGH#$34DF@32#$#%$%^%',
+            'db_pass' => $_ENV['DB_PASS'] ?? '',
+            'jwt_secret' => $_ENV['JWT_SECRET'] ?? '',
             'token_expiry' => $_ENV['TOKEN_EXPIRY'] ?? 86400
         ];
         
