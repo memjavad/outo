@@ -16,6 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   String _errorMessage = '';
   bool _isLoading = false;
+  bool _obscurePassword = true;
 
   Future<void> _login() async {
     setState(() {
@@ -211,10 +212,22 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 TextField(
                                   controller: _passwordController,
-                                  obscureText: true,
+                                  obscureText: _obscurePassword,
                                   decoration: InputDecoration(
                                     hintText: l10n.password,
                                     prefixIcon: Icon(Icons.lock, color: colorScheme.onSurfaceVariant),
+                                    suffixIcon: IconButton(
+                                      icon: Icon(
+                                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                                        color: colorScheme.onSurfaceVariant,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _obscurePassword = !_obscurePassword;
+                                        });
+                                      },
+                                      tooltip: _obscurePassword ? 'Show password' : 'Hide password',
+                                    ),
                                   ),
                                 ),
                               ],
