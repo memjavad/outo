@@ -49,10 +49,10 @@ class DashboardController extends BaseController {
 
         // Merge standard exams and essay submissions natively into the global results table
         $results = $this->pdo->query("
-            SELECT student_name, score_percentage, grade, answers_json, created_at 
+            SELECT student_name, score_percentage, COALESCE(grade, '') as grade, answers_json, created_at
             FROM results 
             UNION ALL 
-            SELECT student_name, score_percentage, grade, answers_json, created_at 
+            SELECT student_name, score_percentage, COALESCE(grade, '') as grade, answers_json, created_at
             FROM essay_results 
             ORDER BY created_at DESC
         ")->fetchAll(PDO::FETCH_ASSOC);
@@ -116,7 +116,14 @@ class DashboardController extends BaseController {
 
         // Calculate Grade Distribution
         $grades = ['A'=>0, 'B'=>0, 'C'=>0, 'D'=>0, 'F'=>0];
-        foreach($results as $res) if(isset($grades[$res['grade']])) $grades[$res['grade']]++;
+        $counts = array_count_values(array_column($results, 'grade'));
+
+        foreach ($counts as $grade => $count) {
+            if (isset($grades[$grade])) {
+                $grades[$grade] = $count;
+            }
+        }
+
         $gradeDistribution = [];
         foreach ($grades as $grade => $count) {
             $gradeDistribution[] = ['grade' => $grade, 'count' => $count];
