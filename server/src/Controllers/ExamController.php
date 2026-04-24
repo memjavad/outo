@@ -351,7 +351,29 @@ class ExamController extends BaseController {
             return ["error" => "File upload failed"];
         }
 
-        $extension = pathinfo($file->getClientFilename(), PATHINFO_EXTENSION);
+        // Security: Whitelist allowed extensions
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $filename = $file->getClientFilename();
+        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+        if (!in_array($extension, $allowedExtensions)) {
+            return ["error" => "Invalid file extension. Only JPG, PNG, GIF, and WEBP are allowed."];
+        }
+
+        // Security: Verify MIME type using finfo
+        $stream = $file->getStream();
+        $fileContent = $stream->read(1024); // Read first 1KB to determine MIME type
+        $stream->rewind(); // Reset stream position for the actual move
+
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_buffer($finfo, $fileContent);
+        finfo_close($finfo);
+
+        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        if (!in_array($mime, $allowedMimeTypes)) {
+            return ["error" => "Invalid file content. The file is not a valid image."];
+        }
+
         $newName = bin2hex(random_bytes(16)) . '.' . $extension;
         $destPath = __DIR__ . '/../../uploads/' . $newName;
 
