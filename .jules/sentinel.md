@@ -1,4 +1,4 @@
-## 2024-04-21 - Insecure ZIP Extraction (Path Traversal/Arbitrary File Write)
-**Vulnerability:** Directly calling `$zip->extractTo()` allows malicious ZIP archives containing relative paths (`../`) or absolute paths (`/etc/passwd`) to overwrite arbitrary files outside the intended extraction directory.
-**Learning:** Never trust the file paths defined within a ZIP archive. They are user-controlled input and can be crafted to execute path traversal attacks.
-**Prevention:** Always iterate over the contents of a ZIP file using `$zip->numFiles` and `$zip->getNameIndex($i)`. Validate each entry name to ensure it does not contain directory traversal sequences (e.g., `../`, `..\`) or absolute path indicators. Extract files manually using the `zip://` stream wrapper (`copy("zip://...")`) and ensure the constructed destination path strictly resides within the target directory boundary.
+## 2024-05-24 - Production Debug Script Left Enabled
+**Vulnerability:** A debug script (`server/debug_prod.php`) was left enabled in the production directory, exposing internal application flow, database connection status, and stack traces to unauthorized visitors.
+**Learning:** Debug scripts left in production environments can expose sensitive technical details, aiding attackers in further exploitation.
+**Prevention:** Never commit or deploy ad-hoc debug scripts to production. Use secure, authenticated logging systems to trace execution flows in production instead.
