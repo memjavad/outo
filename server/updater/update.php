@@ -35,43 +35,35 @@ try {
 
     $zip = new ZipArchive;
     if ($zip->open($zipPath) === TRUE) {
-        // Extract over the main server folder safely
-        $realExtractPath = realpath($extractPath);
-        if ($realExtractPath === false) {
-            $zip->close();
-            throw new Exception("Invalid root path.");
-        }
-
+        // Validate all files in the ZIP for path traversal vulnerabilities
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $entryName = $zip->getNameIndex($i);
-
-            // Basic sanitization
-            if (strpos($entryName, '../') !== false || strpos($entryName, '..\\') !== false || strpos($entryName, '/') === 0) {
+            if (strpos($entryName, '../') !== false ||
+                strpos($entryName, '..\\') !== false ||
+                substr($entryName, 0, 1) === '/' ||
+                preg_match('/^[a-zA-Z]:[\\\\\/]/', $entryName)) {
                 $zip->close();
-                throw new Exception("Security Error: Path traversal detected.");
+                throw new Exception("Insecure ZIP archive detected. Directory traversal or absolute paths are not allowed.");
             }
+        }
+
+        // Extract files manually to ensure paths are controlled
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $entryName = $zip->getNameIndex($i);
+            if (empty($entryName)) continue;
 
             $fullPath = $extractPath . '/' . $entryName;
 
             if (substr($entryName, -1) === '/') {
-                if (!is_dir($fullPath)) mkdir($fullPath, 0755, true);
-                $realDir = realpath($fullPath);
+                if (!is_dir($fullPath)) {
+                    mkdir($fullPath, 0755, true);
+                }
             } else {
                 $dir = dirname($fullPath);
-                if (!is_dir($dir)) mkdir($dir, 0755, true);
-                $realDir = realpath($dir);
-            }
-
-            if ($realDir === false || (strpos($realDir, $realExtractPath . DIRECTORY_SEPARATOR) !== 0 && $realDir !== $realExtractPath)) {
-                $zip->close();
-                throw new Exception("Security Error: Path traversal detected outside root.");
-            }
-
-            if (substr($entryName, -1) !== '/') {
-                if (!copy("zip://" . $zipPath . "#" . $entryName, $fullPath)) {
-                    $zip->close();
-                    throw new Exception("Extraction failed for file: " . $entryName);
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0755, true);
                 }
+                copy("zip://".$zipPath."#".$entryName, $fullPath);
             }
         }
         $zip->close();

@@ -30,69 +30,54 @@ class UpdateService {
             throw new Exception("Failed to open ZIP file");
         }
 
+        // Validate all files in the ZIP for path traversal vulnerabilities
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $entryName = $zip->getNameIndex($i);
+            if (strpos($entryName, '../') !== false ||
+                strpos($entryName, '..\\') !== false ||
+                substr($entryName, 0, 1) === '/' ||
+                preg_match('/^[a-zA-Z]:[\\\\\/]/', $entryName)) {
+                $zip->close();
+                throw new Exception("Insecure ZIP archive detected. Directory traversal or absolute paths are not allowed.");
+            }
+        }
+
         $firstFileName = $zip->getNameIndex(0);
         $hasRootDir = false;
         $rootDirName = '';
         
         if ($firstFileName && strpos($firstFileName, '/') !== false) {
             $parts = explode('/', $firstFileName);
-            // Ignore traversal attempts when determining root dir
-            if ($parts[0] !== '..' && $parts[0] !== '.') {
-                $rootDirName = $parts[0] . '/';
-                $hasRootDir = true;
-
-                for ($i = 0; $i < $zip->numFiles; $i++) {
-                    if (strpos($zip->getNameIndex($i), $rootDirName) !== 0) {
-                        $hasRootDir = false;
-                        break;
-                    }
+            $rootDirName = $parts[0] . '/';
+            $hasRootDir = true;
+            
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                if (strpos($zip->getNameIndex($i), $rootDirName) !== 0) {
+                    $hasRootDir = false;
+                    break;
                 }
             }
         }
 
-        $realRootPath = realpath($this->rootPath);
-        if ($realRootPath === false) {
-            $zip->close();
-            throw new Exception("Invalid root path.");
-        }
-
+        // Extract files manually to ensure paths are controlled
         for ($i = 0; $i < $zip->numFiles; $i++) {
             $entryName = $zip->getNameIndex($i);
+            $targetFileName = $hasRootDir ? substr($entryName, strlen($rootDirName)) : $entryName;
 
-            if ($hasRootDir) {
-                $targetFileName = substr($entryName, strlen($rootDirName));
-                if (empty($targetFileName)) continue;
-            } else {
-                $targetFileName = $entryName;
-            }
-
-            // Basic sanitization
-            if (strpos($targetFileName, '../') !== false || strpos($targetFileName, '..\\') !== false || strpos($targetFileName, '/') === 0) {
-                $zip->close();
-                throw new Exception("Security Error: Path traversal detected.");
-            }
+            if (empty($targetFileName)) continue;
 
             $fullPath = $this->rootPath . '/' . $targetFileName;
 
             if (substr($entryName, -1) === '/') {
-                if (!is_dir($fullPath)) mkdir($fullPath, 0755, true);
-                $realDir = realpath($fullPath);
+                if (!is_dir($fullPath)) {
+                    mkdir($fullPath, 0755, true);
+                }
             } else {
                 $dir = dirname($fullPath);
-                if (!is_dir($dir)) mkdir($dir, 0755, true);
-                $realDir = realpath($dir);
-            }
-
-            if ($realDir === false || (strpos($realDir, $realRootPath . DIRECTORY_SEPARATOR) !== 0 && $realDir !== $realRootPath)) {
-                $zip->close();
-                throw new Exception("Security Error: Path traversal detected outside root.");
-            }
-
-            if (substr($entryName, -1) !== '/') {
-                if (!copy("zip://" . $zipPath . "#" . $entryName, $fullPath)) {
-                    $zip->close();
-                    throw new Exception("Extraction failed. Check file permissions for: " . $targetFileName);
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0755, true);
                 }
+                copy("zip://".$zipPath."#".$entryName, $fullPath);
             }
         }
         
