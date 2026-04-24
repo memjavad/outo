@@ -1,4 +1,3 @@
-
-## 2024-06-25 - [Optimize DashboardController Grade Distribution]
-**Learning:** Optimizing aggregate calculations such as grade distributions by offloading them to the database using `GROUP BY` avoids processing large amounts of result records in memory within PHP.
-**Action:** Next time when encountering a loop over database results solely for counting and aggregating, replace it with a `GROUP BY` SQL query.
+## 2026-04-21 - [Screen Recording Code Removal]
+**Learning:** Found several commented out lines dealing with FlutterScreenRecording that cluttered quiz_screen.dart. Using basic string deletion via sed is robust for these simple unused variable / dead code removals.
+**Action:** When finding dead comment blocks related to outdated dependencies (like ScreenRecording), remove them safely to reduce file bloat.
