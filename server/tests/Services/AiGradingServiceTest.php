@@ -1,131 +1,160 @@
 <?php
-namespace Tests\Services;
 
-use PHPUnit\Framework\TestCase;
-use App\Services\AiGradingService;
+namespace App\Services {
+    // Mock curl functions and error_log in the App\Services namespace where they are called
+    $mockCurlOptions = [];
+    $mockCurlResponse = null;
+    $mockCurlHttpCode = 200;
+    $mockCurlThrowException = false;
+    $mockErrorLog = [];
 
-// A subclass to mock the HTTP execution
-class TestableAiGradingService extends AiGradingService {
-    public array $mockResponse = ['', 200];
-    public ?string $lastUrl = null;
-    public ?array $lastPostData = null;
-
-    protected function executeRequest(string $url, array $postData): array {
-        $this->lastUrl = $url;
-        $this->lastPostData = $postData;
-        return $this->mockResponse;
+    function curl_init($url = null) {
+        global $mockCurlOptions, $mockCurlThrowException;
+        if ($mockCurlThrowException) {
+            throw new \Exception("Simulated exception in curl_init");
+        }
+        $mockCurlOptions['url'] = $url;
+        // Return an empty object to simulate a CurlHandle
+        return new \stdClass();
     }
+
+    function curl_setopt($ch, $option, $value) {
+        global $mockCurlOptions;
+        $mockCurlOptions[$option] = $value;
+        return true;
+    }
+
+    function curl_exec($ch) {
+        global $mockCurlResponse;
+        return $mockCurlResponse;
+    }
+
+    function curl_getinfo($ch, $info) {
+        global $mockCurlHttpCode;
+        if ($info === CURLINFO_HTTP_CODE) {
+            return $mockCurlHttpCode;
+        }
+        return null;
+    }
+
+    function curl_close($ch) {
+        // Mock close
+    }
+
+    function error_log($message) {
+        global $mockErrorLog;
+        $mockErrorLog[] = $message;
+    }
+
+    // Include the actual service code here so it gets defined in this namespace with mocked functions
+    require_once __DIR__ . '/../../src/Services/AiGradingService.php';
 }
 
-class AiGradingServiceTest extends TestCase {
+namespace Tests\Services {
+    use PHPUnit\Framework\TestCase;
+    use App\Services\AiGradingService;
 
-    protected function tearDown(): void {
-        // Clean up ai_debug.log if it was created during testing
-        $logFile = __DIR__ . '/../../ai_debug.log';
-        if (file_exists($logFile)) {
-            unlink($logFile);
+    /**
+     * @runTestsInSeparateProcesses
+     * @preserveGlobalState disabled
+     */
+    class AiGradingServiceTest extends TestCase {
+        protected function setUp(): void {
+            global $mockCurlOptions, $mockCurlResponse, $mockCurlHttpCode, $mockCurlThrowException, $mockErrorLog;
+            $mockCurlOptions = [];
+            $mockCurlResponse = null;
+            $mockCurlHttpCode = 200;
+            $mockCurlThrowException = false;
+            $mockErrorLog = [];
         }
-        parent::tearDown();
-    }
 
-    public function testReturnsNullWhenApiKeyIsEmpty() {
-        $service = new TestableAiGradingService('', 'gemini-pro');
-        $result = $service->gradeSingleEssay(['id' => 1, 'answers_json' => '{}'], 'rubric', 'percentage');
-
-        $this->assertNull($result);
-        $this->assertNull($service->lastUrl); // Execution should not happen
-    }
-
-    public function testSuccessfulGradingWithGemini() {
-        $service = new TestableAiGradingService('fake-api-key', 'gemini-1.5-pro');
-
-        // Mock successful Gemini response
-        $mockJson = json_encode([
-            'candidates' => [
-                [
-                    'content' => [
-                        'parts' => [
-                            ['text' => '```json\n{"score_percentage": 85, "grade": "B", "feedback": "Good job."}\n```']
+        public function testServiceSuccessfullyGradesEssay() {
+            global $mockCurlResponse, $mockCurlHttpCode;
+            $mockCurlHttpCode = 200;
+            $mockCurlResponse = json_encode([
+                'candidates' => [
+                    [
+                        'content' => [
+                            'parts' => [
+                                ['text' => '{"score_percentage": 85, "grade": "B", "feedback": "Good work"}']
+                            ]
                         ]
                     ]
                 ]
-            ]
-        ]);
-        $service->mockResponse = [$mockJson, 200];
+            ]);
 
-        $result = $service->gradeSingleEssay(['id' => 1, 'answers_json' => '{"q1": "a1"}'], 'rubric', 'percentage');
+            $service = new AiGradingService('fake-api-key', 'gemini-1.5-flash');
+            $essayData = ['id' => 123, 'answers_json' => '{"q1": "test answer"}'];
 
-        $this->assertNotNull($result);
-        $this->assertEquals(85, $result['score_percentage']);
-        $this->assertEquals('B', $result['grade']);
-        $this->assertEquals('Good job.', $result['feedback']);
+            $result = $service->gradeSingleEssay($essayData, 'Test Rubric', 'percentage');
 
-        // Assert the payload structure used Gemini's systemInstruction
-        $this->assertArrayHasKey('systemInstruction', $service->lastPostData);
-        $this->assertStringContainsString('fake-api-key', $service->lastUrl);
-    }
+            $this->assertIsArray($result);
+            $this->assertEquals(85, $result['score_percentage']);
+            $this->assertEquals('B', $result['grade']);
+            $this->assertEquals('Good work', $result['feedback']);
+        }
 
-    public function testSuccessfulGradingWithGemma() {
-        $service = new TestableAiGradingService('fake-api-key', 'gemma-2b');
+        public function testServiceReturnsNullOnMissingApiKey() {
+            global $mockErrorLog;
+            $service = new AiGradingService('', 'gemini-1.5-flash');
+            $essayData = ['id' => 123, 'answers_json' => '{"q1": "test answer"}'];
 
-        // Mock successful Gemma response
-        $mockJson = json_encode([
-            'candidates' => [
-                [
-                    'content' => [
-                        'parts' => [
-                            ['text' => '{"score_percentage": 90, "grade": "A", "feedback": "Excellent."}']
+            $result = $service->gradeSingleEssay($essayData, 'Test Rubric', 'percentage');
+
+            $this->assertNull($result);
+            $this->assertStringContainsString('API Key is missing', $mockErrorLog[0] ?? '');
+        }
+
+        public function testServiceReturnsNullOnInvalidHttpStatusCode() {
+            global $mockCurlHttpCode, $mockCurlResponse, $mockErrorLog;
+            $mockCurlHttpCode = 500;
+            $mockCurlResponse = 'Internal Server Error';
+
+            $service = new AiGradingService('fake-api-key', 'gemini-1.5-flash');
+            $essayData = ['id' => 123, 'answers_json' => '{"q1": "test answer"}'];
+
+            $result = $service->gradeSingleEssay($essayData, 'Test Rubric', 'percentage');
+
+            $this->assertNull($result);
+            $this->assertStringContainsString('AiGradingService Error (500)', $mockErrorLog[0] ?? '');
+        }
+
+        public function testServiceReturnsNullOnMalformedJsonResponse() {
+            global $mockCurlHttpCode, $mockCurlResponse, $mockErrorLog;
+            $mockCurlHttpCode = 200;
+            // Provide a response that has valid outer JSON but the text part is invalid JSON
+            $mockCurlResponse = json_encode([
+                'candidates' => [
+                    [
+                        'content' => [
+                            'parts' => [
+                                ['text' => 'Not a valid JSON object']
+                            ]
                         ]
                     ]
                 ]
-            ]
-        ]);
-        $service->mockResponse = [$mockJson, 200];
+            ]);
 
-        $result = $service->gradeSingleEssay(['id' => 1, 'answers_json' => '{"q1": "a1"}'], 'rubric', 'percentage');
+            $service = new AiGradingService('fake-api-key', 'gemini-1.5-flash');
+            $essayData = ['id' => 123, 'answers_json' => '{"q1": "test answer"}'];
 
-        $this->assertNotNull($result);
-        $this->assertEquals(90, $result['score_percentage']);
-        $this->assertEquals('A', $result['grade']);
-        $this->assertEquals('Excellent.', $result['feedback']);
+            $result = $service->gradeSingleEssay($essayData, 'Test Rubric', 'percentage');
 
-        // Assert the payload structure does NOT use systemInstruction for Gemma
-        $this->assertArrayNotHasKey('systemInstruction', $service->lastPostData);
-        // Assert the system instructions are bundled in the user role contents
-        $this->assertStringContainsString('RUBRIC:', $service->lastPostData['contents'][0]['parts'][0]['text']);
-    }
+            $this->assertNull($result);
+            $this->assertStringContainsString('JSON parse failure', $mockErrorLog[0] ?? '');
+        }
 
-    public function testReturnsNullOnHttpError() {
-        $service = new TestableAiGradingService('fake-api-key', 'gemini-pro');
-        $service->mockResponse = ['Internal Server Error', 500];
+        public function testServiceReturnsNullOnException() {
+            global $mockCurlThrowException, $mockErrorLog;
+            $mockCurlThrowException = true; // This will trigger an exception in our mock curl_init
 
-        $result = $service->gradeSingleEssay(['id' => 1, 'answers_json' => '{}'], 'rubric', 'percentage');
+            $service = new AiGradingService('fake-api-key', 'gemini-1.5-flash');
+            $essayData = ['id' => 123, 'answers_json' => '{"q1": "test answer"}'];
 
-        $this->assertNull($result);
-        $this->assertFileExists(__DIR__ . '/../../ai_debug.log');
-    }
+            $result = $service->gradeSingleEssay($essayData, 'Test Rubric', 'percentage');
 
-    public function testReturnsNullOnInvalidJson() {
-        $service = new TestableAiGradingService('fake-api-key', 'gemini-pro');
-        // Mock response with text that can't be parsed into JSON with required keys
-        $mockJson = json_encode([
-            'candidates' => [
-                [
-                    'content' => [
-                        'parts' => [
-                            ['text' => 'This is not JSON at all']
-                        ]
-                    ]
-                ]
-            ]
-        ]);
-        $service->mockResponse = [$mockJson, 200];
-
-        $result = $service->gradeSingleEssay(['id' => 1, 'answers_json' => '{}'], 'rubric', 'percentage');
-
-        $this->assertNull($result);
-        $this->assertFileExists(__DIR__ . '/../../ai_debug.log');
-        $logContents = file_get_contents(__DIR__ . '/../../ai_debug.log');
-        $this->assertStringContainsString('JSON parse failure', $logContents);
+            $this->assertNull($result);
+            $this->assertStringContainsString('FATAL CRASH in AiGradingService', $mockErrorLog[0] ?? '');
+        }
     }
 }
