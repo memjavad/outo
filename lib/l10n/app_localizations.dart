@@ -835,6 +835,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Distractor Analysis'**
   String get distractorAnalysis;
+
+  /// No description provided for @info.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get info;
+
+  /// No description provided for @store.
+  ///
+  /// In en, this message translates to:
+  /// **'Store'**
+  String get store;
 }
 
 class _AppLocalizationsDelegate

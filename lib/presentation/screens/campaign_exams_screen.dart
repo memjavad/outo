@@ -175,6 +175,7 @@ class _CampaignExamsScreenState extends State<CampaignExamsScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
+          tooltip: l10n.goBack,
           icon: const Icon(Icons.arrow_back_ios_new, color: Colors.cyanAccent), // Neon theme
           onPressed: () => context.pop(),
         ),
@@ -189,6 +190,7 @@ class _CampaignExamsScreenState extends State<CampaignExamsScreen> {
         centerTitle: false,
         actions: [
           IconButton(
+            tooltip: l10n.info,
             icon: const Icon(LucideIcons.info, color: Colors.white70),
             onPressed: () => _showInstructionsSheet(context),
           ),
@@ -265,6 +267,7 @@ class _CampaignExamsScreenState extends State<CampaignExamsScreen> {
                         shape: BoxShape.circle,
                       ),
                       child: IconButton(
+                        tooltip: l10n.store,
                         icon: const Icon(LucideIcons.shoppingCart, color: Colors.amberAccent),
                         onPressed: () => context.push('/store'),
                       ),

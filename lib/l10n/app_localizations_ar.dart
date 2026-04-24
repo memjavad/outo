@@ -406,4 +406,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get distractorAnalysis => 'تحليل الخيارات الخاطئة';
+
+  @override
+  String get info => 'معلومات';
+
+  @override
+  String get store => 'المتجر';
 }

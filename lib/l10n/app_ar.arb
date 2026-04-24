@@ -121,5 +121,7 @@
   "totalStudents": "إجمالي الطلاب",
   "averageScore": "متوسط الدرجات",
   "passRate": "نسبة النجاح",
-  "distractorAnalysis": "تحليل الخيارات الخاطئة"
+  "distractorAnalysis": "تحليل الخيارات الخاطئة",
+  "info": "معلومات",
+  "store": "المتجر"
 }
