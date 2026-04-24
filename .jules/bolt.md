@@ -1,3 +1,3 @@
-## 2026-04-21 - [PHP N+1 Query Anti-Pattern]
-**Learning:** Found a classic N+1 query bottleneck in `server/src/Repositories/QuestionRepository.php` where `getByExamId` and `getAll` methods iterated through questions and ran an individual `SELECT` for each question's options.
-**Action:** Always verify loops accessing relational repositories to identify hidden queries. Use `IN` clauses to batch fetch child records in one go and map them in memory to parent IDs to drastically minimize database overhead.
+## 2025-04-22 - N+1 Queries in PHP Backend Repositories
+**Learning:** The PHP backend repositories often fetch relations (like question options) inside a loop (`foreach ($questions as &$q) { $q['options'] = $this->getOptions($q['id']); }`). This causes an N+1 query problem, which severely impacts performance when retrieving entities in bulk (e.g., getting an entire exam's questions).
+**Action:** Replace the N+1 pattern by extracting IDs, using a single batched query with an `IN (...)` clause (chunking IDs to avoid database placeholder limits), and building an in-memory dictionary to assign relations in O(1) time complexity.
