@@ -1,4 +1,3 @@
-## 2024-05-18 - Optimize ResultRepository Insert
-
-**Learning:** When dealing with multiple DB inserts during exam submission, using N+1 query execution introduces severe network/IO overhead. Dynamically chunking the entries and using batch inserts dramatically cuts execution time by over 98%.
-**Action:** Utilize chunked bulk inserts (e.g., using `array_chunk()` on PHP arrays) for multiple related row database operations instead of individual execution statements in loops.
+## 2026-04-21 - Mocking Database for PHPUnit Tests
+**Learning:** Hardcoded database connections (like `mysql:` inside `Database.php`) prevent testing in isolated environments or CI. When injecting a database mock is impossible via standard constructor dependency injection, `ReflectionClass` can be used to set the private database property to an in-memory SQLite PDO instance, enabling fully isolated unit tests.
+**Action:** Use `ReflectionClass` in PHPUnit `setUp` methods to inject an in-memory `sqlite::memory:` PDO connection to bypass hardcoded DB connection strings for legacy service classes.

@@ -3,156 +3,120 @@ namespace Tests\Services;
 
 use PHPUnit\Framework\TestCase;
 use App\Services\AnalyticsService;
-use App\Core\Database;
-use ReflectionClass;
 
-// Mocks the constructor of Database just for this test
 class AnalyticsServiceTest extends TestCase {
-    private $dbMock;
-    private $analyticsService;
+    private \PDO $pdo;
+    private AnalyticsService $service;
 
     protected function setUp(): void {
-        parent::setUp();
+        $this->pdo = new \PDO('sqlite::memory:');
+        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
 
-        $this->dbMock = $this->createMock(\PDO::class);
+        // Setup test tables based on the actual schema
+        $this->pdo->exec("
+            CREATE TABLE results (
+                id INTEGER PRIMARY KEY,
+                exam_id INTEGER,
+                score_percentage FLOAT,
+                time_taken_seconds INTEGER
+            )
+        ");
 
-        // We can't instantiate AnalyticsService normally because it calls Database::getInstance()
-        // which connects to the real DB. We bypass the constructor.
-        $reflection = new ReflectionClass(AnalyticsService::class);
-        $this->analyticsService = $reflection->newInstanceWithoutConstructor();
+        $this->pdo->exec("
+            CREATE TABLE questions (
+                id INTEGER PRIMARY KEY,
+                exam_id INTEGER,
+                question_text TEXT,
+                question_type TEXT
+            )
+        ");
 
-        $dbProperty = $reflection->getProperty('db');
-        $dbProperty->setAccessible(true);
-        $dbProperty->setValue($this->analyticsService, $this->dbMock);
+        $this->pdo->exec("
+            CREATE TABLE student_responses (
+                id INTEGER PRIMARY KEY,
+                question_id INTEGER,
+                selected_option_index INTEGER
+            )
+        ");
+
+        // Use reflection to bypass singleton and constructor for testing
+        $reflection = new \ReflectionClass(AnalyticsService::class);
+        $this->service = $reflection->newInstanceWithoutConstructor();
+
+        $property = $reflection->getProperty('db');
+        $property->setAccessible(true);
+        $property->setValue($this->service, $this->pdo);
+}
+
+    public function testGetExamKPIsWithData() {
+        // Insert test data: 2 passing results, 1 failing result for exam 1
+        $this->pdo->exec("INSERT INTO results (exam_id, score_percentage, time_taken_seconds) VALUES (1, 80.5, 120)");
+        $this->pdo->exec("INSERT INTO results (exam_id, score_percentage, time_taken_seconds) VALUES (1, 40.0, 100)");
+        $this->pdo->exec("INSERT INTO results (exam_id, score_percentage, time_taken_seconds) VALUES (1, 90.0, 110)");
+
+        // Different exam to ensure WHERE clause works
+        $this->pdo->exec("INSERT INTO results (exam_id, score_percentage, time_taken_seconds) VALUES (2, 90.0, 150)");
+
+        $kpis = $this->service->getExamKPIs(1);
+
+        $this->assertEquals(3, $kpis['total_students']);
+        $this->assertEquals(70.17, $kpis['average_score']); // (80.5 + 40.0 + 90.0) / 3
+        $this->assertEquals(110, $kpis['average_time_seconds']); // (120 + 100 + 110) / 3
+        $this->assertEquals(66.67, $kpis['pass_rate']); // 2 / 3 >= 50
     }
 
-    public function testGetExamKPIsReturnsCorrectData() {
-        $stmtMock = $this->createMock(\PDOStatement::class);
-        $stmtMock->expects($this->once())
-                 ->method('execute')
-                 ->with([1]);
-        $stmtMock->expects($this->once())
-                 ->method('fetch')
-                 ->with(\PDO::FETCH_ASSOC)
-                 ->willReturn([
-                     'total_taken' => 10,
-                     'average_score' => 75.5,
-                     'average_time_seconds' => 120.3,
-                     'passed_count' => 6
-                 ]);
+    public function testGetExamKPIsEmpty() {
+        $kpis = $this->service->getExamKPIs(999);
 
-        $this->dbMock->expects($this->once())
-                     ->method('prepare')
-                     ->willReturn($stmtMock);
-
-        $result = $this->analyticsService->getExamKPIs(1);
-
-        $this->assertEquals([
-            'total_students' => 10,
-            'average_score' => 75.5,
-            'average_time_seconds' => 120.0,
-            'pass_rate' => 60.0
-        ], $result);
+        $this->assertEquals(0, $kpis['total_students']);
+        $this->assertEquals(0, $kpis['average_score']);
+        $this->assertEquals(0, $kpis['average_time_seconds']);
+        $this->assertEquals(0, $kpis['pass_rate']);
     }
-    public function testGetExamKPIsHandlesZeroStudents() {
-        $stmtMock = $this->createMock(\PDOStatement::class);
-        $stmtMock->expects($this->once())
-                 ->method('execute')
-                 ->with([2]);
-        $stmtMock->expects($this->once())
-                 ->method('fetch')
-                 ->with(\PDO::FETCH_ASSOC)
-                 ->willReturn([
-                     'total_taken' => 0,
-                     'average_score' => null,
-                     'average_time_seconds' => null,
-                     'passed_count' => 0
-                 ]);
 
-        $this->dbMock->expects($this->once())
-                     ->method('prepare')
-                     ->willReturn($stmtMock);
+    public function testGetDistractorAnalysis() {
+        // Setup data for exam 1, question 10
+        $this->pdo->exec("INSERT INTO questions (id, exam_id, question_text, question_type) VALUES (10, 1, 'Q1', 'single')");
 
-        $result = $this->analyticsService->getExamKPIs(2);
+        // Responses for question 10
+        // Opt 0: 1 time
+        // Opt 1: 2 times
+        // Opt null: 1 time (mapped to -1)
+        $this->pdo->exec("INSERT INTO student_responses (question_id, selected_option_index) VALUES (10, 0)");
+        $this->pdo->exec("INSERT INTO student_responses (question_id, selected_option_index) VALUES (10, 1)");
+        $this->pdo->exec("INSERT INTO student_responses (question_id, selected_option_index) VALUES (10, 1)");
+        $this->pdo->exec("INSERT INTO student_responses (question_id, selected_option_index) VALUES (10, NULL)");
 
-        $this->assertEquals([
-            'total_students' => 0,
-            'average_score' => 0.0,
-            'average_time_seconds' => 0.0,
-            'pass_rate' => 0.0
-        ], $result);
+        $analysis = $this->service->getDistractorAnalysis(1);
+
+        $this->assertCount(1, $analysis);
+        $qData = $analysis[0];
+
+        $this->assertEquals(10, $qData['question_id']);
+        $this->assertEquals('Q1', $qData['question_text']);
+        $this->assertEquals(4, $qData['total_answers']);
+
+        // Check distractors distribution
+        $distractors = $qData['distractors'];
+
+        $opt0 = array_filter($distractors, fn($d) => $d['option_index'] === 0);
+        $opt1 = array_filter($distractors, fn($d) => $d['option_index'] === 1);
+        $optNull = array_filter($distractors, fn($d) => $d['option_index'] === -1);
+
+        $this->assertCount(1, $opt0);
+        $this->assertCount(1, $opt1);
+        $this->assertCount(1, $optNull);
+
+        $this->assertEquals(25.0, current($opt0)['percentage']);
+        $this->assertEquals(50.0, current($opt1)['percentage']);
+        $this->assertEquals(25.0, current($optNull)['percentage']);
     }
-    public function testGetDistractorAnalysisReturnsCorrectData() {
-        $stmtMock = $this->createMock(\PDOStatement::class);
-        $stmtMock->expects($this->once())
-                 ->method('execute')
-                 ->with([1]);
-        $stmtMock->expects($this->once())
-                 ->method('fetchAll')
-                 ->with(\PDO::FETCH_ASSOC)
-                 ->willReturn([
-                     [
-                         'question_id' => 10,
-                         'question_text' => 'What is 2+2?',
-                         'selected_option_index' => 0,
-                         'pick_count' => 5
-                     ],
-                     [
-                         'question_id' => 10,
-                         'question_text' => 'What is 2+2?',
-                         'selected_option_index' => 1,
-                         'pick_count' => 15
-                     ],
-                     [
-                         'question_id' => 11,
-                         'question_text' => 'What is the capital of France?',
-                         'selected_option_index' => null,
-                         'pick_count' => 2
-                     ]
-                 ]);
 
-        $this->dbMock->expects($this->once())
-                     ->method('prepare')
-                     ->willReturn($stmtMock);
+    public function testGetDistractorAnalysisExcludesEssay() {
+        $this->pdo->exec("INSERT INTO questions (id, exam_id, question_text, question_type) VALUES (20, 1, 'Essay Q', 'essay')");
+        $this->pdo->exec("INSERT INTO student_responses (question_id, selected_option_index) VALUES (20, NULL)");
 
-        $result = $this->analyticsService->getDistractorAnalysis(1);
-
-        $this->assertEquals([
-            [
-                'question_id' => 10,
-                'question_text' => 'What is 2+2?',
-                'total_answers' => 20,
-                'distractors' => [
-                    ['option_index' => 0, 'percentage' => 25.0],
-                    ['option_index' => 1, 'percentage' => 75.0]
-                ]
-            ],
-            [
-                'question_id' => 11,
-                'question_text' => 'What is the capital of France?',
-                'total_answers' => 2,
-                'distractors' => [
-                    ['option_index' => -1, 'percentage' => 100.0]
-                ]
-            ]
-        ], $result);
-    }
-    public function testGetDistractorAnalysisHandlesNoData() {
-        $stmtMock = $this->createMock(\PDOStatement::class);
-        $stmtMock->expects($this->once())
-                 ->method('execute')
-                 ->with([3]);
-        $stmtMock->expects($this->once())
-                 ->method('fetchAll')
-                 ->with(\PDO::FETCH_ASSOC)
-                 ->willReturn([]);
-
-        $this->dbMock->expects($this->once())
-                     ->method('prepare')
-                     ->willReturn($stmtMock);
-
-        $result = $this->analyticsService->getDistractorAnalysis(3);
-
-        $this->assertEquals([], $result);
+        $analysis = $this->service->getDistractorAnalysis(1);
+        $this->assertCount(0, $analysis);
     }
 }
