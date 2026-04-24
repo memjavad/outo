@@ -771,7 +771,6 @@ class _QuizScreenState extends State<QuizScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final quizService = Provider.of<QuizService>(context);
     final questions = _activeQuestions;
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
