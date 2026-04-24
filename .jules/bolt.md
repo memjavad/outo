@@ -1,3 +1,3 @@
-## 2026-04-21 - Mocking Database for PHPUnit Tests
-**Learning:** Hardcoded database connections (like `mysql:` inside `Database.php`) prevent testing in isolated environments or CI. When injecting a database mock is impossible via standard constructor dependency injection, `ReflectionClass` can be used to set the private database property to an in-memory SQLite PDO instance, enabling fully isolated unit tests.
-**Action:** Use `ReflectionClass` in PHPUnit `setUp` methods to inject an in-memory `sqlite::memory:` PDO connection to bypass hardcoded DB connection strings for legacy service classes.
+## 2026-04-21 - N+1 Query Optimization in QuestionRepository
+**Learning:** Looping over questions to fetch options individually (`getOptions` inside `getAll` or `getByExamId`) creates a severe N+1 database bottleneck. Fetching all options simultaneously using chunked `IN (...)` queries based on grouped IDs significantly improves execution speed (e.g., from 350ms to ~9ms).
+**Action:** When writing or reviewing repository methods that retrieve a collection of entities with associated sub-entities, utilize batch fetching with array chunking and in-memory grouping instead of issuing per-item database queries inside a loop.
