@@ -1,4 +1,5 @@
-## 2024-05-18 - Information Disclosure via Leftover Debug Scripts
-**Vulnerability:** Debug, testing, and migration scripts (`debug_prod.php`, `check_db.php`, `view_logs.php`, etc.) were left in the production web root, exposing sensitive internal data (stack traces, user password hashes, error logs) to any unauthenticated visitor.
-**Learning:** Development and debugging tools must never be deployed or left in a production web root.
-**Prevention:** Establish a strict deployment pipeline that excludes all test/debug scripts. Remove one-off diagnostic files immediately after use. Ensure `.gitignore` or deployment rules explicitly exclude files like `test_*.php`, `debug_*.php`, etc.
+
+## 2024-11-23 - Insecure File Upload / RCE vulnerability
+**Vulnerability:** ExamController::uploadImage() blindly trusted the client-provided file extension without validating the actual file content, allowing executable `.php` files to be uploaded.
+**Learning:** Using `pathinfo($file->getClientFilename(), PATHINFO_EXTENSION)` without MIME type validation on the actual content creates a critical RCE vulnerability via malicious file uploads.
+**Prevention:** Always extract and validate the file's MIME type from the content stream using `finfo_buffer()` and strictly map it to a safe extension using an allowlist, ignoring the client-provided extension completely.

@@ -347,7 +347,22 @@ class ExamController extends BaseController {
             return ["error" => "File upload failed"];
         }
 
-        $extension = pathinfo($file->getClientFilename(), PATHINFO_EXTENSION);
+        $content = (string)$file->getStream();
+        $finfo = new \finfo(FILEINFO_MIME_TYPE);
+        $mime = $finfo->buffer($content);
+
+        $allowedMimes = [
+            'image/jpeg' => 'jpg',
+            'image/png' => 'png',
+            'image/gif' => 'gif',
+            'image/webp' => 'webp'
+        ];
+
+        if (!array_key_exists($mime, $allowedMimes)) {
+            return ["error" => "Invalid file type. Only images are allowed."];
+        }
+
+        $extension = $allowedMimes[$mime];
         $newName = bin2hex(random_bytes(16)) . '.' . $extension;
         $destPath = __DIR__ . '/../../uploads/' . $newName;
 
