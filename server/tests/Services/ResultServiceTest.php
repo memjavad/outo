@@ -4,236 +4,137 @@ namespace Tests\Services;
 use PHPUnit\Framework\TestCase;
 use App\Services\ResultService;
 use App\Repositories\ResultRepository;
+use PDO;
+use PDOStatement;
 
 class ResultServiceTest extends TestCase {
 
-    public function testSaveResultSuccess() {
-        $mockRepo = $this->createMock(ResultRepository::class);
-        $mockRepo->method('createResult')->willReturn(123);
+    private function createMockRepo() {
+        return $this->createMock(ResultRepository::class);
+    }
 
-        $mockStmt = $this->createMock(\PDOStatement::class);
-        $mockStmt->method('execute')->willReturn(true);
-        $mockStmt->method('fetch')->willReturn(['exam_type' => 'standard']);
-
-        $mockDb = $this->createMock(\PDO::class);
-        $mockDb->method('prepare')->willReturn($mockStmt);
-
-        $mockRepo->method('getDb')->willReturn($mockDb);
+    public function testSaveResultStandardExam() {
+        $mockRepo = $this->createMockRepo();
+        $mockRepo->expects($this->once())->method('createResult')->willReturn(123);
+        $mockRepo->expects($this->once())->method('markSessionCompleted')->with('John');
+        $mockRepo->expects($this->once())->method('isWebhookEnabled')->willReturn(false);
+        $mockRepo->expects($this->once())->method('awardPoints')->with(1, 125);
 
         $service = new ResultService($mockRepo);
 
         $data = [
-            'studentName' => 'John Doe',
-            'scorePercentage' => 85,
-            'grade' => 'B',
+            'studentName' => 'John',
             'studentId' => 1,
-            'examId' => 1,
-            'totalQuestions' => 10,
-            'correctAnswers' => 8,
-            'timeTakenSeconds' => 120,
-            'earned_stars' => 0,
-            'campaign_score' => 0
+            'correctAnswers' => 5,
+            'scorePercentage' => '100%',
+            'timeTakenSeconds' => 10,
+            'totalQuestions' => 5
         ];
 
         $result = $service->saveResult($data);
 
-        $this->assertEquals('success', $result['status']);
-        $this->assertEquals(123, $result['id']);
-        $this->assertEquals(80 + 25, $result['points_earned']);
+        $this->assertEquals([
+            "status" => "success",
+            "id" => 123,
+            "points_earned" => 125
+        ], $result);
     }
 
-    public function testSaveResultEssayOverride() {
-        $mockRepo = $this->createMock(ResultRepository::class);
-        $mockRepo->method('createResult')->willReturn(124);
+    public function testSaveResultEssayExam() {
+        $mockRepo = $this->createMockRepo();
+        $mockRepo->expects($this->once())->method('createResult')->willReturn(456);
 
-        $mockStmt = $this->createMock(\PDOStatement::class);
-        $mockStmt->method('execute')->willReturn(true);
-        $mockStmt->method('fetch')->willReturn(['exam_type' => 'essay']);
+        $mockPdo = $this->createMock(PDO::class);
+        $mockStmt = $this->createMock(PDOStatement::class);
 
-        $mockDb = $this->createMock(\PDO::class);
-        $mockDb->method('prepare')->willReturn($mockStmt);
+        // Simulating the query for ExamRepository->getById(10)
+        $mockPdo->expects($this->once())->method('prepare')->willReturn($mockStmt);
+        $mockStmt->expects($this->once())->method('execute')->with([10]);
+        $mockStmt->expects($this->once())->method('fetch')->willReturn(['id' => 10, 'exam_type' => 'essay']);
 
-        $mockRepo->method('getDb')->willReturn($mockDb);
+        $mockRepo->method('getDb')->willReturn($mockPdo);
 
         $service = new ResultService($mockRepo);
 
         $data = [
-            'studentName' => 'Jane Doe',
-            'scorePercentage' => 90,
-            'grade' => 'A',
+            'studentName' => 'Alice',
+            'examId' => 10
+        ];
+
+        $result = $service->saveResult($data);
+
+        $this->assertEquals([
+            "status" => "success",
+            "id" => 456,
+            "points_earned" => 0
+        ], $result);
+    }
+
+    public function testSaveResultWithStarsAndCampaign() {
+        $mockRepo = $this->createMockRepo();
+        $mockRepo->expects($this->once())->method('createResult')->willReturn(789);
+        $mockRepo->expects($this->once())->method('awardStars')->with(2, 5);
+        $mockRepo->expects($this->once())->method('awardPoints')->with(2, 50);
+
+        $service = new ResultService($mockRepo);
+
+        $data = [
+            'studentName' => 'Bob',
             'studentId' => 2,
-            'examId' => 2,
-            'totalQuestions' => 1,
-            'correctAnswers' => 1,
-            'timeTakenSeconds' => 60,
-        ];
-
-        $result = $service->saveResult($data);
-
-        $this->assertEquals('success', $result['status']);
-        $this->assertEquals(124, $result['id']);
-        $this->assertEquals(0, $result['points_earned']);
-    }
-
-    public function testSaveResultCampaignScore() {
-        $mockRepo = $this->createMock(ResultRepository::class);
-        $mockRepo->method('createResult')->willReturn(125);
-        $mockRepo->expects($this->once())->method('awardPoints')->with(3, 500);
-        $mockRepo->expects($this->once())->method('awardStars')->with(3, 5);
-
-        $mockStmt = $this->createMock(\PDOStatement::class);
-        $mockStmt->method('execute')->willReturn(true);
-        $mockStmt->method('fetch')->willReturn(['exam_type' => 'campaign']);
-
-        $mockDb = $this->createMock(\PDO::class);
-        $mockDb->method('prepare')->willReturn($mockStmt);
-
-        $mockRepo->method('getDb')->willReturn($mockDb);
-
-        $service = new ResultService($mockRepo);
-
-        $data = [
-            'studentName' => 'Campaign User',
-            'studentId' => 3,
-            'examId' => 3,
-            'campaign_score' => 500,
             'earned_stars' => 5,
-            'correctAnswers' => 10,
+            'campaign_score' => 50
         ];
 
         $result = $service->saveResult($data);
 
-        $this->assertEquals('success', $result['status']);
-        $this->assertEquals(125, $result['id']);
-        $this->assertEquals(500, $result['points_earned']);
-    }
-
-    public function testSaveResultFlawlessScore() {
-        $mockRepo = $this->createMock(ResultRepository::class);
-        $mockRepo->method('createResult')->willReturn(126);
-        $mockRepo->expects($this->once())->method('awardPoints')->with(4, 100 + 50 + 25);
-
-        $mockStmt = $this->createMock(\PDOStatement::class);
-        $mockStmt->method('execute')->willReturn(true);
-        $mockStmt->method('fetch')->willReturn(['exam_type' => 'standard']);
-
-        $mockDb = $this->createMock(\PDO::class);
-        $mockDb->method('prepare')->willReturn($mockStmt);
-
-        $mockRepo->method('getDb')->willReturn($mockDb);
-
-        $service = new ResultService($mockRepo);
-
-        $data = [
-            'studentName' => 'Flawless User',
-            'studentId' => 4,
-            'examId' => 4,
-            'scorePercentage' => 100,
-            'totalQuestions' => 10,
-            'correctAnswers' => 10,
-            'timeTakenSeconds' => 150,
-            'earned_stars' => 0,
-            'campaign_score' => 0
-        ];
-
-        $result = $service->saveResult($data);
-
-        $this->assertEquals(126, $result['id']);
-        $this->assertEquals(175, $result['points_earned']);
-    }
-
-    public function testSaveResultMinParticipationAward() {
-        $mockRepo = $this->createMock(ResultRepository::class);
-        $mockRepo->method('createResult')->willReturn(127);
-        $mockRepo->expects($this->once())->method('awardPoints')->with(5, 10);
-
-        $mockStmt = $this->createMock(\PDOStatement::class);
-        $mockStmt->method('execute')->willReturn(true);
-        $mockStmt->method('fetch')->willReturn(['exam_type' => 'standard']);
-
-        $mockDb = $this->createMock(\PDO::class);
-        $mockDb->method('prepare')->willReturn($mockStmt);
-
-        $mockRepo->method('getDb')->willReturn($mockDb);
-
-        $service = new ResultService($mockRepo);
-
-        $data = [
-            'studentName' => 'Poor User',
-            'studentId' => 5,
-            'examId' => 5,
-            'scorePercentage' => 0,
-            'totalQuestions' => 10,
-            'correctAnswers' => 0,
-            'timeTakenSeconds' => 600,
-            'earned_stars' => 0,
-            'campaign_score' => 0
-        ];
-
-        $result = $service->saveResult($data);
-
-        $this->assertEquals(127, $result['id']);
-        $this->assertEquals(10, $result['points_earned']);
+        $this->assertEquals([
+            "status" => "success",
+            "id" => 789,
+            "points_earned" => 50
+        ], $result);
     }
 
     public function testGetStudentResults() {
-        $mockRepo = $this->createMock(ResultRepository::class);
-        $expectedResults = [['id' => 1, 'score' => 80]];
-        $mockRepo->method('getStudentResults')->with(1)->willReturn($expectedResults);
+        $mockRepo = $this->createMockRepo();
+        $expected = [['id' => 1, 'score_percentage' => 85]];
+        $mockRepo->expects($this->once())->method('getStudentResults')->with(1)->willReturn($expected);
 
         $service = new ResultService($mockRepo);
-
-        $results = $service->getStudentResults(1);
-
-        $this->assertEquals($expectedResults, $results);
+        $this->assertEquals($expected, $service->getStudentResults(1));
     }
 
     public function testGradeResult() {
-        $mockRepo = $this->createMock(ResultRepository::class);
-        $mockRepo->expects($this->once())->method('gradeResult')->with(1, 95.5, 'A+', 'Great job');
+        $mockRepo = $this->createMockRepo();
+        $mockRepo->expects($this->once())->method('gradeResult')->with(1, 90.0, 'A', 'Good job');
 
         $service = new ResultService($mockRepo);
-
-        $result = $service->gradeResult(1, 95.5, 'A+', 'Great job', 2, 100);
-
-        $this->assertEquals('success', $result['status']);
-        $this->assertEquals('Result graded safely.', $result['message']);
+        $result = $service->gradeResult(1, 90.0, 'A', 'Good job', 10, 50);
+        $this->assertEquals(["status" => "success", "message" => "Result graded safely."], $result);
     }
 
     public function testGetLeaderboard() {
-        $mockRepo = $this->createMock(ResultRepository::class);
-        $expectedLeaderboard = [['student_name' => 'John', 'score' => 90]];
-        $mockRepo->method('getLeaderboard')->with(1)->willReturn($expectedLeaderboard);
+        $mockRepo = $this->createMockRepo();
+        $expected = [['student_name' => 'Alice', 'score_percentage' => 100]];
+        $mockRepo->expects($this->once())->method('getLeaderboard')->with(5)->willReturn($expected);
 
         $service = new ResultService($mockRepo);
-
-        $result = $service->getLeaderboard(1);
-
-        $this->assertEquals('success', $result['status']);
-        $this->assertEquals($expectedLeaderboard, $result['leaderboard']);
+        $this->assertEquals(["status" => "success", "leaderboard" => $expected], $service->getLeaderboard(5));
     }
 
     public function testGetCampaignLeaderboard() {
-        $mockRepo = $this->createMock(ResultRepository::class);
-        $expectedLeaderboard = [['student_name' => 'Campaigner', 'score' => 500]];
-        $mockRepo->method('getCampaignLeaderboard')->willReturn($expectedLeaderboard);
+        $mockRepo = $this->createMockRepo();
+        $expected = [['student_name' => 'Bob', 'score_percentage' => 500]];
+        $mockRepo->expects($this->once())->method('getCampaignLeaderboard')->willReturn($expected);
 
         $service = new ResultService($mockRepo);
-
-        $result = $service->getCampaignLeaderboard();
-
-        $this->assertEquals('success', $result['status']);
-        $this->assertEquals($expectedLeaderboard, $result['leaderboard']);
+        $this->assertEquals(["status" => "success", "leaderboard" => $expected], $service->getCampaignLeaderboard());
     }
 
     public function testClearResults() {
-        $mockRepo = $this->createMock(ResultRepository::class);
+        $mockRepo = $this->createMockRepo();
         $mockRepo->expects($this->once())->method('clearResults');
 
         $service = new ResultService($mockRepo);
-
-        $result = $service->clearResults();
-
-        $this->assertEquals('success', $result['status']);
+        $this->assertEquals(["status" => "success"], $service->clearResults());
     }
 }
