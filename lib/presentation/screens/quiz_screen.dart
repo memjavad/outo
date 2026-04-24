@@ -48,7 +48,6 @@ class _QuizScreenState extends State<QuizScreen> with WidgetsBindingObserver {
   int _timeRemainingSeconds = 0;
   int _questionTimeRemainingSeconds = 0;
   final ValueNotifier<int> _tickNotifier = ValueNotifier<int>(0);
-  bool _isScreenRecording = false;
   bool _isAudioRecording = false;
   final AudioRecorder _audioRecorder = AudioRecorder();
   String? _audioFilePath;
@@ -338,9 +337,6 @@ class _QuizScreenState extends State<QuizScreen> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    // if (_isScreenRecording && isMobilePlatform) {
-    //   FlutterScreenRecording.stopRecordScreen;
-    // }
     if (_isAudioRecording && isMobilePlatform) {
       _audioRecorder.stop();
     }
@@ -375,9 +371,6 @@ class _QuizScreenState extends State<QuizScreen> with WidgetsBindingObserver {
     final quizService = mounted ? Provider.of<QuizService>(context, listen: false) : null;
     final router = mounted ? GoRouter.of(context) : null;
     
-    // if (_isScreenRecording && isMobilePlatform) {
-    //   await FlutterScreenRecording.stopRecordScreen;
-    // }
     
     if (_isAudioRecording && isMobilePlatform) {
       await _audioRecorder.stop();
@@ -630,7 +623,6 @@ class _QuizScreenState extends State<QuizScreen> with WidgetsBindingObserver {
     final quizService = mounted ? Provider.of<QuizService>(context, listen: false) : null;
     final router = mounted ? GoRouter.of(context) : null;
     
-    // if (_isScreenRecording && isMobilePlatform) await FlutterScreenRecording.stopRecordScreen;
     if (_isAudioRecording && isMobilePlatform) await _audioRecorder.stop();
     
     // Force a blank payload ensuring backend accepts submission unconditionally
