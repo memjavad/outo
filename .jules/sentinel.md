@@ -1,4 +1,5 @@
-## 2024-05-16 - Unauthenticated Access to System Logs Fix
-**Vulnerability:** Insecure Direct Object Reference (IDOR) / Missing Authentication. `server/view_logs.php` exposed sensitive server error logs to anyone with the URL, allowing read access and the ability to clear the logs to cover tracks.
-**Learning:** Security checks must be implemented consistently on all files exposed to the web that handle sensitive data, especially those outside of the main routing framework (e.g., standalone utility scripts).
-**Prevention:** Always verify `session_start()` and authentication status (e.g., `$_SESSION['admin_logged_in'] === true`) at the top of any PHP script that provides administrative or sensitive functionality before executing any logic or outputting data.
+
+## 2024-04-21 - [Zip File Path Traversal Vulnerability]
+**Vulnerability:** Directly calling `$zip->extractTo()` without validating the contents of the ZIP archive allows an attacker to exploit Path Traversal/Arbitrary File Write by uploading a maliciously crafted ZIP with `../` or `/` prefixed entries, potentially overwriting critical system files outside the target directory.
+**Learning:** Never trust the file paths inside uploaded zip files.
+**Prevention:** Always loop over the contents of a ZIP file using `$zip->getNameIndex($i)` and validate that the paths do not contain directory traversal sequences (`../`, `..\`) or absolute paths (`/`, `\`) before attempting extraction.
