@@ -1,3 +1,3 @@
-## 2025-04-22 - N+1 Queries in PHP Backend Repositories
-**Learning:** The PHP backend repositories often fetch relations (like question options) inside a loop (`foreach ($questions as &$q) { $q['options'] = $this->getOptions($q['id']); }`). This causes an N+1 query problem, which severely impacts performance when retrieving entities in bulk (e.g., getting an entire exam's questions).
-**Action:** Replace the N+1 pattern by extracting IDs, using a single batched query with an `IN (...)` clause (chunking IDs to avoid database placeholder limits), and building an in-memory dictionary to assign relations in O(1) time complexity.
+## 2024-04-24 - Bulk option insertion optimization
+**Learning:** Found N+1 queries when inserting multiple options via `createOption` inside a loop in `ExamController` and `ExamService`.
+**Action:** Use a bulk insertion method `createOptionsBulk` to avoid N+1 query bottlenecks.
