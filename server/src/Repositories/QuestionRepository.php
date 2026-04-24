@@ -34,9 +34,10 @@ class QuestionRepository {
         $questionIds = array_column($questions, 'id');
         $placeholders = implode(',', array_fill(0, count($questionIds), '?'));
 
-        $stmt = $this->db->prepare("SELECT * FROM options WHERE question_id IN ($placeholders) ORDER BY question_id ASC, option_index ASC");
-        $stmt->execute($questionIds);
-        $allOptions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        $sqlOpts = "SELECT * FROM options WHERE question_id IN ($placeholders) ORDER BY option_index ASC";
+        $stmtOpts = $this->db->prepare($sqlOpts);
+        $stmtOpts->execute($questionIds);
+        $allOptions = $stmtOpts->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
         $optionsByQuestion = [];
         foreach ($allOptions as $opt) {
@@ -46,6 +47,7 @@ class QuestionRepository {
         foreach ($questions as &$q) {
             $q['options'] = $optionsByQuestion[$q['id']] ?? [];
         }
+
         return $questions;
     }
     
@@ -62,9 +64,10 @@ class QuestionRepository {
         $questionIds = array_column($questions, 'id');
         $placeholders = implode(',', array_fill(0, count($questionIds), '?'));
 
-        $stmt = $this->db->prepare("SELECT * FROM options WHERE question_id IN ($placeholders) ORDER BY question_id ASC, option_index ASC");
-        $stmt->execute($questionIds);
-        $allOptions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        $sqlOpts = "SELECT * FROM options WHERE question_id IN ($placeholders) ORDER BY option_index ASC";
+        $stmtOpts = $this->db->prepare($sqlOpts);
+        $stmtOpts->execute($questionIds);
+        $allOptions = $stmtOpts->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
         $optionsByQuestion = [];
         foreach ($allOptions as $opt) {
@@ -74,6 +77,7 @@ class QuestionRepository {
         foreach ($questions as &$q) {
             $q['options'] = $optionsByQuestion[$q['id']] ?? [];
         }
+
         return $questions;
     }
 
@@ -97,29 +101,6 @@ class QuestionRepository {
         return $stmt->execute([$questionId, $text, $index]);
     }
     
-    /**
-     * Bolt Optimization: Replaces individual inserts with a single bulk insert
-     * Impact: Eliminates N+1 queries when saving question options. For a question
-     * with 4 options, reduces queries from 4 to 1, improving insertion speed.
-     */
-    public function createOptionsBulk(int $questionId, array $optionsMap): bool {
-        if (empty($optionsMap)) return true;
-
-        $placeholders = [];
-        $values = [];
-
-        foreach ($optionsMap as $index => $text) {
-            $placeholders[] = "(?, ?, ?)";
-            $values[] = $questionId;
-            $values[] = $text;
-            $values[] = $index;
-        }
-
-        $sql = "INSERT INTO options (question_id, option_text, option_index) VALUES " . implode(', ', $placeholders);
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute($values);
-    }
-
     public function updateQuestion(int $id, array $data): bool {
         if (empty($data)) return true;
         $fields = [];
