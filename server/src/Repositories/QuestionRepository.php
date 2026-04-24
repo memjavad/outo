@@ -20,31 +20,6 @@ class QuestionRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
-    private function attachOptionsToQuestions(array $questions): array {
-        if (empty($questions)) return [];
-
-        $questionIds = array_column($questions, 'id');
-        $optionsByQuestionId = array_fill_keys($questionIds, []);
-
-        $chunks = array_chunk($questionIds, 900); // Prevent exceeding DB placeholder limits
-        foreach ($chunks as $chunk) {
-            $placeholders = implode(',', array_fill(0, count($chunk), '?'));
-            $stmt = $this->db->prepare("SELECT * FROM options WHERE question_id IN ($placeholders) ORDER BY option_index ASC");
-            $stmt->execute($chunk);
-            $options = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-
-            foreach ($options as $opt) {
-                $optionsByQuestionId[$opt['question_id']][] = $opt;
-            }
-        }
-
-        foreach ($questions as &$q) {
-            $q['options'] = $optionsByQuestionId[$q['id']] ?? [];
-        }
-
-        return $questions;
-    }
-
     public function getByExamId(int $examId, bool $randomize = false): array {
         $sql = "SELECT * FROM questions WHERE exam_id = ?";
         $sql .= $randomize ? " ORDER BY RAND()" : " ORDER BY created_at ASC";
@@ -52,7 +27,10 @@ class QuestionRepository {
         $stmt->execute([$examId]);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
-        return $this->attachOptionsToQuestions($questions);
+        foreach ($questions as &$q) {
+            $q['options'] = $this->getOptions($q['id']);
+        }
+        return $questions;
     }
     
     public function getAll(bool $randomize = false): array {
@@ -61,7 +39,10 @@ class QuestionRepository {
         $stmt = $this->db->query($sql);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
-        return $this->attachOptionsToQuestions($questions);
+        foreach ($questions as &$q) {
+            $q['options'] = $this->getOptions($q['id']);
+        }
+        return $questions;
     }
 
     public function getOptions(int $questionId): array {
@@ -85,20 +66,21 @@ class QuestionRepository {
     }
     
     /**
-     * Bolt Optimization: Replaces N+1 single option inserts with a single chunked bulk insert query.
-     * Expected Impact: Significantly reduces database round-trips when creating or updating questions
-     * with multiple options. Performance scales O(1) in DB connections instead of O(N) where N is options count.
+     * Bolt Optimization: Replaces individual inserts with a single bulk insert
+     * Impact: Eliminates N+1 queries when saving question options. For a question
+     * with 4 options, reduces queries from 4 to 1, improving insertion speed.
      */
-    public function createOptionsBulk(array $optionsData): bool {
-        if (empty($optionsData)) return true;
+    public function createOptionsBulk(int $questionId, array $optionsMap): bool {
+        if (empty($optionsMap)) return true;
 
         $placeholders = [];
         $values = [];
-        foreach ($optionsData as $option) {
-            $placeholders[] = '(?, ?, ?)';
-            $values[] = $option['question_id'];
-            $values[] = $option['option_text'];
-            $values[] = $option['option_index'];
+
+        foreach ($optionsMap as $index => $text) {
+            $placeholders[] = "(?, ?, ?)";
+            $values[] = $questionId;
+            $values[] = $text;
+            $values[] = $index;
         }
 
         $sql = "INSERT INTO options (question_id, option_text, option_index) VALUES " . implode(', ', $placeholders);

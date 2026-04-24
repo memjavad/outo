@@ -116,13 +116,7 @@ class ExamController extends BaseController {
 
             $questionId = $questionRepo->createQuestion($questionData);
 
-            $optionsData = [];
-            foreach ($options as $index => $text) {
-                $optionsData[] = ['question_id' => $questionId, 'option_text' => $text, 'option_index' => $index];
-            }
-            if (!empty($optionsData)) {
-                $questionRepo->createOptionsBulk($optionsData);
-            }
+            $questionRepo->createOptionsBulk($questionId, $options);
 
             $db->commit();
             return $this->json($response, ["status" => "success", "id" => $questionId, "question" => $questionText, "imageUrl" => $imageUrl]);
@@ -338,13 +332,7 @@ class ExamController extends BaseController {
             $questionRepo->updateQuestion((int)$id, $questionData);
 
             $questionRepo->deleteOptions((int)$id);
-            $optionsData = [];
-            foreach ($options as $index => $text) {
-                $optionsData[] = ['question_id' => (int)$id, 'option_text' => $text, 'option_index' => $index];
-            }
-            if (!empty($optionsData)) {
-                $questionRepo->createOptionsBulk($optionsData);
-            }
+            $questionRepo->createOptionsBulk((int)$id, $options);
 
             $db->commit();
             return $this->json($response, ["status" => "success", "message" => "Question updated", "imageUrl" => $imageUrl]);
@@ -359,29 +347,7 @@ class ExamController extends BaseController {
             return ["error" => "File upload failed"];
         }
 
-        // Security: Whitelist allowed extensions
-        $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-        $filename = $file->getClientFilename();
-        $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-
-        if (!in_array($extension, $allowedExtensions)) {
-            return ["error" => "Invalid file extension. Only JPG, PNG, GIF, and WEBP are allowed."];
-        }
-
-        // Security: Verify MIME type using finfo
-        $stream = $file->getStream();
-        $fileContent = $stream->read(1024); // Read first 1KB to determine MIME type
-        $stream->rewind(); // Reset stream position for the actual move
-
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mime = finfo_buffer($finfo, $fileContent);
-        finfo_close($finfo);
-
-        $allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-        if (!in_array($mime, $allowedMimeTypes)) {
-            return ["error" => "Invalid file content. The file is not a valid image."];
-        }
-
+        $extension = pathinfo($file->getClientFilename(), PATHINFO_EXTENSION);
         $newName = bin2hex(random_bytes(16)) . '.' . $extension;
         $destPath = __DIR__ . '/../../uploads/' . $newName;
 
