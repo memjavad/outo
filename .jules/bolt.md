@@ -1,3 +1,4 @@
-## 2026-04-21 - [Performance] Bulk Insert Optimizaton
-**Learning:** Inserting many records individually using a `foreach` loop inside `createResult` takes O(n) database calls and significantly impacts performance, taking ~0.8s for 500 records.
-**Action:** Use `array_chunk` on parameters to construct a single `INSERT` query with multiple value sets (`VALUES (?, ?, ?, ?), (?, ?, ?, ?)`), significantly reducing the database connection overhead. This takes ~0.03s for 500 records, a >20x speedup.
+
+## 2024-06-25 - [Optimize DashboardController Grade Distribution]
+**Learning:** Optimizing aggregate calculations such as grade distributions by offloading them to the database using `GROUP BY` avoids processing large amounts of result records in memory within PHP.
+**Action:** Next time when encountering a loop over database results solely for counting and aggregating, replace it with a `GROUP BY` SQL query.
