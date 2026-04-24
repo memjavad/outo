@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:student_quiz_app/domain/entities/result.dart';
+import 'package:student_quiz_app/models/quiz_model.dart';
+
 void main() {
   final jsonStr = '''{
     "id": 1,
@@ -16,7 +17,7 @@ void main() {
   } catch (e) {
     print('FAILED: $e');
   }
-  
+
   final jsonStr2 = '''{
     "id": 1,
     "student_name": "Test2",
