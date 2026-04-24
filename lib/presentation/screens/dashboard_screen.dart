@@ -97,7 +97,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        actions: [const StudentStatsHeader()],
+        actions: [_ScoreTrackers(quizService: quizService)],
       ),
       body: GlobalBackground(
         child: Center(
@@ -126,24 +126,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children:
-                        [
-                              // --- Student Dashboard View ---
-                              const StudentProfileCard(),
-                              const SizedBox(height: 8),
-                              Text(
-                                l10n.readyForChallenge,
-                                style: TextStyle(color: Colors.grey[600]),
-                              ),
-                              const SizedBox(height: 32),
-
-                              // Dashboard Grid
-                              const DashboardMenuGrid(),
-                              const SizedBox(height: 32),
-                            ]
-                            .animate(interval: 50.ms)
-                            .fade(duration: 500.ms, curve: Curves.easeOutQuad)
-                            .slideY(begin: 0.05, end: 0),
+                    children: [
+                          _ProfileSummary(
+                            theme: theme,
+                            primaryColor: primaryColor,
+                            l10n: l10n,
+                            quizService: quizService,
+                          ),
+                          const SizedBox(height: 32),
+                          _DashboardGrid(
+                            theme: theme,
+                            primaryColor: primaryColor,
+                            l10n: l10n,
+                          ),
+                          const SizedBox(height: 32),
+                        ]
+                        .animate(interval: 50.ms)
+                        .fade(duration: 500.ms, curve: Curves.easeOutQuad)
+                        .slideY(begin: 0.05, end: 0),
                   ),
                 ),
               ),
@@ -155,12 +155,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 }
 
-class StudentStatsHeader extends StatelessWidget {
-  const StudentStatsHeader({super.key});
+class _ScoreTrackers extends StatelessWidget {
+  final QuizService quizService;
+
+  const _ScoreTrackers({required this.quizService});
 
   @override
   Widget build(BuildContext context) {
-    final quizService = Provider.of<QuizService>(context);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -235,82 +236,99 @@ class StudentStatsHeader extends StatelessWidget {
   }
 }
 
-class StudentProfileCard extends StatelessWidget {
-  const StudentProfileCard({super.key});
+class _ProfileSummary extends StatelessWidget {
+  final ThemeData theme;
+  final Color primaryColor;
+  final AppLocalizations l10n;
+  final QuizService quizService;
+
+  const _ProfileSummary({
+    required this.theme,
+    required this.primaryColor,
+    required this.l10n,
+    required this.quizService,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final primaryColor = theme.primaryColor;
-    final l10n = AppLocalizations.of(context)!;
-    final quizService = Provider.of<QuizService>(context);
-
-    return InkWell(
-      onTap: () => context.push('/profile'),
-      borderRadius: BorderRadius.circular(24),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest,
+    return Column(
+      children: [
+        InkWell(
+          onTap: () => context.push('/profile'),
           borderRadius: BorderRadius.circular(24),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: primaryColor.withValues(alpha: 0.15),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(LucideIcons.user, color: primaryColor),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.surfaceContainerHighest,
+              borderRadius: BorderRadius.circular(24),
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.localeName == 'ar' ? 'مرحباً بعودتك' : 'Welcome Back',
-                    style: TextStyle(
-                      color: Colors.grey.shade500,
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
-                    ),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: primaryColor.withValues(alpha: 0.15),
+                    shape: BoxShape.circle,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '‪${quizService.currentStudent?.name ?? 'Student'}‬‏',
-                    style: theme.textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      fontSize: 18,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  child: Icon(LucideIcons.user, color: primaryColor),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.localeName == 'ar'
+                            ? 'مرحباً بعودتك'
+                            : 'Welcome Back',
+                        style: TextStyle(
+                          color: Colors.grey.shade500,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '\u202A${quizService.currentStudent?.name ?? "Student"}\u202C\u200F',
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w900,
+                          fontSize: 18,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                Icon(
+                  LucideIcons.chevronRight,
+                  color: Colors.grey.shade400,
+                  size: 24,
+                ),
+              ],
             ),
-            Icon(
-              LucideIcons.chevronRight,
-              color: Colors.grey.shade400,
-              size: 24,
-            ),
-          ],
+          ),
         ),
-      ),
+        const SizedBox(height: 8),
+        Text(l10n.readyForChallenge, style: TextStyle(color: Colors.grey[600])),
+      ],
     );
   }
 }
 
-class DashboardMenuGrid extends StatelessWidget {
-  const DashboardMenuGrid({super.key});
+class _DashboardGrid extends StatelessWidget {
+  final ThemeData theme;
+  final Color primaryColor;
+  final AppLocalizations l10n;
+
+  const _DashboardGrid({
+    required this.theme,
+    required this.primaryColor,
+    required this.l10n,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
-    final primaryColor = theme.primaryColor;
-
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -319,39 +337,44 @@ class DashboardMenuGrid extends StatelessWidget {
       crossAxisSpacing: 12,
       childAspectRatio: 1.1,
       children: [
-        DashboardCard(
-          title: l10n.localeName == 'ar'
-              ? 'رحلة علم النفس'
-              : 'Story of Psychology',
+        _buildDashboardCard(
+          context,
+          title:
+              l10n.localeName == 'ar'
+                  ? 'رحلة علم النفس'
+                  : 'Story of Psychology',
           icon: LucideIcons.map,
           color: Colors.purple,
           gradientColors: [Colors.purple.shade400, Colors.purple.shade800],
           onTap: () => context.push('/campaign_exams'),
         ),
-        DashboardCard(
-          title: l10n.localeName == 'ar'
-              ? 'الامتحانات الفردية'
-              : 'Single Exams',
+        _buildDashboardCard(
+          context,
+          title:
+              l10n.localeName == 'ar' ? 'الامتحانات الفردية' : 'Single Exams',
           icon: LucideIcons.fileText,
           color: primaryColor,
           gradientColors: [primaryColor.withValues(alpha: 0.8), primaryColor],
           onTap: () => context.push('/standard_exams'),
         ),
-        DashboardCard(
+        _buildDashboardCard(
+          context,
           title: l10n.essaysTab,
           icon: LucideIcons.penTool,
           color: Colors.indigo,
           gradientColors: [Colors.indigo.shade400, Colors.indigo.shade800],
           onTap: () => context.push('/essays_student'),
         ),
-        DashboardCard(
+        _buildDashboardCard(
+          context,
           title: l10n.myGrades,
           icon: LucideIcons.history,
           color: Colors.orange,
           gradientColors: [Colors.orange.shade400, Colors.deepOrange.shade800],
           onTap: () => context.push('/student_results'),
         ),
-        DashboardCard(
+        _buildDashboardCard(
+          context,
           title: l10n.leaderboard ?? 'Leaderboard',
           icon: LucideIcons.trophy,
           color: Colors.teal,
@@ -361,26 +384,15 @@ class DashboardMenuGrid extends StatelessWidget {
       ],
     );
   }
-}
 
-class DashboardCard extends StatelessWidget {
-  final String title;
-  final IconData icon;
-  final Color color;
-  final List<Color> gradientColors;
-  final VoidCallback onTap;
-
-  const DashboardCard({
-    super.key,
-    required this.title,
-    required this.icon,
-    required this.color,
-    required this.gradientColors,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildDashboardCard(
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+    required Color color,
+    required List<Color> gradientColors,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
@@ -419,9 +431,10 @@ class DashboardCard extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : Colors.black87,
+                color:
+                    Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : Colors.black87,
                 fontWeight: FontWeight.w900,
                 fontSize: 15,
               ),
