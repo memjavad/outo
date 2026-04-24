@@ -174,5 +174,7 @@
   "totalStudents": "Total Students",
   "averageScore": "Avg Score",
   "passRate": "Pass Rate",
-  "distractorAnalysis": "Distractor Analysis"
+  "distractorAnalysis": "Distractor Analysis",
+  "info": "Info",
+  "store": "Store"
 }

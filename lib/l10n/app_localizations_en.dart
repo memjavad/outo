@@ -407,4 +407,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get distractorAnalysis => 'Distractor Analysis';
+
+  @override
+  String get info => 'Info';
+
+  @override
+  String get store => 'Store';
 }
