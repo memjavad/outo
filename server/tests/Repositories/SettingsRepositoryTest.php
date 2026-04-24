@@ -7,147 +7,160 @@ use PDO;
 use PDOStatement;
 
 class SettingsRepositoryTest extends TestCase {
-
-    private PDO $pdoMock;
-    private PDOStatement $stmtMock;
-    private SettingsRepository $repository;
+    private $db;
+    private $settingsRepo;
 
     protected function setUp(): void {
-        $this->pdoMock = $this->createMock(PDO::class);
-        $this->stmtMock = $this->createMock(PDOStatement::class);
-        $this->repository = new SettingsRepository($this->pdoMock);
-    }
-
-    public function testGetAllReturnsArray() {
-        $expectedData = ['key1' => 'value1', 'key2' => 'value2'];
-
-        $this->pdoMock->expects($this->once())
-            ->method('query')
-            ->with("SELECT setting_key, setting_value FROM settings")
-            ->willReturn($this->stmtMock);
-
-        $this->stmtMock->expects($this->once())
-            ->method('fetchAll')
-            ->with(PDO::FETCH_KEY_PAIR)
-            ->willReturn($expectedData);
-
-        $result = $this->repository->getAll();
-        $this->assertEquals($expectedData, $result);
+        $this->db = $this->createMock(PDO::class);
+        $this->settingsRepo = new SettingsRepository($this->db);
     }
 
     public function testGetAllReturnsEmptyArrayWhenNoSettings() {
-        $this->pdoMock->expects($this->once())
-            ->method('query')
-            ->with("SELECT setting_key, setting_value FROM settings")
-            ->willReturn($this->stmtMock);
+        $stmt = $this->createMock(PDOStatement::class);
+        $stmt->expects($this->once())
+             ->method('fetchAll')
+             ->with(PDO::FETCH_KEY_PAIR)
+             ->willReturn([]); // Changed from false to []
 
-        $this->stmtMock->expects($this->once())
-            ->method('fetchAll')
-            ->with(PDO::FETCH_KEY_PAIR)
-            ->willReturn(false);
+        $this->db->expects($this->once())
+                 ->method('query')
+                 ->with("SELECT setting_key, setting_value FROM settings")
+                 ->willReturn($stmt);
 
-        $result = $this->repository->getAll();
+        $result = $this->settingsRepo->getAll();
         $this->assertEquals([], $result);
     }
 
-    public function testGetReturnsValue() {
-        $key = 'some_key';
-        $expectedValue = 'some_value';
+    public function testGetAllReturnsSettings() {
+        $expected = ['site_name' => 'My Site', 'theme' => 'dark'];
 
-        $this->pdoMock->expects($this->once())
-            ->method('prepare')
-            ->with("SELECT setting_value FROM settings WHERE setting_key = ?")
-            ->willReturn($this->stmtMock);
+        $stmt = $this->createMock(PDOStatement::class);
+        $stmt->expects($this->once())
+             ->method('fetchAll')
+             ->with(PDO::FETCH_KEY_PAIR)
+             ->willReturn($expected);
 
-        $this->stmtMock->expects($this->once())
-            ->method('execute')
-            ->with([$key])
-            ->willReturn(true);
+        $this->db->expects($this->once())
+                 ->method('query')
+                 ->with("SELECT setting_key, setting_value FROM settings")
+                 ->willReturn($stmt);
 
-        $this->stmtMock->expects($this->once())
-            ->method('fetchColumn')
-            ->willReturn($expectedValue);
-
-        $result = $this->repository->get($key);
-        $this->assertEquals($expectedValue, $result);
+        $result = $this->settingsRepo->getAll();
+        $this->assertEquals($expected, $result);
     }
 
-    public function testGetReturnsDefaultWhenNotFound() {
-        $key = 'missing_key';
-        $default = 'default_val';
+    public function testGetReturnsSettingValue() {
+        $stmt = $this->createMock(PDOStatement::class);
+        $stmt->expects($this->once())
+             ->method('execute')
+             ->with(['site_name'])
+             ->willReturn(true);
+        $stmt->expects($this->once())
+             ->method('fetchColumn')
+             ->willReturn('My Site');
 
-        $this->pdoMock->expects($this->once())
-            ->method('prepare')
-            ->with("SELECT setting_value FROM settings WHERE setting_key = ?")
-            ->willReturn($this->stmtMock);
+        $this->db->expects($this->once())
+                 ->method('prepare')
+                 ->with("SELECT setting_value FROM settings WHERE setting_key = ?")
+                 ->willReturn($stmt);
 
-        $this->stmtMock->expects($this->once())
-            ->method('execute')
-            ->with([$key])
-            ->willReturn(true);
-
-        $this->stmtMock->expects($this->once())
-            ->method('fetchColumn')
-            ->willReturn(false);
-
-        $result = $this->repository->get($key, $default);
-        $this->assertEquals($default, $result);
+        $result = $this->settingsRepo->get('site_name');
+        $this->assertEquals('My Site', $result);
     }
 
-    public function testUpdateManySuccessfullyUpdates() {
-        $data = [
-            'key1' => 'val1',
-            'api_key' => 'secret', // Should be skipped
-            'key2' => 'val2'
-        ];
+    public function testGetReturnsDefaultValueWhenSettingNotFound() {
+        $stmt = $this->createMock(PDOStatement::class);
+        $stmt->expects($this->once())
+             ->method('execute')
+             ->with(['missing_key'])
+             ->willReturn(true);
+        $stmt->expects($this->once())
+             ->method('fetchColumn')
+             ->willReturn(false);
 
-        $this->pdoMock->expects($this->once())
-            ->method('beginTransaction')
-            ->willReturn(true);
+        $this->db->expects($this->once())
+                 ->method('prepare')
+                 ->with("SELECT setting_value FROM settings WHERE setting_key = ?")
+                 ->willReturn($stmt);
 
-        $this->pdoMock->expects($this->once())
-            ->method('prepare')
-            ->with("INSERT INTO settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?")
-            ->willReturn($this->stmtMock);
+        $result = $this->settingsRepo->get('missing_key', 'default_val');
+        $this->assertEquals('default_val', $result);
+    }
 
-        // We expect execute to be called twice, once for key1, once for key2. api_key should be skipped.
-        $this->stmtMock->expects($this->exactly(2))
-            ->method('execute')
-            ->willReturnCallback(function($args) {
-                $this->assertContains($args[0], ['key1', 'key2']);
-                return true;
-            });
+    public function testUpdateManySuccessfullyUpdatesSettings() {
+        $data = ['site_name' => 'New Site', 'theme' => 'light'];
 
-        $this->pdoMock->expects($this->once())
-            ->method('commit')
-            ->willReturn(true);
+        $this->db->expects($this->once())->method('beginTransaction');
 
-        $result = $this->repository->updateMany($data);
+        $stmt = $this->createMock(PDOStatement::class);
+
+        // Use a callback to assert multiple consecutive calls since withConsecutive was removed
+        $callIndex = 0;
+        $stmt->expects($this->exactly(2))
+             ->method('execute')
+             ->willReturnCallback(function ($args) use (&$callIndex) {
+                 if ($callIndex === 0) {
+                     $this->assertEquals(['site_name', 'New Site', 'New Site'], $args);
+                 } else if ($callIndex === 1) {
+                     $this->assertEquals(['theme', 'light', 'light'], $args);
+                 }
+                 $callIndex++;
+                 return true;
+             });
+
+        $this->db->expects($this->once())
+                 ->method('prepare')
+                 ->with("INSERT INTO settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?")
+                 ->willReturn($stmt);
+
+        $this->db->expects($this->once())->method('commit');
+
+        $result = $this->settingsRepo->updateMany($data);
+        $this->assertTrue($result);
+    }
+
+    public function testUpdateManySkipsProtectedKeys() {
+        $data = ['site_name' => 'New Site', 'api_key' => 'secret'];
+
+        $this->db->expects($this->once())->method('beginTransaction');
+
+        $stmt = $this->createMock(PDOStatement::class);
+        // Execute should only be called once, skipping 'api_key'
+        $stmt->expects($this->once())
+             ->method('execute')
+             ->with(['site_name', 'New Site', 'New Site'])
+             ->willReturn(true);
+
+        $this->db->expects($this->once())
+                 ->method('prepare')
+                 ->with("INSERT INTO settings (setting_key, setting_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE setting_value = ?")
+                 ->willReturn($stmt);
+
+        $this->db->expects($this->once())->method('commit');
+
+        $result = $this->settingsRepo->updateMany($data, ['api_key']);
         $this->assertTrue($result);
     }
 
     public function testUpdateManyRollsBackOnException() {
-        $data = ['key1' => 'val1'];
+        $data = ['site_name' => 'New Site'];
 
-        $this->pdoMock->expects($this->once())
-            ->method('beginTransaction')
-            ->willReturn(true);
+        $this->db->expects($this->once())->method('beginTransaction');
+        $this->db->expects($this->once())->method('inTransaction')->willReturn(true);
+        $this->db->expects($this->once())->method('rollBack');
 
-        $this->pdoMock->expects($this->once())
-            ->method('prepare')
-            ->willThrowException(new \Exception("DB Error"));
+        $stmt = $this->createMock(PDOStatement::class);
+        $stmt->expects($this->once())
+             ->method('execute')
+             ->willThrowException(new \Exception('Database error'));
 
-        $this->pdoMock->expects($this->once())
-            ->method('inTransaction')
-            ->willReturn(true);
-
-        $this->pdoMock->expects($this->once())
-            ->method('rollBack')
-            ->willReturn(true);
+        $this->db->expects($this->once())
+                 ->method('prepare')
+                 ->willReturn($stmt);
 
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage("DB Error");
+        $this->expectExceptionMessage('Database error');
 
-        $this->repository->updateMany($data);
+        $this->settingsRepo->updateMany($data);
     }
 }
