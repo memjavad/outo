@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:student_quiz_app/models/quiz_model.dart';
+import 'package:student_quiz_app/domain/entities/result.dart';
 void main() {
   final jsonStr = '''{
     "id": 1,
@@ -13,7 +13,7 @@ void main() {
   try {
     final result = QuizResult.fromJson(json.decode(jsonStr));
     print('SUCCESS: ' + result.studentName);
-  } catch (e, stack) {
+  } catch (e) {
     print('FAILED: $e');
   }
   
@@ -29,7 +29,7 @@ void main() {
   try {
     final result = QuizResult.fromJson(json.decode(jsonStr2));
     print('SUCCESS 2: ' + result.studentName);
-  } catch (e, stack) {
+  } catch (e) {
     print('FAILED 2: $e');
   }
 }
