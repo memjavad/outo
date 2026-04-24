@@ -27,28 +27,7 @@ class QuestionRepository {
         $stmt->execute([$examId]);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
-        if (empty($questions)) {
-            return [];
-        }
-
-        $questionIds = array_column($questions, 'id');
-        $placeholders = implode(',', array_fill(0, count($questionIds), '?'));
-
-        $sqlOpts = "SELECT * FROM options WHERE question_id IN ($placeholders) ORDER BY option_index ASC";
-        $stmtOpts = $this->db->prepare($sqlOpts);
-        $stmtOpts->execute($questionIds);
-        $allOptions = $stmtOpts->fetchAll(PDO::FETCH_ASSOC) ?: [];
-
-        $optionsByQuestion = [];
-        foreach ($allOptions as $opt) {
-            $optionsByQuestion[$opt['question_id']][] = $opt;
-        }
-
-        foreach ($questions as &$q) {
-            $q['options'] = $optionsByQuestion[$q['id']] ?? [];
-        }
-
-        return $questions;
+        return $this->attachOptionsToQuestions($questions);
     }
     
     public function getAll(bool $randomize = false): array {
@@ -57,6 +36,11 @@ class QuestionRepository {
         $stmt = $this->db->query($sql);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
+        return $this->attachOptionsToQuestions($questions);
+    }
+
+
+    private function attachOptionsToQuestions(array $questions): array {
         if (empty($questions)) {
             return [];
         }
@@ -64,18 +48,17 @@ class QuestionRepository {
         $questionIds = array_column($questions, 'id');
         $placeholders = implode(',', array_fill(0, count($questionIds), '?'));
 
-        $sqlOpts = "SELECT * FROM options WHERE question_id IN ($placeholders) ORDER BY option_index ASC";
-        $stmtOpts = $this->db->prepare($sqlOpts);
-        $stmtOpts->execute($questionIds);
-        $allOptions = $stmtOpts->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        $stmt = $this->db->prepare("SELECT * FROM options WHERE question_id IN ($placeholders) ORDER BY question_id ASC, option_index ASC");
+        $stmt->execute($questionIds);
+        $allOptions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
-        $optionsByQuestion = [];
-        foreach ($allOptions as $opt) {
-            $optionsByQuestion[$opt['question_id']][] = $opt;
+        $optionsByQuestionId = [];
+        foreach ($allOptions as $option) {
+            $optionsByQuestionId[$option['question_id']][] = $option;
         }
 
         foreach ($questions as &$q) {
-            $q['options'] = $optionsByQuestion[$q['id']] ?? [];
+            $q['options'] = $optionsByQuestionId[$q['id']] ?? [];
         }
 
         return $questions;
