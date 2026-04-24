@@ -1,3 +1,4 @@
-## 2024-06-25 - Bulk Insert for Options
-**Learning:** Inserting rows individually within a loop causes significant N+1 overhead during database operations, notably in ExamController option processing.
-**Action:** Always prefer bulk inserts (e.g., `INSERT INTO table (x,y) VALUES (?), (?)`) using bound parameters in PDO for batch operations to optimize performance and lower latency.
+
+## 2024-05-18 - Bulk Insert Optimization
+**Learning:** Inserting rows individually within a loop (N+1 queries) significantly degrades performance, especially in network-bound PHP/MySQL setups like `ExamController::addQuestion` creating options.
+**Action:** Always prefer bulk insert strategies (e.g., `createOptionsBulk` using multi-row `VALUES (?, ?), (?, ?)` syntax) over repeated `createOption` calls to minimize database roundtrips and drastically improve execution time.
