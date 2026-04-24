@@ -1,12 +1,12 @@
-💡 **What:** Added `attachOptionsToQuestions` helper to batch fetch all options for a list of questions in a single query and updated `getAll` and `getByExamId` to use it.
-🎯 **Why:** The previous implementation executed a database query for each question to fetch its associated options, resulting in an N+1 query problem, which is extremely inefficient when fetching many questions.
-📊 **Measured Improvement:**
-Before the change:
-`getAll()` time: 0.3520s
-`getByExamId(1)` time: 0.3562s
+🎯 **What:**
+Removed `server/debug_prod.php` and several other exposed debugging, testing, and migration scripts (such as `check_db.php`, `view_logs.php`, `update_db.php`) that were inadvertently left in the production web root.
 
-After the change:
-`getAll()` time: 0.0082s
-`getByExamId(1)` time: 0.0088s
+⚠️ **Risk:**
+These scripts present a critical Information Disclosure and System Compromise risk. For example:
+- `debug_prod.php` reveals internal application flows and stack traces.
+- `check_db.php` dumps all user data, including password hashes, directly to the screen.
+- `view_logs.php` exposes internal server error logs.
+Any unauthenticated attacker could discover and exploit these files to steal sensitive user data, reverse-engineer the backend logic, or trigger unintended database operations.
 
-This represents a ~42x performance improvement.
+🛡️ **Solution:**
+Permanently deleted the aforementioned debug and testing scripts from the repository. Moving forward, these files should not be deployed to production environments.
