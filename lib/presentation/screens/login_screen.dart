@@ -16,7 +16,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   String _errorMessage = '';
   bool _isLoading = false;
-  bool _obscurePassword = true;
 
   Future<void> _login() async {
     setState(() {
@@ -32,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (!mounted) return;
 
-    if (success != null && mounted) {
+    if (success) {
       context.go('/admin');
     } else if (mounted) {
       setState(() {
@@ -49,47 +48,21 @@ class _LoginScreenState extends State<LoginScreen> {
     final colorScheme = theme.colorScheme;
     
     return Scaffold(
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor: colorScheme.surface,
       body: Stack(
         children: [
           // Decorative Asymmetric Floating Shapes
-          Positioned(
+          _DecorativeShape(
             top: -MediaQuery.of(context).size.height * 0.1,
             left: -MediaQuery.of(context).size.width * 0.1,
-            child: Container(
-              width: 256,
-              height: 256,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: colorScheme.secondary.withOpacity(0.1),
-                boxShadow: [
-                  BoxShadow(
-                    color: colorScheme.secondary.withOpacity(0.1),
-                    blurRadius: 80,
-                    spreadRadius: 80,
-                  ),
-                ],
-              ),
-            ),
+            size: 256,
+            color: colorScheme.secondary.withValues(alpha: 0.1),
           ),
-          Positioned(
+          _DecorativeShape(
             bottom: -MediaQuery.of(context).size.height * 0.05,
             right: -MediaQuery.of(context).size.width * 0.05,
-            child: Container(
-              width: 320,
-              height: 320,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: colorScheme.primaryContainer.withOpacity(0.05),
-                boxShadow: [
-                  BoxShadow(
-                    color: colorScheme.primaryContainer.withOpacity(0.05),
-                    blurRadius: 100,
-                    spreadRadius: 100,
-                  ),
-                ],
-              ),
-            ),
+            size: 320,
+            color: colorScheme.primaryContainer.withValues(alpha: 0.05),
           ),
 
           Center(
@@ -100,177 +73,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Hero Branding 
-                    Container(
-                      width: 96,
-                      height: 96,
-                      margin: const EdgeInsets.only(bottom: 32),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: colorScheme.surfaceContainerHighest,
-                        boxShadow: [
-                          BoxShadow(
-                            color: colorScheme.primary.withOpacity(0.08),
-                            blurRadius: 40,
-                            offset: const Offset(0, 20),
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        Icons.admin_panel_settings,
-                        size: 48,
-                        color: colorScheme.primary,
-                      ),
-                    ),
-                    Text(
-                      "Admin Portal",
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      "Elevated Access Required",
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
+                    _HeroBranding(colorScheme: colorScheme, theme: theme),
                     const SizedBox(height: 40),
-
-                    Container(
-                      padding: const EdgeInsets.all(32.0),
-                      decoration: BoxDecoration(
-                        color: colorScheme.surfaceContainerLowest,
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: [
-                          BoxShadow(
-                            color: colorScheme.primary.withOpacity(0.04),
-                            blurRadius: 30,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          if (_errorMessage.isNotEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 16.0),
-                              child: Text(
-                                l10n.invalidLogin,
-                                style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                            
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 16),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 4, bottom: 8),
-                                  child: Text(
-                                    l10n.username.toUpperCase(),
-                                    style: theme.textTheme.labelMedium?.copyWith(
-                                      color: colorScheme.primary,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 1.2,
-                                    ),
-                                  ),
-                                ),
-                                TextField(
-                                  controller: _usernameController,
-                                  decoration: InputDecoration(
-                                    hintText: l10n.username,
-                                    prefixIcon: Icon(Icons.person, color: colorScheme.onSurfaceVariant),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 32),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 4, bottom: 8),
-                                  child: Text(
-                                    l10n.password.toUpperCase(),
-                                    style: theme.textTheme.labelMedium?.copyWith(
-                                      color: colorScheme.primary,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 1.2,
-                                    ),
-                                  ),
-                                ),
-                                TextField(
-                                  controller: _passwordController,
-                                  obscureText: _obscurePassword,
-                                  decoration: InputDecoration(
-                                    hintText: l10n.password,
-                                    prefixIcon: Icon(Icons.lock, color: colorScheme.onSurfaceVariant),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                                        color: colorScheme.onSurfaceVariant,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          _obscurePassword = !_obscurePassword;
-                                        });
-                                      },
-                                      tooltip: _obscurePassword ? 'Show password' : 'Hide password',
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          
-                          // Primary CTA
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(24),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: colorScheme.primary.withOpacity(0.2),
-                                  blurRadius: 25,
-                                  offset: const Offset(0, 10),
-                                ),
-                              ],
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  colorScheme.primary,
-                                  colorScheme.primaryContainer,
-                                ],
-                              ),
-                            ),
-                            child: ElevatedButton(
-                              onPressed: _isLoading ? null : _login,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                shadowColor: Colors.transparent,
-                              ),
-                              child: _isLoading
-                                  ? const SizedBox(
-                                      height: 24,
-                                      width: 24,
-                                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                                    )
-                                  : Text(l10n.login),
-                            ),
-                          ),
-                        ],
-                      ),
+                    _LoginForm(
+                      errorMessage: _errorMessage,
+                      isLoading: _isLoading,
+                      usernameController: _usernameController,
+                      passwordController: _passwordController,
+                      onLogin: _login,
+                      l10n: l10n,
+                      theme: theme,
+                      colorScheme: colorScheme,
                     ),
                   ],
                 ),
@@ -292,6 +105,263 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
+class _DecorativeShape extends StatelessWidget {
+  final double? top;
+  final double? bottom;
+  final double? left;
+  final double? right;
+  final double size;
+  final Color color;
 
+  const _DecorativeShape({
+    this.top,
+    this.bottom,
+    this.left,
+    this.right,
+    required this.size,
+    required this.color,
+  });
 
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      top: top,
+      bottom: bottom,
+      left: left,
+      right: right,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: color,
+          boxShadow: [
+            BoxShadow(
+              color: color,
+              blurRadius: size * 0.3125, // equivalent to 80/256 or 100/320
+              spreadRadius: size * 0.3125,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
+class _HeroBranding extends StatelessWidget {
+  final ColorScheme colorScheme;
+  final ThemeData theme;
+
+  const _HeroBranding({required this.colorScheme, required this.theme});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // Hero Branding
+        Container(
+          width: 96,
+          height: 96,
+          margin: const EdgeInsets.only(bottom: 32),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: colorScheme.surfaceContainerHighest,
+            boxShadow: [
+              BoxShadow(
+                color: colorScheme.primary.withValues(alpha: 0.08),
+                blurRadius: 40,
+                offset: const Offset(0, 20),
+              ),
+            ],
+          ),
+          child: Icon(
+            Icons.admin_panel_settings,
+            size: 48,
+            color: colorScheme.primary,
+          ),
+        ),
+        Text(
+          "Admin Portal",
+          textAlign: TextAlign.center,
+          style: theme.textTheme.headlineMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+            color: colorScheme.primary,
+          ),
+        ),
+        const SizedBox(height: 12),
+        Text(
+          "Elevated Access Required",
+          textAlign: TextAlign.center,
+          style: theme.textTheme.bodyMedium?.copyWith(
+            color: colorScheme.onSurfaceVariant,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _LoginForm extends StatelessWidget {
+  final String errorMessage;
+  final bool isLoading;
+  final TextEditingController usernameController;
+  final TextEditingController passwordController;
+  final VoidCallback onLogin;
+  final AppLocalizations l10n;
+  final ThemeData theme;
+  final ColorScheme colorScheme;
+
+  const _LoginForm({
+    required this.errorMessage,
+    required this.isLoading,
+    required this.usernameController,
+    required this.passwordController,
+    required this.onLogin,
+    required this.l10n,
+    required this.theme,
+    required this.colorScheme,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(32.0),
+      decoration: BoxDecoration(
+        color: colorScheme.surfaceContainerLowest,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: colorScheme.primary.withValues(alpha: 0.04),
+            blurRadius: 30,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (errorMessage.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: Text(
+                l10n.invalidLogin,
+                style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
+              ),
+            ),
+
+          _InputField(
+            label: l10n.username.toUpperCase(),
+            hint: l10n.username,
+            icon: Icons.person,
+            controller: usernameController,
+            theme: theme,
+            colorScheme: colorScheme,
+            padding: const EdgeInsets.only(bottom: 16),
+          ),
+
+          _InputField(
+            label: l10n.password.toUpperCase(),
+            hint: l10n.password,
+            icon: Icons.lock,
+            controller: passwordController,
+            obscureText: true,
+            theme: theme,
+            colorScheme: colorScheme,
+            padding: const EdgeInsets.only(bottom: 32),
+          ),
+
+          // Primary CTA
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: colorScheme.primary.withValues(alpha: 0.2),
+                  blurRadius: 25,
+                  offset: const Offset(0, 10),
+                ),
+              ],
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  colorScheme.primary,
+                  colorScheme.primaryContainer,
+                ],
+              ),
+            ),
+            child: ElevatedButton(
+              onPressed: isLoading ? null : onLogin,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+              ),
+              child: isLoading
+                  ? const SizedBox(
+                      height: 24,
+                      width: 24,
+                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                    )
+                  : Text(l10n.login),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _InputField extends StatelessWidget {
+  final String label;
+  final String hint;
+  final IconData icon;
+  final TextEditingController controller;
+  final bool obscureText;
+  final ThemeData theme;
+  final ColorScheme colorScheme;
+  final EdgeInsetsGeometry padding;
+
+  const _InputField({
+    required this.label,
+    required this.hint,
+    required this.icon,
+    required this.controller,
+    this.obscureText = false,
+    required this.theme,
+    required this.colorScheme,
+    required this.padding,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: padding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 8),
+            child: Text(
+              label,
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: colorScheme.primary,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.2,
+              ),
+            ),
+          ),
+          TextField(
+            controller: controller,
+            obscureText: obscureText,
+            decoration: InputDecoration(
+              hintText: hint,
+              prefixIcon: Icon(icon, color: colorScheme.onSurfaceVariant),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
