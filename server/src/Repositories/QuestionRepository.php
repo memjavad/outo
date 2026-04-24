@@ -20,27 +20,33 @@ class QuestionRepository {
         return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
     }
 
-    private function attachOptions(array &$questions): void {
-        if (empty($questions)) return;
+    private function attachOptions(array $questions): array {
+        if (empty($questions)) {
+            return [];
+        }
 
         $questionIds = array_column($questions, 'id');
-        $optionsByQuestion = [];
+        $optionsByQuestionId = array_fill_keys($questionIds, []);
 
+        // Chunking the IDs to avoid exceeding database limits on IN clause (SQLite limit is usually 999)
         $chunks = array_chunk($questionIds, 500);
         foreach ($chunks as $chunk) {
-            $inQuery = implode(',', array_fill(0, count($chunk), '?'));
-            $stmt = $this->db->prepare("SELECT * FROM options WHERE question_id IN ($inQuery) ORDER BY option_index ASC");
+            $placeholders = implode(',', array_fill(0, count($chunk), '?'));
+            $sql = "SELECT * FROM options WHERE question_id IN ($placeholders) ORDER BY question_id ASC, option_index ASC";
+            $stmt = $this->db->prepare($sql);
             $stmt->execute($chunk);
-            $allOptions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+            $options = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
 
-            foreach ($allOptions as $option) {
-                $optionsByQuestion[$option['question_id']][] = $option;
+            foreach ($options as $opt) {
+                $optionsByQuestionId[$opt['question_id']][] = $opt;
             }
         }
 
         foreach ($questions as &$q) {
-            $q['options'] = $optionsByQuestion[$q['id']] ?? [];
+            $q['options'] = $optionsByQuestionId[$q['id']] ?? [];
         }
+
+        return $questions;
     }
 
     public function getByExamId(int $examId, bool $randomize = false): array {
@@ -50,8 +56,7 @@ class QuestionRepository {
         $stmt->execute([$examId]);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
-        $this->attachOptions($questions);
-        return $questions;
+        return $this->attachOptions($questions);
     }
     
     public function getAll(bool $randomize = false): array {
@@ -60,8 +65,7 @@ class QuestionRepository {
         $stmt = $this->db->query($sql);
         $questions = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
         
-        $this->attachOptions($questions);
-        return $questions;
+        return $this->attachOptions($questions);
     }
 
     public function getOptions(int $questionId): array {

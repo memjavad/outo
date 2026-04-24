@@ -1,3 +1,3 @@
-## 2026-04-21 - N+1 Query Optimization in QuestionRepository
-**Learning:** Looping over questions to fetch options individually (`getOptions` inside `getAll` or `getByExamId`) creates a severe N+1 database bottleneck. Fetching all options simultaneously using chunked `IN (...)` queries based on grouped IDs significantly improves execution speed (e.g., from 350ms to ~9ms).
-**Action:** When writing or reviewing repository methods that retrieve a collection of entities with associated sub-entities, utilize batch fetching with array chunking and in-memory grouping instead of issuing per-item database queries inside a loop.
+## 2024-04-21 - Eliminate N+1 Query in QuestionRepository
+**Learning:** In `QuestionRepository::getAll` and `getByExamId`, fetching options for each question inside a loop resulted in an N+1 query problem, taking ~95ms for 500 questions.
+**Action:** Use a batching approach with `IN (...)` queries to fetch options for chunks of questions (e.g., 500 at a time) and group them in memory. This reduces the number of queries drastically, improving performance to ~4ms for 500 questions. Ensure chunking is used to avoid hitting database limits on the number of parameters in an `IN` clause.
