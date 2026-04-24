@@ -55,17 +55,58 @@ class UpdateService {
                 
                 $fullPath = $this->rootPath . '/' . $targetFileName;
                 if (substr($entryName, -1) === '/') {
-                    if (!is_dir($fullPath)) mkdir($fullPath, 0755, true);
+                    if (!is_dir($fullPath) && !mkdir($fullPath, 0755, true)) {
+                        $zip->close();
+                        throw new Exception("Extraction failed: could not create directory " . $fullPath);
+                    }
                 } else {
                     $dir = dirname($fullPath);
-                    if (!is_dir($dir)) mkdir($dir, 0755, true);
-                    copy("zip://".$zipPath."#".$entryName, $fullPath);
+                    if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
+                        $zip->close();
+                        throw new Exception("Extraction failed: could not create directory " . $dir);
+                    }
+                    $fileData = $zip->getFromIndex($i);
+                    if ($fileData === false) {
+                        $zip->close();
+                        throw new Exception("Extraction failed: could not read file " . $entryName . " from ZIP");
+                    }
+                    if (file_put_contents($fullPath, $fileData) === false) {
+                        $zip->close();
+                        throw new Exception("Extraction failed: could not write file " . $fullPath);
+                    }
                 }
             }
         } else {
-            if (!$zip->extractTo($this->rootPath)) {
-                $zip->close();
-                throw new Exception("Extraction failed. Check file permissions.");
+            for ($i = 0; $i < $zip->numFiles; $i++) {
+                $entryName = $zip->getNameIndex($i);
+
+                // Prevent Zip Slip / Path Traversal
+                if (empty($entryName) || strpos($entryName, '../') !== false || strpos($entryName, '..\\') !== false || substr($entryName, 0, 1) === '/') {
+                    continue; // Skip invalid or dangerous paths
+                }
+
+                $fullPath = $this->rootPath . '/' . $entryName;
+                if (substr($entryName, -1) === '/') {
+                    if (!is_dir($fullPath) && !mkdir($fullPath, 0755, true)) {
+                        $zip->close();
+                        throw new Exception("Extraction failed: could not create directory " . $fullPath);
+                    }
+                } else {
+                    $dir = dirname($fullPath);
+                    if (!is_dir($dir) && !mkdir($dir, 0755, true)) {
+                        $zip->close();
+                        throw new Exception("Extraction failed: could not create directory " . $dir);
+                    }
+                    $fileData = $zip->getFromIndex($i);
+                    if ($fileData === false) {
+                        $zip->close();
+                        throw new Exception("Extraction failed: could not read file " . $entryName . " from ZIP");
+                    }
+                    if (file_put_contents($fullPath, $fileData) === false) {
+                        $zip->close();
+                        throw new Exception("Extraction failed: could not write file " . $fullPath);
+                    }
+                }
             }
         }
         
