@@ -1,5 +1,4 @@
-
-## 2024-11-23 - Insecure File Upload / RCE vulnerability
-**Vulnerability:** ExamController::uploadImage() blindly trusted the client-provided file extension without validating the actual file content, allowing executable `.php` files to be uploaded.
-**Learning:** Using `pathinfo($file->getClientFilename(), PATHINFO_EXTENSION)` without MIME type validation on the actual content creates a critical RCE vulnerability via malicious file uploads.
-**Prevention:** Always extract and validate the file's MIME type from the content stream using `finfo_buffer()` and strictly map it to a safe extension using an allowlist, ignoring the client-provided extension completely.
+## 2025-02-20 - SQL Injection via unvalidated array keys in Repositories
+**Vulnerability:** SQL Injection in `ExamRepository`, `QuestionRepository`, and `StudentRepository` where input array keys were directly concatenated into `INSERT` and `UPDATE` statements without validation, allowing subquery injection or malicious column insertions.
+**Learning:** PDO prepared statements only protect parameter values, not column names. Dynamically generating queries from array keys without an explicit allowlist or strict validation exposes the application to SQL injection.
+**Prevention:** Always strictly validate array keys (e.g., using a regex like `/^[a-zA-Z0-9_]+$/`) or compare them against a predefined schema allowlist before building `UPDATE` or `INSERT` SQL strings dynamically.

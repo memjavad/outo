@@ -45,11 +45,19 @@ class ExamRepository {
     }
 
     public function create(array $data): int {
-        $fields = array_keys($data);
+        $fields = [];
+        $values = [];
+        foreach ($data as $key => $value) {
+            if (!preg_match('/^[a-zA-Z0-9_]+$/', $key)) {
+                throw new \InvalidArgumentException("Invalid column name: $key");
+            }
+            $fields[] = $key;
+            $values[] = $value;
+        }
         $placeholders = implode(', ', array_fill(0, count($fields), '?'));
         $sql = "INSERT INTO exams (" . implode(', ', $fields) . ") VALUES ($placeholders)";
         $stmt = $this->db->prepare($sql);
-        $stmt->execute(array_values($data));
+        $stmt->execute($values);
         return (int)$this->db->lastInsertId();
     }
 
@@ -58,6 +66,9 @@ class ExamRepository {
         $fields = [];
         $values = [];
         foreach ($data as $key => $value) {
+            if (!preg_match('/^[a-zA-Z0-9_]+$/', $key)) {
+                throw new \InvalidArgumentException("Invalid column name: $key");
+            }
             $fields[] = "$key = ?";
             $values[] = $value;
         }
