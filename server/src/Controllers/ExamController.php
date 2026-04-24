@@ -116,8 +116,12 @@ class ExamController extends BaseController {
 
             $questionId = $questionRepo->createQuestion($questionData);
 
+            $optionsData = [];
             foreach ($options as $index => $text) {
-                $questionRepo->createOption($questionId, $text, $index);
+                $optionsData[] = ['question_id' => $questionId, 'option_text' => $text, 'option_index' => $index];
+            }
+            if (!empty($optionsData)) {
+                $questionRepo->createOptionsBulk($optionsData);
             }
 
             $db->commit();
@@ -334,8 +338,12 @@ class ExamController extends BaseController {
             $questionRepo->updateQuestion((int)$id, $questionData);
 
             $questionRepo->deleteOptions((int)$id);
+            $optionsData = [];
             foreach ($options as $index => $text) {
-                $questionRepo->createOption((int)$id, $text, $index);
+                $optionsData[] = ['question_id' => (int)$id, 'option_text' => $text, 'option_index' => $index];
+            }
+            if (!empty($optionsData)) {
+                $questionRepo->createOptionsBulk($optionsData);
             }
 
             $db->commit();
