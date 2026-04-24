@@ -116,7 +116,7 @@ class ExamController extends BaseController {
 
             $questionId = $questionRepo->createQuestion($questionData);
 
-            $questionRepo->createOptionsBulk($questionId, $options);
+            $questionRepo->createOptions($questionId, $options);
 
             $db->commit();
             return $this->json($response, ["status" => "success", "id" => $questionId, "question" => $questionText, "imageUrl" => $imageUrl]);
@@ -332,7 +332,7 @@ class ExamController extends BaseController {
             $questionRepo->updateQuestion((int)$id, $questionData);
 
             $questionRepo->deleteOptions((int)$id);
-            $questionRepo->createOptionsBulk((int)$id, $options);
+            $questionRepo->createOptions((int)$id, $options);
 
             $db->commit();
             return $this->json($response, ["status" => "success", "message" => "Question updated", "imageUrl" => $imageUrl]);
