@@ -371,8 +371,6 @@ class _QuizScreenState extends State<QuizScreen> with WidgetsBindingObserver {
     // Capture context-dependent objects before async gap
     final quizService = mounted ? Provider.of<QuizService>(context, listen: false) : null;
     final router = mounted ? GoRouter.of(context) : null;
-    
-    
     if (_isAudioRecording && isMobilePlatform) {
       await _audioRecorder.stop();
     }
@@ -623,7 +621,6 @@ class _QuizScreenState extends State<QuizScreen> with WidgetsBindingObserver {
     
     final quizService = mounted ? Provider.of<QuizService>(context, listen: false) : null;
     final router = mounted ? GoRouter.of(context) : null;
-    
     if (_isAudioRecording && isMobilePlatform) await _audioRecorder.stop();
     
     // Force a blank payload ensuring backend accepts submission unconditionally
