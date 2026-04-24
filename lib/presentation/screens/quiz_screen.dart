@@ -38,7 +38,6 @@ class _QuizScreenState extends State<QuizScreen> with WidgetsBindingObserver {
   int _currentQuestionIndex = 0;
   int _score = 0;
   int _totalCampaignPoints = 0;
-  int _currentCombo = 0;
   Map<int, dynamic> _selectedAnswers = {};
   Map<int, int> _answerTimes = {};
   final Stopwatch _stopwatch = Stopwatch();
@@ -535,7 +534,6 @@ class _QuizScreenState extends State<QuizScreen> with WidgetsBindingObserver {
     
     setState(() {
         _totalCampaignPoints = points;
-        _currentCombo = combo;
     });
   }
 
