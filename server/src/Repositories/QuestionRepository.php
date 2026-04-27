@@ -95,6 +95,27 @@ class QuestionRepository {
         $stmt = $this->db->prepare("INSERT INTO options (question_id, option_text, option_index) VALUES (?, ?, ?)");
         return $stmt->execute([$questionId, $text, $index]);
     }
+
+    public function createOptionsBulk(int $questionId, array $options): bool {
+        if (empty($options)) {
+            return true;
+        }
+
+        $placeholders = [];
+        $values = [];
+
+        // Use array_values to ensure sequential index keys starting from 0
+        foreach (array_values($options) as $index => $text) {
+            $placeholders[] = "(?, ?, ?)";
+            $values[] = $questionId;
+            $values[] = $text;
+            $values[] = $index;
+        }
+
+        $sql = "INSERT INTO options (question_id, option_text, option_index) VALUES " . implode(', ', $placeholders);
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute($values);
+    }
     
     public function updateQuestion(int $id, array $data): bool {
         if (empty($data)) return true;
