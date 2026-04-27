@@ -1,3 +1,6 @@
 ## 2026-04-21 - [PHPUnit Environment Mismatch]
 **Learning:** Composer installs a phpunit version requiring PHP >= 8.4.1, while the local environment has PHP 8.3.6. Editing files inside the `vendor/` directory (like `phpunit` or `platform_check.php`) to bypass version constraints is an anti-pattern, generates large git diffs, and introduces unacceptable side effects that will block the PR.
 **Action:** When facing a PHP version mismatch with `phpunit`, download a compatible `phpunit.phar` (e.g., `wget -O phpunit.phar https://phar.phpunit.de/phpunit-10.5.phar`) and run tests using `php phpunit.phar`. Do not commit the `.phar` file to the repository, and ensure temporary test caches (like `.phpunit.cache/`) are added to `.gitignore` and removed from tracking.
+## 2024-04-27 - [Bulk Insert Optimization]
+**Learning:** Found N+1 query vulnerability when iterating and calling single-option database inserts. `ExamController` and `ExamService` were already invoking `createOptionsBulk` which did not exist on `QuestionRepository`, causing fatal errors during some workflows despite earlier migrations indicating it might have existed.
+**Action:** Implemented `createOptionsBulk` in `QuestionRepository` to replace the repetitive single row inserts, significantly optimizing the performance of bulk option insertion for exams.
