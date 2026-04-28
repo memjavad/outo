@@ -31,11 +31,6 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  bool _isOffline = false;
-  List<Exam> _activeExams = [];
-  Set<String> _completedExamIds = {};
-  bool _isLoadingExams = true;
-
   @override
   void initState() {
     super.initState();
@@ -45,40 +40,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Future<void> _loadExams() async {
     final service = Provider.of<QuizService>(context, listen: false);
     try {
-      final exams = await service.fetchExams();
-      Set<String> completed = {};
-
+      await service.fetchExams();
       if (service.isStudentLoggedIn) {
-        final results = await service.fetchStudentResults();
-        completed = results.map((r) => r.examId.toString()).toSet();
-      }
-
-      if (mounted) {
-        setState(() {
-          _activeExams = exams.where((e) => e.isActive).toList();
-          _completedExamIds = completed;
-          _isLoadingExams = false;
-          _isOffline = service.isOffline;
-        });
+        await service.fetchStudentResults();
       }
     } catch (_) {
-      if (mounted)
-        setState(() {
-          _isLoadingExams = false;
-          _isOffline = true;
-        });
+      // Error loading initial data
     }
   }
 
   @override
   void dispose() {
     super.dispose();
-  }
-
-  void _navigateToInstructions(Exam exam) {
-    if (mounted) {
-      context.push('/exam_instructions', extra: exam);
-    }
   }
 
   @override
