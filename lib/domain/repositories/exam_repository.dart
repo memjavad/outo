@@ -17,7 +17,6 @@ abstract class ExamRepository {
 
   Future<bool> addQuestion(String token, QuizQuestion question);
   Future<bool> updateQuestion(String token, QuizQuestion question);
-  Future<bool> deleteQuestion(String token, String id);
   Future<bool> addExam(String token, String title, {String? description, String examType = 'standard', String? prerequisiteExamId, int unlockCost = 0});
   Future<bool> deleteExam(String token, String examId);
 }

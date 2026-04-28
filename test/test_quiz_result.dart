@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:student_quiz_app/models/quiz_model.dart';
+import 'package:student_quiz_app/domain/entities/result.dart';
 
 void main() {
   final jsonStr = '''{
