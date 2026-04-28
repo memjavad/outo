@@ -2,8 +2,6 @@ import '../../domain/repositories/result_repository.dart';
 import '../../domain/entities/entities.dart';
 import '../sources/remote/api_results.dart';
 import '../sources/local/local_storage.dart';
-import 'package:http/http.dart' as http; // Dummy import to signal network check
-import 'dart:io';
 
 class ResultRepositoryImpl implements ResultRepository {
   final ApiResults remoteDataSource;
