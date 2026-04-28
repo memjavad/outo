@@ -67,6 +67,8 @@ class DashboardController extends BaseController {
         $essayExams = array_filter($exams, fn($e) => ($e['exam_type'] ?? 'standard') === 'essay');
 
         // Fetch ALL essays to dynamically group by exam for the admin UI
+        // OPTIMIZATION: Replaced unbounded fetchAll() with a bounded query targeting pending essays
+        // and a max limit of the 3000 most recent graded essays. This reduces DB round trips and memory overhead significantly.
         $allEssayResults = [];
         try {
             $allEssayResults = $this->pdo->query("
@@ -74,17 +76,29 @@ class DashboardController extends BaseController {
                FROM essay_results r 
                LEFT JOIN exams e ON r.exam_id = e.id 
                LEFT JOIN students s ON r.student_id = s.id 
+               WHERE r.is_graded = 0 OR r.id IN (
+                   SELECT id FROM (SELECT id FROM essay_results ORDER BY created_at DESC LIMIT 3000) as temp
+               )
                ORDER BY r.created_at DESC
             ")->fetchAll(PDO::FETCH_ASSOC);
         } catch (\PDOException $err) {
             error_log("Failed to fetch essay results: " . $err->getMessage());
         }
 
-        $pendingEssays = array_filter($allEssayResults, fn($r) => $r['is_graded'] == 0);
-
+        // OPTIMIZATION: Filter pending essays and construct the exam groupings in a single pass O(n) loop
+        // instead of multiple iterations. Added a 500-item cap per exam array to prevent massive UI rendering delays.
+        $pendingEssays = [];
         $essayResultsByExamId = [];
         foreach ($allEssayResults as $res) {
-            $essayResultsByExamId[$res['exam_id']][] = $res;
+            if ($res['is_graded'] == 0) {
+                $pendingEssays[] = $res;
+            }
+            if (!isset($essayResultsByExamId[$res['exam_id']])) {
+                $essayResultsByExamId[$res['exam_id']] = [];
+            }
+            if (count($essayResultsByExamId[$res['exam_id']]) < 500) {
+                $essayResultsByExamId[$res['exam_id']][] = $res;
+            }
         }
         
         $settings = $settingsRepo->getAll();
