@@ -276,7 +276,6 @@ class _QuizScreenState extends State<QuizScreen> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
       if (widget.exam?.strictAppFocus ?? false) {
-        final quizService = Provider.of<QuizService>(context, listen: false);
         _timer?.cancel();
         _submitQuiz(_activeQuestions, cheatFlag: "App Focus Lost (Switched Apps)");
       }
@@ -769,7 +768,6 @@ class _QuizScreenState extends State<QuizScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final quizService = Provider.of<QuizService>(context);
     final questions = _activeQuestions;
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
