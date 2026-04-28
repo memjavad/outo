@@ -75,12 +75,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.dispose();
   }
 
-  void _navigateToInstructions(Exam exam) {
-    if (mounted) {
-      context.push('/exam_instructions', extra: exam);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -126,24 +120,25 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                          _ProfileSummary(
-                            theme: theme,
-                            primaryColor: primaryColor,
-                            l10n: l10n,
-                            quizService: quizService,
-                          ),
-                          const SizedBox(height: 32),
-                          _DashboardGrid(
-                            theme: theme,
-                            primaryColor: primaryColor,
-                            l10n: l10n,
-                          ),
-                          const SizedBox(height: 32),
-                        ]
-                        .animate(interval: 50.ms)
-                        .fade(duration: 500.ms, curve: Curves.easeOutQuad)
-                        .slideY(begin: 0.05, end: 0),
+                    children:
+                        [
+                              _ProfileSummary(
+                                theme: theme,
+                                primaryColor: primaryColor,
+                                l10n: l10n,
+                                quizService: quizService,
+                              ),
+                              const SizedBox(height: 32),
+                              _DashboardGrid(
+                                theme: theme,
+                                primaryColor: primaryColor,
+                                l10n: l10n,
+                              ),
+                              const SizedBox(height: 32),
+                            ]
+                            .animate(interval: 50.ms)
+                            .fade(duration: 500.ms, curve: Curves.easeOutQuad)
+                            .slideY(begin: 0.05, end: 0),
                   ),
                 ),
               ),
@@ -339,10 +334,9 @@ class _DashboardGrid extends StatelessWidget {
       children: [
         _buildDashboardCard(
           context,
-          title:
-              l10n.localeName == 'ar'
-                  ? 'رحلة علم النفس'
-                  : 'Story of Psychology',
+          title: l10n.localeName == 'ar'
+              ? 'رحلة علم النفس'
+              : 'Story of Psychology',
           icon: LucideIcons.map,
           color: Colors.purple,
           gradientColors: [Colors.purple.shade400, Colors.purple.shade800],
@@ -350,8 +344,9 @@ class _DashboardGrid extends StatelessWidget {
         ),
         _buildDashboardCard(
           context,
-          title:
-              l10n.localeName == 'ar' ? 'الامتحانات الفردية' : 'Single Exams',
+          title: l10n.localeName == 'ar'
+              ? 'الامتحانات الفردية'
+              : 'Single Exams',
           icon: LucideIcons.fileText,
           color: primaryColor,
           gradientColors: [primaryColor.withValues(alpha: 0.8), primaryColor],
@@ -431,10 +426,9 @@ class _DashboardGrid extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                color:
-                    Theme.of(context).brightness == Brightness.dark
-                        ? Colors.white
-                        : Colors.black87,
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : Colors.black87,
                 fontWeight: FontWeight.w900,
                 fontSize: 15,
               ),
