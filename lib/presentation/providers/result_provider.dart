@@ -6,8 +6,13 @@ import '../../data/sources/remote/api_results.dart';
 import '../../data/sources/local/local_storage.dart';
 
 class ResultProvider extends ChangeNotifier {
-  final ResultRepository _repository = ResultRepositoryImpl(remoteDataSource: ApiResults(), localDataSource: LocalStorage());
-  final LocalStorage _localStorage = LocalStorage();
+  late ResultRepository _repository;
+  late LocalStorage _localStorage;
+
+  ResultProvider({ResultRepository? repository, LocalStorage? localStorage}) {
+    _repository = repository ?? ResultRepositoryImpl(remoteDataSource: ApiResults(), localDataSource: LocalStorage());
+    _localStorage = localStorage ?? LocalStorage();
+  }
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
