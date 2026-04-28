@@ -90,11 +90,6 @@ class ExamRepositoryImpl implements ExamRepository {
   }
 
   @override
-  Future<bool> deleteQuestion(String token, String id) async {
-    return false; // Deprecated directly in older API routing via non-typed `?id` fetch. We'll bypass.
-  }
-
-  @override
   Future<bool> addExam(String token, String title, {String? description, String examType = 'standard', String? prerequisiteExamId, int unlockCost = 0}) async {
     return await remoteDataSource.addExam(title, description: description, examType: examType, prerequisiteExamId: prerequisiteExamId, unlockCost: unlockCost);
   }
