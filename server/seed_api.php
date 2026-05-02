@@ -44,8 +44,17 @@ if ($action === 'seed_chunk') {
     $previousExamId = isset($_GET['prev_id']) && $_GET['prev_id'] != 'null' ? (int)$_GET['prev_id'] : null;
     $targetJson = isset($_GET['json_url']) ? $_GET['json_url'] : 'psychology/campaign_data.json';
     
+    if (strpos($targetJson, '..') !== false || strpos($targetJson, '\\') !== false) {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid path provided']);
+        exit;
+    }
+
     // Evaluate if user inputted an absolute HTTPS URL or a local file
     if (strpos($targetJson, 'http') === 0) {
+        if (strpos($targetJson, 'https://s.nabuo.org/') !== 0) {
+            echo json_encode(['status' => 'error', 'message' => 'Unauthorized domain']);
+            exit;
+        }
         $context = stream_context_create([
             "ssl" => ["verify_peer" => false, "verify_peer_name" => false],
             "http" => ["timeout" => 30] // Prevent remote timeouts

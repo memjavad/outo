@@ -1,1 +1,5 @@
 ## 2024-05-24 - [Hardcoded Secrets]\n**Vulnerability:** Hardcoded DB credentials and JWT secret in config\n**Learning:** Credentials were left in code instead of strictly loading from environment variables or enforcing .env existence.\n**Prevention:** Throw an error when secrets are missing instead of falling back to insecure hardcoded defaults.
+## 2024-05-02 - [SSRF and Path Traversal in Seed API]
+**Vulnerability:** The seed API accepted a URL/path parameter and blindly fetched the content. It allowed Path Traversal (`../../`) to read local arbitrary files (like `/etc/passwd`) and Server-Side Request Forgery (SSRF) allowing requests to any remote domain.
+**Learning:** `file_get_contents` is extremely dangerous with user-controlled input as it handles both local paths and network protocols (http/https). It must be strictly sanitized and bounded.
+**Prevention:** Implement an exact prefix/domain whitelist (`strpos($url, 'https://allowed.domain/') === 0`) and explicitly reject any directory traversal strings (`..`) in user-provided paths prior to IO operations.
