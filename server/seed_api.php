@@ -46,12 +46,26 @@ if ($action === 'seed_chunk') {
     
     // Evaluate if user inputted an absolute HTTPS URL or a local file
     if (strpos($targetJson, 'http') === 0) {
+        $parsedUrl = parse_url($targetJson);
+        $host = $parsedUrl['host'] ?? '';
+        // SSRF Protection: strictly allow s.nabuo.org
+        if ($host !== 's.nabuo.org') {
+            echo json_encode(['status' => 'error', 'message' => "Domain not allowed."]);
+            exit;
+        }
+
         $context = stream_context_create([
             "ssl" => ["verify_peer" => false, "verify_peer_name" => false],
             "http" => ["timeout" => 30] // Prevent remote timeouts
         ]);
         $jsonData = @file_get_contents($targetJson, false, $context);
     } else {
+        // LFI / Path Traversal Protection
+        if (strpos($targetJson, '../') !== false || strpos($targetJson, '..\\') !== false) {
+            echo json_encode(['status' => 'error', 'message' => "Path traversal not allowed."]);
+            exit;
+        }
+
         $jsonFilePath = __DIR__ . '/' . ltrim($targetJson, '/\\');
         if (!file_exists($jsonFilePath)) {
             echo json_encode(['status' => 'error', 'message' => "Local missing payload: $jsonFilePath"]);
