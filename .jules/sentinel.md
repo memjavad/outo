@@ -1,1 +1,5 @@
 ## 2024-05-24 - [Hardcoded Secrets]\n**Vulnerability:** Hardcoded DB credentials and JWT secret in config\n**Learning:** Credentials were left in code instead of strictly loading from environment variables or enforcing .env existence.\n**Prevention:** Throw an error when secrets are missing instead of falling back to insecure hardcoded defaults.
+## 2026-05-04 - SSRF and LFI in API Seeding Endpoint
+**Vulnerability:** The `server/seed_api.php` file allowed arbitrary URL fetching (Server-Side Request Forgery) and local file inclusion (Path Traversal) via the `json_url` parameter without domain or path validation.
+**Learning:** Development-focused seeding endpoints often lack standard security middleware or input validation because they are intended for internal use, but remain publicly accessible.
+**Prevention:** Always validate external inputs in standalone scripts. For URLs, strictly whitelist expected hosts (`parse_url` -> check `host`). For local paths, block directory traversal sequences (`../`, `..\`) and ensure file inclusion paths are fully controlled.
