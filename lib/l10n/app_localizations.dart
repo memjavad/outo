@@ -847,6 +847,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Store'**
   String get store;
+
+  /// No description provided for @deleteExam.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Exam'**
+  String get deleteExam;
+
+  /// No description provided for @deleteEssay.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Essay'**
+  String get deleteEssay;
+
+  /// No description provided for @deleteCampaign.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Campaign'**
+  String get deleteCampaign;
+
+  /// No description provided for @approve.
+  ///
+  /// In en, this message translates to:
+  /// **'Approve'**
+  String get approve;
+
+  /// No description provided for @reject.
+  ///
+  /// In en, this message translates to:
+  /// **'Reject'**
+  String get reject;
 }
 
 class _AppLocalizationsDelegate

@@ -143,12 +143,12 @@ class _PendingStudentsScreenState extends State<PendingStudentsScreen> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.check_circle, color: Colors.green),
-                    tooltip: l10n.localeName == 'ar' ? 'قبول' : 'Approve',
+                    tooltip: l10n.approve,
                     onPressed: () => _approve(student),
                   ),
                   IconButton(
                     icon: const Icon(Icons.cancel, color: Colors.red),
-                    tooltip: l10n.localeName == 'ar' ? 'رفض' : 'Reject',
+                    tooltip: l10n.reject,
                     onPressed: () => _reject(student),
                   ),
                 ],

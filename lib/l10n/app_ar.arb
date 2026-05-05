@@ -123,5 +123,10 @@
   "passRate": "نسبة النجاح",
   "distractorAnalysis": "تحليل الخيارات الخاطئة",
   "info": "معلومات",
-  "store": "المتجر"
+  "store": "المتجر",
+  "deleteExam": "حذف الامتحان",
+  "deleteEssay": "حذف الواجب",
+  "deleteCampaign": "حذف الحملة",
+  "approve": "قبول",
+  "reject": "رفض"
 }

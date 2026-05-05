@@ -205,6 +205,7 @@ class _ExamInstructionsScreenState extends State<ExamInstructionsScreen> {
                 children: [
                   IconButton(
                     icon: Icon(Icons.arrow_back_ios_new, color: theme.primaryColor),
+                    tooltip: l10n.goBack,
                     onPressed: () => context.pop(),
                   ),
                   Expanded(

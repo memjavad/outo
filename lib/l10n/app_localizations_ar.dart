@@ -412,4 +412,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get store => 'المتجر';
+
+  @override
+  String get deleteExam => 'حذف الامتحان';
+
+  @override
+  String get deleteEssay => 'حذف الواجب';
+
+  @override
+  String get deleteCampaign => 'حذف الحملة';
+
+  @override
+  String get approve => 'قبول';
+
+  @override
+  String get reject => 'رفض';
 }

@@ -413,4 +413,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get store => 'Store';
+
+  @override
+  String get deleteExam => 'Delete Exam';
+
+  @override
+  String get deleteEssay => 'Delete Essay';
+
+  @override
+  String get deleteCampaign => 'Delete Campaign';
+
+  @override
+  String get approve => 'Approve';
+
+  @override
+  String get reject => 'Reject';
 }
