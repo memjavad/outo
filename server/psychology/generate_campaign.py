@@ -14,14 +14,10 @@ MODEL_NAME = 'gemini-3.1-flash-lite-preview'
 TOTAL_LEVELS = 200
 QUESTIONS_PER_LEVEL = 20
 
-API_KEYS = [
-    "AIzaSyD45XO-54zAikWuEIocBHUS8nVLG3UPqcg",
-    "AIzaSyCHVUpXLNKTl0zbfhws9Thja1Z-qyiFUHg",
-    "AIzaSyApaIV2ZKJtiQ8aXAQEbtVnWPNhNjSVspY",
-    "AIzaSyA0pCgnAR6nsf4qZOZRJVstmHck6y7QJVk",
-    "AIzaSyBRXfNCWKVaU1pFaQrcpMQLLrVRKK5I9Vw",
-    "AIzaSyBI9zSyCnOmkIQ69HWwtqjkmIbEHtVKAVY"
-]
+api_keys_env = os.environ.get("GEMINI_API_KEYS", "")
+API_KEYS = [k.strip() for k in api_keys_env.split(",") if k.strip()]
+if not API_KEYS:
+    raise ValueError("GEMINI_API_KEYS environment variable is not set or empty")
 
 # Track API key usage
 key_usage_counts = {key: 0 for key in API_KEYS}
