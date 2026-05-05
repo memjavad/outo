@@ -122,6 +122,7 @@ class _ProfileHeader extends StatelessWidget {
       children: [
         IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: theme.primaryColor),
+          tooltip: AppLocalizations.of(context)!.goBack,
           onPressed: () => context.pop(),
         ),
         const SizedBox(width: 8),

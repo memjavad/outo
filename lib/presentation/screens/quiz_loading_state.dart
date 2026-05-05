@@ -29,6 +29,7 @@ class QuizLoadingState extends StatelessWidget {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.close),
+                        tooltip: AppLocalizations.of(context)!.cancel,
                         color: theme.primaryColor,
                         style: IconButton.styleFrom(
                           backgroundColor:

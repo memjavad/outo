@@ -223,6 +223,7 @@ class _StudentResultsScreenState extends State<StudentResultsScreen> {
                   children: [
                      IconButton(
                        icon: Icon(Icons.arrow_back_ios_new, color: Theme.of(context).primaryColor),
+                       tooltip: l10n.goBack,
                        onPressed: () => context.pop(),
                      ),
                      Expanded(

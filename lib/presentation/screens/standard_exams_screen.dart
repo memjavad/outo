@@ -59,6 +59,7 @@ class _StandardExamsScreenState extends State<StandardExamsScreen> {
                 children: [
                    IconButton(
                      icon: Icon(Icons.arrow_back_ios_new, color: primaryColor),
+                     tooltip: l10n.goBack,
                      onPressed: () => context.pop(),
                    ),
                    Expanded(

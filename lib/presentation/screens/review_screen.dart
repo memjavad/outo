@@ -35,6 +35,7 @@ class ReviewScreen extends StatelessWidget {
                       Icons.arrow_back_ios_new,
                       color: Theme.of(context).primaryColor,
                     ),
+                    tooltip: l10n.goBack,
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                   Expanded(

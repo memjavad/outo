@@ -55,6 +55,7 @@ class _StudentEssaysScreenState extends State<StudentEssaysScreen> {
                 children: [
                    IconButton(
                      icon: Icon(Icons.arrow_back_ios_new, color: primaryColor),
+                     tooltip: l10n.goBack,
                      onPressed: () => context.pop(),
                    ),
                    Expanded(

@@ -29,7 +29,7 @@
       "seconds": {}
     }
   },
-  "offlineBanner": "⚠️ Offline Mode – Using Cached Data",
+  "offlineBanner": "\u26a0\ufe0f Offline Mode \u2013 Using Cached Data",
   "selectExam": "Select Exam",
   "pleaseSelectExam": "Please select an Exam",
   "pleaseEnterAccessCode": "Please enter your Access Code",
@@ -58,7 +58,7 @@
       "total": {}
     }
   },
-  "unansweredWarning": "⚠️ You have {count} unanswered questions!",
+  "unansweredWarning": "\u26a0\ufe0f You have {count} unanswered questions!",
   "@unansweredWarning": {
     "placeholders": {
       "count": {}
@@ -176,5 +176,10 @@
   "passRate": "Pass Rate",
   "distractorAnalysis": "Distractor Analysis",
   "info": "Info",
-  "store": "Store"
+  "store": "Store",
+  "deleteExam": "Delete Exam",
+  "deleteEssay": "Delete Essay",
+  "deleteCampaign": "Delete Campaign",
+  "approve": "Approve",
+  "reject": "Reject"
 }

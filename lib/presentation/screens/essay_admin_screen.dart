@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:student_quiz_app/l10n/app_localizations.dart';
+
 import 'package:provider/provider.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import '../providers/quiz_service_facade.dart';
@@ -175,6 +177,7 @@ class _EssayAdminScreenState extends State<EssayAdminScreen> with SingleTickerPr
                     : null,
                 trailing: IconButton(
                   icon: const Icon(Icons.delete_outline, color: Colors.red),
+                  tooltip: AppLocalizations.of(context)!.deleteEssay,
                   onPressed: () => _deleteEssay(exam),
                 ),
               ),

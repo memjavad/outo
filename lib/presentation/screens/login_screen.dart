@@ -96,6 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
             start: 16,
             child: IconButton(
               icon: Icon(Icons.close, color: colorScheme.primary, size: 32),
+              tooltip: AppLocalizations.of(context)!.cancel,
               onPressed: () => context.pop(),
             ),
           ),

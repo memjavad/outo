@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:student_quiz_app/l10n/app_localizations.dart';
+
 import 'package:provider/provider.dart';
 import '../providers/quiz_service_facade.dart';
 import '../../domain/entities/entities.dart';
@@ -205,7 +207,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                           Icons.delete_outline,
                           color: Colors.red,
                         ),
-                        tooltip: 'Delete Exam',
+                        tooltip: AppLocalizations.of(context)!.deleteExam,
                         onPressed: () => _deleteExam(exam),
                       ),
                       onTap: () {

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:student_quiz_app/l10n/app_localizations.dart';
+
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -205,6 +207,7 @@ class _CampaignAdminScreenState extends State<CampaignAdminScreen> {
                     ),
                     trailing: IconButton(
                       icon: const Icon(Icons.delete_outline, color: Colors.red),
+                      tooltip: AppLocalizations.of(context)!.deleteCampaign,
                       onPressed: () => _deleteCampaign(exam),
                     ),
                     onTap: () {
