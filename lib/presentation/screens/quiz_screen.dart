@@ -789,6 +789,7 @@ class _QuizScreenState extends State<QuizScreen> with WidgetsBindingObserver {
                     Row(
                       children: [
                         IconButton(
+                          tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
                           icon: const Icon(Icons.close),
                           color: theme.primaryColor,
                           style: IconButton.styleFrom(backgroundColor: theme.colorScheme.surfaceContainerHighest),
