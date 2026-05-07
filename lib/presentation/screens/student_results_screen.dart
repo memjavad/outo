@@ -222,6 +222,7 @@ class _StudentResultsScreenState extends State<StudentResultsScreen> {
                 child: Row(
                   children: [
                      IconButton(
+                       tooltip: MaterialLocalizations.of(context).backButtonTooltip,
                        icon: Icon(Icons.arrow_back_ios_new, color: Theme.of(context).primaryColor),
                        onPressed: () => context.pop(),
                      ),

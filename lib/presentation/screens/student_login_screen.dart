@@ -545,6 +545,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
               top: MediaQuery.of(context).padding.top + 8,
               start: 16,
               child: IconButton(
+                tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
                 icon: Icon(Icons.close, color: colorScheme.primary, size: 32),
                 onPressed: () => context.pop(),
               ),
