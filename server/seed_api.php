@@ -46,15 +46,24 @@ if ($action === 'seed_chunk') {
     
     // Evaluate if user inputted an absolute HTTPS URL or a local file
     if (strpos($targetJson, 'http') === 0) {
+        $parsedUrl = parse_url($targetJson);
+        if (!isset($parsedUrl['host']) || $parsedUrl['host'] !== 's.nabuo.org') {
+            echo json_encode(['status' => 'error', 'message' => "Untrusted domain"]);
+            exit;
+        }
         $context = stream_context_create([
-            "ssl" => ["verify_peer" => false, "verify_peer_name" => false],
+            "ssl" => ["verify_peer" => true, "verify_peer_name" => true],
             "http" => ["timeout" => 30] // Prevent remote timeouts
         ]);
         $jsonData = @file_get_contents($targetJson, false, $context);
     } else {
+        if (strpos($targetJson, '..') !== false) {
+            echo json_encode(['status' => 'error', 'message' => "Invalid path"]);
+            exit;
+        }
         $jsonFilePath = __DIR__ . '/' . ltrim($targetJson, '/\\');
         if (!file_exists($jsonFilePath)) {
-            echo json_encode(['status' => 'error', 'message' => "Local missing payload: $jsonFilePath"]);
+            echo json_encode(['status' => 'error', 'message' => "Local missing payload"]);
             exit;
         }
         $jsonData = @file_get_contents($jsonFilePath);
