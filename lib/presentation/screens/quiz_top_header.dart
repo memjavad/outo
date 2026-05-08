@@ -93,9 +93,10 @@ class QuizTopHeader extends StatelessWidget {
                           vertical: 6,
                         ),
                         decoration: BoxDecoration(
-                          color: isWarning
-                              ? theme.colorScheme.errorContainer
-                              : theme.colorScheme.surfaceContainerLow,
+                          color:
+                              isWarning
+                                  ? theme.colorScheme.errorContainer
+                                  : theme.colorScheme.surfaceContainerLow,
                           borderRadius: BorderRadius.circular(32),
                         ),
                         child: Row(
@@ -104,9 +105,10 @@ class QuizTopHeader extends StatelessWidget {
                             Icon(
                               Icons.schedule,
                               size: 16,
-                              color: isWarning
-                                  ? theme.colorScheme.error
-                                  : theme.primaryColor,
+                              color:
+                                  isWarning
+                                      ? theme.colorScheme.error
+                                      : theme.primaryColor,
                             ),
                             const SizedBox(width: 6),
                             Text(
@@ -114,9 +116,10 @@ class QuizTopHeader extends StatelessWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
-                                color: isWarning
-                                    ? theme.colorScheme.error
-                                    : theme.primaryColor,
+                                color:
+                                    isWarning
+                                        ? theme.colorScheme.error
+                                        : theme.primaryColor,
                                 fontFeatures: const [
                                   FontFeature.tabularFigures(),
                                 ],
@@ -249,10 +252,11 @@ class QuizTopHeader extends StatelessWidget {
                       animation: quillController!,
                       builder: (context, child) {
                         final text = quillController!.document.toPlainText();
-                        final count = text
-                            .split(RegExp(r'\s+'))
-                            .where((s) => s.isNotEmpty)
-                            .length;
+                        final count =
+                            text
+                                .split(RegExp(r'\s+'))
+                                .where((s) => s.isNotEmpty)
+                                .length;
                         return Text(
                           '$count W',
                           style: TextStyle(

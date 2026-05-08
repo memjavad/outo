@@ -14,12 +14,15 @@ class LeaderboardScreen extends StatefulWidget {
   State<LeaderboardScreen> createState() => _LeaderboardScreenState();
 }
 
-class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTickerProviderStateMixin {
+class _LeaderboardScreenState extends State<LeaderboardScreen>
+    with SingleTickerProviderStateMixin {
   bool _isLoading = false;
   List<Exam> _activeExams = [];
 
-  List<Exam> get _essayExams => _activeExams.where((e) => e.examType == 'essay').toList();
-  List<Exam> get _standardExams => _activeExams.where((e) => e.examType == 'standard').toList();
+  List<Exam> get _essayExams =>
+      _activeExams.where((e) => e.examType == 'essay').toList();
+  List<Exam> get _standardExams =>
+      _activeExams.where((e) => e.examType == 'standard').toList();
 
   Exam? _selectedEssayExam;
   Exam? _selectedStandardExam;
@@ -53,8 +56,10 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
 
     await Future.wait([
       _fetchCampaignLeaderboard(quizService),
-      if (_selectedEssayExam != null) _fetchEssayLeaderboard(_selectedEssayExam!.id, quizService),
-      if (_selectedStandardExam != null) _fetchStandardLeaderboard(_selectedStandardExam!.id, quizService)
+      if (_selectedEssayExam != null)
+        _fetchEssayLeaderboard(_selectedEssayExam!.id, quizService),
+      if (_selectedStandardExam != null)
+        _fetchStandardLeaderboard(_selectedStandardExam!.id, quizService),
     ]);
 
     if (mounted) setState(() => _isLoading = false);
@@ -65,8 +70,12 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
     if (mounted) setState(() => _campaignLeaderboard = lb);
   }
 
-  Future<void> _fetchEssayLeaderboard(String examId, [QuizService? service]) async {
-    final quizService = service ?? Provider.of<QuizService>(context, listen: false);
+  Future<void> _fetchEssayLeaderboard(
+    String examId, [
+    QuizService? service,
+  ]) async {
+    final quizService =
+        service ?? Provider.of<QuizService>(context, listen: false);
     if (service == null && mounted) setState(() => _isLoading = true);
     final lb = await quizService.fetchLeaderboard(examId);
     if (mounted) {
@@ -77,8 +86,12 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
     }
   }
 
-  Future<void> _fetchStandardLeaderboard(String examId, [QuizService? service]) async {
-    final quizService = service ?? Provider.of<QuizService>(context, listen: false);
+  Future<void> _fetchStandardLeaderboard(
+    String examId, [
+    QuizService? service,
+  ]) async {
+    final quizService =
+        service ?? Provider.of<QuizService>(context, listen: false);
     if (service == null && mounted) setState(() => _isLoading = true);
     final lb = await quizService.fetchLeaderboard(examId);
     if (mounted) {
@@ -90,9 +103,12 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
   }
 
   Widget _buildMedal(int index) {
-    if (index == 0) return const Icon(LucideIcons.medal, color: Color(0xFFFFD700), size: 32);
-    if (index == 1) return const Icon(LucideIcons.medal, color: Color(0xFFC0C0C0), size: 32);
-    if (index == 2) return const Icon(LucideIcons.medal, color: Color(0xFFCD7F32), size: 32);
+    if (index == 0)
+      return const Icon(LucideIcons.medal, color: Color(0xFFFFD700), size: 32);
+    if (index == 1)
+      return const Icon(LucideIcons.medal, color: Color(0xFFC0C0C0), size: 32);
+    if (index == 2)
+      return const Icon(LucideIcons.medal, color: Color(0xFFCD7F32), size: 32);
     return Container(
       width: 32,
       alignment: Alignment.center,
@@ -103,7 +119,10 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
     );
   }
 
-  Widget _buildLeaderboardList(List<LeaderboardEntry> leaderboard, bool isCampaign) {
+  Widget _buildLeaderboardList(
+    List<LeaderboardEntry> leaderboard,
+    bool isCampaign,
+  ) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
@@ -116,12 +135,16 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(LucideIcons.ghost, size: 64, color: Colors.grey.withOpacity(0.5)),
+            Icon(
+              LucideIcons.ghost,
+              size: 64,
+              color: Colors.grey.withOpacity(0.5),
+            ),
             const SizedBox(height: 16),
             Text(
               l10n.noScoresYet,
               style: TextStyle(color: Colors.grey[600], fontSize: 16),
-            )
+            ),
           ],
         ),
       );
@@ -133,25 +156,39 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
       itemBuilder: (context, index) {
         final entry = leaderboard[index];
         final isTop3 = index < 3;
-        final medalColor = index == 0 ? const Color(0xFFFFD700) : (index == 1 ? const Color(0xFFC0C0C0) : const Color(0xFFCD7F32));
+        final medalColor =
+            index == 0
+                ? const Color(0xFFFFD700)
+                : (index == 1
+                    ? const Color(0xFFC0C0C0)
+                    : const Color(0xFFCD7F32));
 
         return Container(
           margin: const EdgeInsets.only(bottom: 12),
           decoration: BoxDecoration(
-            color: isTop3 ? medalColor.withOpacity(0.05) : theme.colorScheme.surfaceContainerLowest,
+            color:
+                isTop3
+                    ? medalColor.withOpacity(0.05)
+                    : theme.colorScheme.surfaceContainerLowest,
             borderRadius: BorderRadius.circular(20),
-            boxShadow: isTop3 ? [
-              BoxShadow(
-                color: medalColor.withOpacity(0.15),
-                blurRadius: 20,
-                offset: const Offset(0, 4),
-              )
-            ] : [],
+            boxShadow:
+                isTop3
+                    ? [
+                      BoxShadow(
+                        color: medalColor.withOpacity(0.15),
+                        blurRadius: 20,
+                        offset: const Offset(0, 4),
+                      ),
+                    ]
+                    : [],
           ),
           child: Material(
             color: Colors.transparent,
             child: ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 8,
+              ),
               leading: _buildMedal(index),
               title: Text(
                 entry.studentName,
@@ -165,7 +202,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   if (isCampaign)
-                     Text(
+                    Text(
                       '${entry.scorePercentage.toInt()} XP', // Campaign mapping reuses scorePercentage as XP float
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
@@ -178,7 +215,10 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
                       '${entry.scorePercentage.toStringAsFixed(1)}%',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: entry.scorePercentage >= 50 ? Colors.green : Colors.red,
+                        color:
+                            entry.scorePercentage >= 50
+                                ? Colors.green
+                                : Colors.red,
                         fontSize: 16,
                       ),
                     ),
@@ -196,10 +236,14 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
     );
   }
 
-  Widget _buildDropdownHeader(List<Exam> exams, Exam? selectedItem, ValueChanged<Exam?> onChanged) {
+  Widget _buildDropdownHeader(
+    List<Exam> exams,
+    Exam? selectedItem,
+    ValueChanged<Exam?> onChanged,
+  ) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
       decoration: BoxDecoration(
@@ -209,7 +253,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
             color: theme.colorScheme.primary.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 2),
-          )
+          ),
         ],
       ),
       child: Row(
@@ -222,17 +266,18 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
                 isExpanded: true,
                 value: selectedItem,
                 hint: Text(l10n.selectExam),
-                items: exams.map((exam) {
-                  return DropdownMenuItem<Exam>(
-                    value: exam,
-                    child: Text(
-                      exam.title,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  );
-                }).toList(),
+                items:
+                    exams.map((exam) {
+                      return DropdownMenuItem<Exam>(
+                        value: exam,
+                        child: Text(
+                          exam.title,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      );
+                    }).toList(),
                 onChanged: onChanged,
               ),
             ),
@@ -254,17 +299,27 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
             SafeArea(
               bottom: false,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 8.0,
+                ),
                 child: Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.arrow_back_ios_new, color: theme.primaryColor),
+                      icon: Icon(
+                        Icons.arrow_back_ios_new,
+                        color: theme.primaryColor,
+                      ),
+                      tooltip:
+                          MaterialLocalizations.of(context).backButtonTooltip,
                       onPressed: () => context.pop(),
                     ),
                     Expanded(
                       child: Text(
                         l10n.leaderboard,
-                        style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                        style: theme.textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -282,8 +337,14 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
               labelStyle: const TextStyle(fontWeight: FontWeight.bold),
               tabs: [
                 Tab(icon: const Icon(LucideIcons.star), text: l10n.campaignTab),
-                Tab(icon: const Icon(LucideIcons.fileText), text: l10n.essaysTab),
-                Tab(icon: const Icon(LucideIcons.checkSquare), text: l10n.examsTab),
+                Tab(
+                  icon: const Icon(LucideIcons.fileText),
+                  text: l10n.essaysTab,
+                ),
+                Tab(
+                  icon: const Icon(LucideIcons.checkSquare),
+                  text: l10n.examsTab,
+                ),
               ],
             ),
             Expanded(
@@ -293,37 +354,63 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> with SingleTicker
                   // Tab 1: Campaign
                   Column(
                     children: [
-                       Container(
+                      Container(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        child: Text(l10n.globalStoryPoints, style: TextStyle(color: theme.primaryColor, fontWeight: FontWeight.bold)),
-                       ),
-                       Expanded(child: _buildLeaderboardList(_campaignLeaderboard, true)),
+                        child: Text(
+                          l10n.globalStoryPoints,
+                          style: TextStyle(
+                            color: theme.primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildLeaderboardList(
+                          _campaignLeaderboard,
+                          true,
+                        ),
+                      ),
                     ],
                   ),
 
                   // Tab 2: Essays
                   Column(
                     children: [
-                       _buildDropdownHeader(_essayExams, _selectedEssayExam, (newExam) {
-                          if (newExam != null && newExam.id != _selectedEssayExam?.id) {
-                            setState(() => _selectedEssayExam = newExam);
-                            _fetchEssayLeaderboard(newExam.id);
-                          }
-                       }),
-                       Expanded(child: _buildLeaderboardList(_essayLeaderboard, false)),
+                      _buildDropdownHeader(_essayExams, _selectedEssayExam, (
+                        newExam,
+                      ) {
+                        if (newExam != null &&
+                            newExam.id != _selectedEssayExam?.id) {
+                          setState(() => _selectedEssayExam = newExam);
+                          _fetchEssayLeaderboard(newExam.id);
+                        }
+                      }),
+                      Expanded(
+                        child: _buildLeaderboardList(_essayLeaderboard, false),
+                      ),
                     ],
                   ),
 
                   // Tab 3: Standard Exams
                   Column(
                     children: [
-                       _buildDropdownHeader(_standardExams, _selectedStandardExam, (newExam) {
-                          if (newExam != null && newExam.id != _selectedStandardExam?.id) {
+                      _buildDropdownHeader(
+                        _standardExams,
+                        _selectedStandardExam,
+                        (newExam) {
+                          if (newExam != null &&
+                              newExam.id != _selectedStandardExam?.id) {
                             setState(() => _selectedStandardExam = newExam);
                             _fetchStandardLeaderboard(newExam.id);
                           }
-                       }),
-                       Expanded(child: _buildLeaderboardList(_standardLeaderboard, false)),
+                        },
+                      ),
+                      Expanded(
+                        child: _buildLeaderboardList(
+                          _standardLeaderboard,
+                          false,
+                        ),
+                      ),
                     ],
                   ),
                 ],

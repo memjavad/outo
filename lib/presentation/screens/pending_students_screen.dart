@@ -35,20 +35,21 @@ class _PendingStudentsScreenState extends State<PendingStudentsScreen> {
   Future<void> _approve(Student student) async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Approve Student'),
-        content: Text('Allow ${student.name} to join the platform?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+      builder:
+          (ctx) => AlertDialog(
+            title: const Text('Approve Student'),
+            content: Text('Allow ${student.name} to join the platform?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text('Approve'),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Approve'),
-          ),
-        ],
-      ),
     );
 
     final service = Provider.of<QuizService>(context, listen: false);
@@ -68,24 +69,25 @@ class _PendingStudentsScreenState extends State<PendingStudentsScreen> {
   Future<void> _reject(Student student) async {
     final confirm = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Reject Student'),
-        content: Text('Delete ${student.name}\'s registration?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+      builder:
+          (ctx) => AlertDialog(
+            title: const Text('Reject Student'),
+            content: Text('Delete ${student.name}\'s registration?'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Reject'),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-            child: const Text('Reject'),
-          ),
-        ],
-      ),
     );
 
     final service = Provider.of<QuizService>(context, listen: false);

@@ -170,15 +170,15 @@ class QuizBottomNavigation extends StatelessWidget {
                       Text(
                         currentQuestionIndex < questions.length - 1
                             ? (l10n.localeName == 'ar'
-                                  ? 'التالي'
-                                  : 'SAVE & NEXT')
+                                ? 'التالي'
+                                : 'SAVE & NEXT')
                             : (isReviewingEssay
-                                  ? (l10n.localeName == 'ar'
-                                        ? 'تأكيد التسليم'
-                                        : 'CONFIRM SUBMIT')
-                                  : (l10n.localeName == 'ar'
-                                        ? 'تسليم'
-                                        : 'SUBMIT')),
+                                ? (l10n.localeName == 'ar'
+                                    ? 'تأكيد التسليم'
+                                    : 'CONFIRM SUBMIT')
+                                : (l10n.localeName == 'ar'
+                                    ? 'تسليم'
+                                    : 'SUBMIT')),
                         style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,

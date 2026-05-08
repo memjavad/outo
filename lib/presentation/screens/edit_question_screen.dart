@@ -29,11 +29,14 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
   void initState() {
     super.initState();
     _questionController = TextEditingController(text: widget.question.question);
-    _imageUrlController = TextEditingController(text: widget.question.imageUrl ?? '');
+    _imageUrlController = TextEditingController(
+      text: widget.question.imageUrl ?? '',
+    );
     _questionType = widget.question.questionType;
-    _optionControllers = widget.question.options
-        .map((opt) => TextEditingController(text: opt))
-        .toList();
+    _optionControllers =
+        widget.question.options
+            .map((opt) => TextEditingController(text: opt))
+            .toList();
     // Ensure at least 4 options
     while (_optionControllers.length < 4) {
       _optionControllers.add(TextEditingController());
@@ -50,7 +53,9 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
         _exams = exams;
         if (widget.question.examId != null) {
           try {
-            _selectedExam = _exams.firstWhere((e) => e.id == widget.question.examId);
+            _selectedExam = _exams.firstWhere(
+              (e) => e.id == widget.question.examId,
+            );
           } catch (_) {
             _selectedExam = null;
           }
@@ -62,33 +67,48 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
 
   Future<void> _saveQuestion() async {
     if (_formKey.currentState!.validate()) {
-      setState(() { _isSaving = true; });
+      setState(() {
+        _isSaving = true;
+      });
 
       final updatedQuestion = QuizQuestion(
         id: widget.question.id,
         examId: _selectedExam?.id,
         question: _questionController.text,
         richText: widget.question.richText,
-        imageUrl: _imageUrlController.text.isNotEmpty ? _imageUrlController.text : null,
+        imageUrl:
+            _imageUrlController.text.isNotEmpty
+                ? _imageUrlController.text
+                : null,
         questionType: _questionType,
         options: _optionControllers.map((c) => c.text).toList(),
         correctAnswerIndex: _correctAnswerIndex,
         categoryId: widget.question.categoryId,
       );
 
-      final success = await context.read<QuizService>().updateQuestion(updatedQuestion);
+      final success = await context.read<QuizService>().updateQuestion(
+        updatedQuestion,
+      );
 
       if (!mounted) return;
 
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Question updated successfully!'), backgroundColor: Colors.green),
+          const SnackBar(
+            content: Text('Question updated successfully!'),
+            backgroundColor: Colors.green,
+          ),
         );
         Navigator.of(context).pop(true);
       } else {
-        setState(() { _isSaving = false; });
+        setState(() {
+          _isSaving = false;
+        });
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to update question'), backgroundColor: Colors.red),
+          const SnackBar(
+            content: Text('Failed to update question'),
+            backgroundColor: Colors.red,
+          ),
         );
       }
     }
@@ -107,9 +127,7 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Edit Question'),
-      ),
+      appBar: AppBar(title: const Text('Edit Question')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Form(
@@ -130,8 +148,11 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 3,
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Please enter a question' : null,
+                validator:
+                    (value) =>
+                        value == null || value.isEmpty
+                            ? 'Please enter a question'
+                            : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -158,13 +179,17 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
                 },
               ),
               const SizedBox(height: 24),
-              const Text('Options', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              const Text(
+                'Options',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
               const SizedBox(height: 8),
               _OptionsBuilder(
                 questionType: _questionType,
                 optionControllers: _optionControllers,
                 correctAnswerIndex: _correctAnswerIndex,
-                onCorrectAnswerChanged: (val) => setState(() => _correctAnswerIndex = val),
+                onCorrectAnswerChanged:
+                    (val) => setState(() => _correctAnswerIndex = val),
               ),
               const SizedBox(height: 32),
               ElevatedButton(
@@ -174,13 +199,20 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
                   backgroundColor: Theme.of(context).primaryColor,
                   foregroundColor: Colors.white,
                 ),
-                child: _isSaving
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                      )
-                    : const Text('Save Changes', style: TextStyle(fontWeight: FontWeight.bold)),
+                child:
+                    _isSaving
+                        ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                        : const Text(
+                          'Save Changes',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
               ),
             ],
           ),
@@ -189,9 +221,6 @@ class _EditQuestionScreenState extends State<EditQuestionScreen> {
     );
   }
 }
-
-
-
 
 class _ExamSelector extends StatelessWidget {
   final bool isLoadingExams;
@@ -225,10 +254,9 @@ class _ExamSelector extends StatelessWidget {
               value: null,
               child: Text('Global Question Bank (Unassigned)'),
             ),
-            ...exams.map((e) => DropdownMenuItem(
-                  value: e,
-                  child: Text(e.title),
-                )),
+            ...exams.map(
+              (e) => DropdownMenuItem(value: e, child: Text(e.title)),
+            ),
           ],
           onChanged: onChanged,
         ),
@@ -257,9 +285,15 @@ class _QuestionTypeSelector extends StatelessWidget {
       ),
       items: const [
         DropdownMenuItem(value: 'single', child: Text('Single Choice')),
-        DropdownMenuItem(value: 'multiple', child: Text('Multiple Choice (Checkboxes)')),
+        DropdownMenuItem(
+          value: 'multiple',
+          child: Text('Multiple Choice (Checkboxes)'),
+        ),
         DropdownMenuItem(value: 'true_false', child: Text('True / False')),
-        DropdownMenuItem(value: 'short_answer', child: Text('Short Answer (Text)')),
+        DropdownMenuItem(
+          value: 'short_answer',
+          child: Text('Short Answer (Text)'),
+        ),
       ],
       onChanged: onChanged,
     );
@@ -285,7 +319,9 @@ class _OptionsBuilder extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text('Provide the EXACT text answer you expect students to type:'),
+          const Text(
+            'Provide the EXACT text answer you expect students to type:',
+          ),
           const SizedBox(height: 8),
           TextFormField(
             controller: optionControllers[0],
@@ -293,7 +329,11 @@ class _OptionsBuilder extends StatelessWidget {
               labelText: 'Expected Correct Answer',
               border: OutlineInputBorder(),
             ),
-            validator: (value) => value == null || value.isEmpty ? 'Please enter the answer' : null,
+            validator:
+                (value) =>
+                    value == null || value.isEmpty
+                        ? 'Please enter the answer'
+                        : null,
           ),
         ],
       );
@@ -345,7 +385,11 @@ class _OptionsBuilder extends StatelessWidget {
                         labelText: 'Option ${i + 1}',
                         border: const OutlineInputBorder(),
                       ),
-                      validator: (value) => value == null || value.isEmpty ? 'Please enter an option' : null,
+                      validator:
+                          (value) =>
+                              value == null || value.isEmpty
+                                  ? 'Please enter an option'
+                                  : null,
                     ),
                   ),
                 ],

@@ -96,17 +96,15 @@ class QuizMainContent extends StatelessWidget {
               const SizedBox(height: 16),
               Theme(
                 data: Theme.of(context).copyWith(
-                  progressIndicatorTheme: Theme.of(context)
-                      .progressIndicatorTheme
-                      .copyWith(
-                        color: Theme.of(context).primaryColor,
-                        linearTrackColor: Theme.of(
-                          context,
-                        ).colorScheme.surfaceContainerHighest,
-                        circularTrackColor: Theme.of(
-                          context,
-                        ).colorScheme.surfaceContainerHighest,
-                      ),
+                  progressIndicatorTheme: Theme.of(
+                    context,
+                  ).progressIndicatorTheme.copyWith(
+                    color: Theme.of(context).primaryColor,
+                    linearTrackColor:
+                        Theme.of(context).colorScheme.surfaceContainerHighest,
+                    circularTrackColor:
+                        Theme.of(context).colorScheme.surfaceContainerHighest,
+                  ),
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
@@ -130,9 +128,8 @@ class QuizMainContent extends StatelessWidget {
                       ) ??
                       1;
                   int maxTime = getCampaignQuestionTime(levelMatch);
-                  double timeProgress = maxTime > 0
-                      ? questionTimeRemainingSeconds / maxTime
-                      : 0;
+                  double timeProgress =
+                      maxTime > 0 ? questionTimeRemainingSeconds / maxTime : 0;
                   bool isUrgent = questionTimeRemainingSeconds <= 5;
 
                   return Padding(
@@ -151,9 +148,10 @@ class QuizMainContent extends StatelessWidget {
                                 fontSize: 12,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.5,
-                                color: isUrgent
-                                    ? Colors.redAccent
-                                    : theme.colorScheme.onSurfaceVariant,
+                                color:
+                                    isUrgent
+                                        ? Colors.redAccent
+                                        : theme.colorScheme.onSurfaceVariant,
                               ),
                             ),
                             Text(
@@ -161,9 +159,10 @@ class QuizMainContent extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: isUrgent
-                                    ? Colors.redAccent
-                                    : theme.colorScheme.primary,
+                                color:
+                                    isUrgent
+                                        ? Colors.redAccent
+                                        : theme.colorScheme.primary,
                                 fontFeatures: const [
                                   FontFeature.tabularFigures(),
                                 ],
@@ -187,21 +186,24 @@ class QuizMainContent extends StatelessWidget {
                               child: Container(
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors: isUrgent
-                                        ? [
-                                            Colors.redAccent,
-                                            Colors.orangeAccent,
-                                          ]
-                                        : [Colors.amberAccent, Colors.orange],
+                                    colors:
+                                        isUrgent
+                                            ? [
+                                              Colors.redAccent,
+                                              Colors.orangeAccent,
+                                            ]
+                                            : [
+                                              Colors.amberAccent,
+                                              Colors.orange,
+                                            ],
                                   ),
                                   borderRadius: BorderRadius.circular(4),
                                   boxShadow: [
                                     BoxShadow(
-                                      color:
-                                          (isUrgent
-                                                  ? Colors.redAccent
-                                                  : Colors.orange)
-                                              .withOpacity(0.5),
+                                      color: (isUrgent
+                                              ? Colors.redAccent
+                                              : Colors.orange)
+                                          .withOpacity(0.5),
                                       blurRadius: 8,
                                       spreadRadius: 2,
                                     ),
@@ -273,15 +275,13 @@ class QuizMainContent extends StatelessWidget {
                       color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
                     code: TextStyle(
-                      backgroundColor: Theme.of(
-                        context,
-                      ).colorScheme.surfaceContainerHighest,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
                       fontFamily: 'monospace',
                     ),
                     codeblockDecoration: BoxDecoration(
-                      color: Theme.of(
-                        context,
-                      ).colorScheme.surfaceContainerHighest,
+                      color:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
@@ -295,11 +295,12 @@ class QuizMainContent extends StatelessWidget {
                 child: Image.network(
                   question.imageUrl!,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => const Icon(
-                    Icons.broken_image,
-                    size: 50,
-                    color: Colors.grey,
-                  ),
+                  errorBuilder:
+                      (context, error, stackTrace) => const Icon(
+                        Icons.broken_image,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
                 ),
               ),
             ],
@@ -329,14 +330,15 @@ class QuizMainContent extends StatelessWidget {
                   borderRadius: BorderRadius.circular(
                     question.questionType == 'essay' ? 8 : 16,
                   ),
-                  border: question.questionType == 'essay'
-                      ? Border.all(
-                          color: theme.colorScheme.outlineVariant.withValues(
-                            alpha: 0.3,
-                          ),
-                          width: 1.0,
-                        )
-                      : null,
+                  border:
+                      question.questionType == 'essay'
+                          ? Border.all(
+                            color: theme.colorScheme.outlineVariant.withValues(
+                              alpha: 0.3,
+                            ),
+                            width: 1.0,
+                          )
+                          : null,
                   boxShadow: [
                     if (question.questionType == 'essay')
                       BoxShadow(
@@ -357,69 +359,73 @@ class QuizMainContent extends StatelessWidget {
                 ),
                 child:
                     question.questionType == 'essay' && quillController != null
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 24,
-                            ),
-                            constraints: BoxConstraints(
-                              minHeight:
-                                  MediaQuery.of(context).size.height * 0.70,
-                            ),
-                            child: quill.QuillEditor.basic(
-                              controller: quillController!,
-                              config: quill.QuillEditorConfig(
-                                contextMenuBuilder: (context, rawEditorState) {
-                                  return const SizedBox.shrink();
-                                },
-                                customStyles: quill.DefaultStyles(
-                                  paragraph: quill.DefaultTextBlockStyle(
-                                    TextStyle(
-                                      fontSize: 16,
-                                      height: 1.8,
-                                      color: theme.colorScheme.onSurface,
+                        ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 24,
+                              ),
+                              constraints: BoxConstraints(
+                                minHeight:
+                                    MediaQuery.of(context).size.height * 0.70,
+                              ),
+                              child: quill.QuillEditor.basic(
+                                controller: quillController!,
+                                config: quill.QuillEditorConfig(
+                                  contextMenuBuilder: (
+                                    context,
+                                    rawEditorState,
+                                  ) {
+                                    return const SizedBox.shrink();
+                                  },
+                                  customStyles: quill.DefaultStyles(
+                                    paragraph: quill.DefaultTextBlockStyle(
+                                      TextStyle(
+                                        fontSize: 16,
+                                        height: 1.8,
+                                        color: theme.colorScheme.onSurface,
+                                      ),
+                                      const quill.HorizontalSpacing(0, 0),
+                                      const quill.VerticalSpacing(0, 0),
+                                      const quill.VerticalSpacing(0, 0),
+                                      null,
                                     ),
-                                    const quill.HorizontalSpacing(0, 0),
-                                    const quill.VerticalSpacing(0, 0),
-                                    const quill.VerticalSpacing(0, 0),
-                                    null,
                                   ),
                                 ),
                               ),
                             ),
+                          ],
+                        )
+                        : TextField(
+                          onChanged: (val) {
+                            selectedAnswers[currentQuestionIndex] = val;
+                          },
+                          controller: TextEditingController(
+                            text: selectedAnswers[currentQuestionIndex] ?? '',
                           ),
-                        ],
-                      )
-                    : TextField(
-                        onChanged: (val) {
-                          selectedAnswers[currentQuestionIndex] = val;
-                        },
-                        controller: TextEditingController(
-                          text: selectedAnswers[currentQuestionIndex] ?? '',
+                          maxLines: null,
+                          minLines: 3,
+                          style: const TextStyle(fontSize: 16, height: 1.5),
+                          decoration: InputDecoration(
+                            hintText:
+                                l10n.localeName == 'ar'
+                                    ? 'اكتب إجابتك هنا...'
+                                    : 'Type your answer here...',
+                            hintStyle: TextStyle(
+                              color: theme.colorScheme.onSurfaceVariant
+                                  .withOpacity(0.5),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(16),
+                              borderSide: BorderSide.none,
+                            ),
+                            filled: true,
+                            fillColor: Colors.transparent,
+                            contentPadding: const EdgeInsets.all(24),
+                          ),
                         ),
-                        maxLines: null,
-                        minLines: 3,
-                        style: const TextStyle(fontSize: 16, height: 1.5),
-                        decoration: InputDecoration(
-                          hintText: l10n.localeName == 'ar'
-                              ? 'اكتب إجابتك هنا...'
-                              : 'Type your answer here...',
-                          hintStyle: TextStyle(
-                            color: theme.colorScheme.onSurfaceVariant
-                                .withOpacity(0.5),
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Colors.transparent,
-                          contentPadding: const EdgeInsets.all(24),
-                        ),
-                      ),
               ),
               if (question.questionType != 'essay')
                 Padding(
@@ -477,29 +483,33 @@ class QuizMainContent extends StatelessWidget {
                           duration: const Duration(milliseconds: 300),
                           opacity: isEliminated ? 0.2 : 1.0,
                           child: ElevatedButton(
-                            onPressed: () =>
-                                onAnswerQuestion(originalIndex, questions),
+                            onPressed:
+                                () =>
+                                    onAnswerQuestion(originalIndex, questions),
                             style: ElevatedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 20),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20),
-                                side: isSelected
-                                    ? BorderSide(
-                                        color: Theme.of(context).primaryColor,
-                                        width: 2,
-                                      )
-                                    : BorderSide.none,
+                                side:
+                                    isSelected
+                                        ? BorderSide(
+                                          color: Theme.of(context).primaryColor,
+                                          width: 2,
+                                        )
+                                        : BorderSide.none,
                               ),
-                              backgroundColor: isSelected
-                                  ? Theme.of(
-                                      context,
-                                    ).primaryColor.withOpacity(0.05)
-                                  : Theme.of(
-                                      context,
-                                    ).colorScheme.surfaceContainerLowest,
-                              foregroundColor: isSelected
-                                  ? Theme.of(context).primaryColor
-                                  : Theme.of(context).colorScheme.onSurface,
+                              backgroundColor:
+                                  isSelected
+                                      ? Theme.of(
+                                        context,
+                                      ).primaryColor.withOpacity(0.05)
+                                      : Theme.of(
+                                        context,
+                                      ).colorScheme.surfaceContainerLowest,
+                              foregroundColor:
+                                  isSelected
+                                      ? Theme.of(context).primaryColor
+                                      : Theme.of(context).colorScheme.onSurface,
                               elevation: 0,
                               shadowColor: Colors.transparent,
                             ),
@@ -519,9 +529,10 @@ class QuizMainContent extends StatelessWidget {
                                   question.options[originalIndex],
                                   style: TextStyle(
                                     fontSize: 16,
-                                    fontWeight: isSelected
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
+                                    fontWeight:
+                                        isSelected
+                                            ? FontWeight.bold
+                                            : FontWeight.normal,
                                   ),
                                 ),
                               ],

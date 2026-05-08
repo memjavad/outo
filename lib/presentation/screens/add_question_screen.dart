@@ -49,7 +49,10 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         examId: _selectedExam?.id,
         question: _questionController.text,
-        imageUrl: _imageUrlController.text.isNotEmpty ? _imageUrlController.text : null,
+        imageUrl:
+            _imageUrlController.text.isNotEmpty
+                ? _imageUrlController.text
+                : null,
         questionType: _questionType,
         options: _optionControllers.map((c) => c.text).toList(),
         correctAnswerIndex: _correctAnswerIndex,
@@ -73,9 +76,7 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add Question'),
-      ),
+      appBar: AppBar(title: const Text('Add Question')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24.0),
         child: Form(
@@ -95,8 +96,11 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                   labelText: 'Question Text',
                   border: OutlineInputBorder(),
                 ),
-                validator: (value) =>
-                    value == null || value.isEmpty ? 'Please enter a question' : null,
+                validator:
+                    (value) =>
+                        value == null || value.isEmpty
+                            ? 'Please enter a question'
+                            : null,
               ),
               const SizedBox(height: 16),
               TextFormField(
@@ -124,13 +128,18 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                 },
               ),
               const SizedBox(height: 24),
-              const Text('Options / Answer', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              const Text(
+                'Options / Answer',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
               const SizedBox(height: 8),
               _OptionsBuilder(
                 questionType: _questionType,
                 optionControllers: _optionControllers,
                 correctAnswerIndex: _correctAnswerIndex,
-                onCorrectAnswerChanged: (int? value) => setState(() => _correctAnswerIndex = value!),
+                onCorrectAnswerChanged:
+                    (int? value) =>
+                        setState(() => _correctAnswerIndex = value!),
               ),
               const SizedBox(height: 32),
               ElevatedButton(
@@ -149,9 +158,6 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
     );
   }
 }
-
-
-
 
 class _ExamSelector extends StatelessWidget {
   final bool isLoadingExams;
@@ -187,10 +193,9 @@ class _ExamSelector extends StatelessWidget {
               value: null,
               child: Text('Global Question Bank (Unassigned)'),
             ),
-            ...exams.map((e) => DropdownMenuItem(
-                  value: e,
-                  child: Text(e.title),
-                )),
+            ...exams.map(
+              (e) => DropdownMenuItem(value: e, child: Text(e.title)),
+            ),
           ],
           onChanged: onChanged,
         ),
@@ -219,9 +224,15 @@ class _QuestionTypeDropdown extends StatelessWidget {
       ),
       items: const [
         DropdownMenuItem(value: 'single', child: Text('Single Choice')),
-        DropdownMenuItem(value: 'multiple', child: Text('Multiple Choice (Checkboxes)')),
+        DropdownMenuItem(
+          value: 'multiple',
+          child: Text('Multiple Choice (Checkboxes)'),
+        ),
         DropdownMenuItem(value: 'true_false', child: Text('True / False')),
-        DropdownMenuItem(value: 'short_answer', child: Text('Short Answer (Text)')),
+        DropdownMenuItem(
+          value: 'short_answer',
+          child: Text('Short Answer (Text)'),
+        ),
       ],
       onChanged: onChanged,
     );
@@ -247,7 +258,9 @@ class _OptionsBuilder extends StatelessWidget {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text('Provide the EXACT text answer you expect students to type:'),
+          const Text(
+            'Provide the EXACT text answer you expect students to type:',
+          ),
           const SizedBox(height: 8),
           TextFormField(
             controller: optionControllers[0],
@@ -255,7 +268,11 @@ class _OptionsBuilder extends StatelessWidget {
               labelText: 'Expected Correct Answer',
               border: OutlineInputBorder(),
             ),
-            validator: (value) => value == null || value.isEmpty ? 'Please enter the answer' : null,
+            validator:
+                (value) =>
+                    value == null || value.isEmpty
+                        ? 'Please enter the answer'
+                        : null,
           ),
         ],
       );
@@ -307,7 +324,11 @@ class _OptionsBuilder extends StatelessWidget {
                         labelText: 'Option ${i + 1}',
                         border: const OutlineInputBorder(),
                       ),
-                      validator: (value) => value == null || value.isEmpty ? 'Please enter an option' : null,
+                      validator:
+                          (value) =>
+                              value == null || value.isEmpty
+                                  ? 'Please enter an option'
+                                  : null,
                     ),
                   ),
                 ],
