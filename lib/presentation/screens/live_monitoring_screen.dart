@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../providers/quiz_service_facade.dart';
 import '../../domain/entities/entities.dart';
 
-
 class LiveMonitoringScreen extends StatefulWidget {
   const LiveMonitoringScreen({super.key});
 
@@ -36,7 +35,7 @@ class _LiveMonitoringScreenState extends State<LiveMonitoringScreen> {
   Future<void> _loadSessions({bool isRefresh = false}) async {
     if (!mounted) return;
     if (!isRefresh) setState(() => _isLoading = true);
-    
+
     final service = Provider.of<QuizService>(context, listen: false);
     final sessions = await service.fetchLiveSessions();
     if (mounted) {
@@ -58,7 +57,11 @@ class _LiveMonitoringScreenState extends State<LiveMonitoringScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.monitor_heart_outlined, size: 80, color: Colors.grey[400]),
+            Icon(
+              Icons.monitor_heart_outlined,
+              size: 80,
+              color: Colors.grey[400],
+            ),
             const SizedBox(height: 16),
             Text(
               'No active students',
@@ -76,16 +79,24 @@ class _LiveMonitoringScreenState extends State<LiveMonitoringScreen> {
         itemCount: _sessions.length,
         itemBuilder: (context, index) {
           final session = _sessions[index];
-          final progress = session.totalQuestions > 0 
-              ? session.answeredCount / session.totalQuestions 
-              : 0.0;
-              
+          final progress =
+              session.totalQuestions > 0
+                  ? session.answeredCount / session.totalQuestions
+                  : 0.0;
+
           Color statusColor;
           switch (session.status) {
-            case 'active': statusColor = Colors.green; break;
-            case 'completed': statusColor = Colors.blue; break;
-            case 'abandoned': statusColor = Colors.red; break;
-            default: statusColor = Colors.grey;
+            case 'active':
+              statusColor = Colors.green;
+              break;
+            case 'completed':
+              statusColor = Colors.blue;
+              break;
+            case 'abandoned':
+              statusColor = Colors.red;
+              break;
+            default:
+              statusColor = Colors.grey;
           }
 
           return Card(
@@ -96,7 +107,10 @@ class _LiveMonitoringScreenState extends State<LiveMonitoringScreen> {
                 backgroundColor: statusColor.withValues(alpha: 0.2),
                 child: Icon(Icons.person, color: statusColor),
               ),
-              title: Text(session.studentName, style: const TextStyle(fontWeight: FontWeight.bold)),
+              title: Text(
+                session.studentName,
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
               subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -110,14 +124,24 @@ class _LiveMonitoringScreenState extends State<LiveMonitoringScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Question: ${session.currentQuestion + 1} / ${session.totalQuestions}'),
-                      Text('Status: ${session.status.toUpperCase()}', 
-                        style: TextStyle(color: statusColor, fontWeight: FontWeight.bold, fontSize: 12),
+                      Text(
+                        'Question: ${session.currentQuestion + 1} / ${session.totalQuestions}',
+                      ),
+                      Text(
+                        'Status: ${session.status.toUpperCase()}',
+                        style: TextStyle(
+                          color: statusColor,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 4),
-                  Text('IP: ${session.id} | Last Beat: ${_formatTime(session.lastHeartbeat)}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                  Text(
+                    'IP: ${session.id} | Last Beat: ${_formatTime(session.lastHeartbeat)}',
+                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
                 ],
               ),
               isThreeLine: true,
@@ -132,6 +156,3 @@ class _LiveMonitoringScreenState extends State<LiveMonitoringScreen> {
     return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}:${time.second.toString().padLeft(2, '0')}';
   }
 }
-
-
-

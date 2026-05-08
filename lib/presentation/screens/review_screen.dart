@@ -31,6 +31,8 @@ class ReviewScreen extends StatelessWidget {
               child: Row(
                 children: [
                   IconButton(
+                    tooltip:
+                        MaterialLocalizations.of(context).backButtonTooltip,
                     icon: Icon(
                       Icons.arrow_back_ios_new,
                       color: Theme.of(context).primaryColor,
@@ -106,9 +108,12 @@ class _ReviewQuestionCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: Theme.of(context).cardTheme.color,
                   borderRadius: BorderRadius.circular(8),
-                  border: Theme.of(context).brightness == Brightness.dark
-                      ? Border.all(color: Colors.white.withValues(alpha: 0.05))
-                      : Border.all(color: const Color(0xFFE2E8F0)),
+                  border:
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Border.all(
+                            color: Colors.white.withValues(alpha: 0.05),
+                          )
+                          : Border.all(color: const Color(0xFFE2E8F0)),
                 ),
                 child: MarkdownBody(
                   data: question.richText!,
@@ -120,9 +125,8 @@ class _ReviewQuestionCard extends StatelessWidget {
                       color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
                     code: TextStyle(
-                      backgroundColor: Theme.of(
-                        context,
-                      ).colorScheme.surfaceContainerHighest,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.surfaceContainerHighest,
                       fontFamily: 'monospace',
                     ),
                   ),
@@ -138,11 +142,12 @@ class _ReviewQuestionCard extends StatelessWidget {
                   fit: BoxFit.cover,
                   height: 150,
                   width: double.infinity,
-                  errorBuilder: (context, error, stackTrace) => const Icon(
-                    Icons.broken_image,
-                    size: 50,
-                    color: Colors.grey,
-                  ),
+                  errorBuilder:
+                      (context, error, stackTrace) => const Icon(
+                        Icons.broken_image,
+                        size: 50,
+                        color: Colors.grey,
+                      ),
                 ),
               ),
             ],
@@ -171,9 +176,10 @@ class _ReviewQuestionCard extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isCorrect
-                    ? Colors.green.withValues(alpha: 0.1)
-                    : Colors.red.withValues(alpha: 0.1),
+                color:
+                    isCorrect
+                        ? Colors.green.withValues(alpha: 0.1)
+                        : Colors.red.withValues(alpha: 0.1),
                 border: Border.all(
                   color: isCorrect ? Colors.green : Colors.red,
                 ),
@@ -233,9 +239,10 @@ class _ReviewQuestionCard extends StatelessWidget {
         bool isCorrect = question.correctAnswerIndex == optIndex;
 
         Color bgColor = Colors.transparent;
-        Color borderColor = Theme.of(context).brightness == Brightness.dark
-            ? Colors.white.withValues(alpha: 0.12)
-            : const Color(0xFFE2E8F0);
+        Color borderColor =
+            Theme.of(context).brightness == Brightness.dark
+                ? Colors.white.withValues(alpha: 0.12)
+                : const Color(0xFFE2E8F0);
         IconData? icon;
         Color iconColor = Colors.transparent;
 
@@ -273,9 +280,10 @@ class _ReviewQuestionCard extends StatelessWidget {
                   question.options[optIndex],
                   style: TextStyle(
                     fontSize: 16,
-                    fontWeight: (isSelected || isCorrect)
-                        ? FontWeight.bold
-                        : FontWeight.normal,
+                    fontWeight:
+                        (isSelected || isCorrect)
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                   ),
                 ),
               ),

@@ -49,14 +49,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
       name: _nameController.text.trim(),
       bio: _bioController.text.trim(),
     );
-    
+
     if (mounted) {
       setState(() => _isLoading = false);
       if (success) {
         setState(() => _isEditing = false);
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.profileUpdated)));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.profileUpdated)),
+        );
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(AppLocalizations.of(context)!.updateFailed)));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(AppLocalizations.of(context)!.updateFailed)),
+        );
       }
     }
   }
@@ -68,7 +72,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final theme = Theme.of(context);
 
     if (student == null) {
-      return Scaffold(body: Center(child: Text(AppLocalizations.of(context)!.notLoggedIn)));
+      return Scaffold(
+        body: Center(child: Text(AppLocalizations.of(context)!.notLoggedIn)),
+      );
     }
 
     return Scaffold(
@@ -85,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _ProfileInfoDisplay(
                   student: student,
                   theme: theme,
-                  onEdit: () => setState(() => _isEditing = true)
+                  onEdit: () => setState(() => _isEditing = true),
                 )
               else
                 _ProfileEditForm(
@@ -122,12 +128,15 @@ class _ProfileHeader extends StatelessWidget {
       children: [
         IconButton(
           icon: Icon(Icons.arrow_back_ios_new, color: theme.primaryColor),
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
           onPressed: () => context.pop(),
         ),
         const SizedBox(width: 8),
         Text(
           AppLocalizations.of(context)!.myProfile,
-          style: theme.textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+          style: theme.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ],
     );
@@ -149,13 +158,24 @@ class _ProfileInfoDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(student.name, style: theme.textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold)),
-        Text(student.phone, style: const TextStyle(color: Colors.grey, fontSize: 16)),
+        Text(
+          student.name,
+          style: theme.textTheme.headlineMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          student.phone,
+          style: const TextStyle(color: Colors.grey, fontSize: 16),
+        ),
         const SizedBox(height: 20),
         if (student.bio != null && student.bio!.isNotEmpty)
           Container(
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: Colors.grey.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(
+              color: Colors.grey.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(12),
+            ),
             child: Text(student.bio!, textAlign: TextAlign.center),
           ),
         const SizedBox(height: 32),
@@ -163,7 +183,9 @@ class _ProfileInfoDisplay extends StatelessWidget {
           onPressed: onEdit,
           icon: const Icon(Icons.edit),
           label: Text(AppLocalizations.of(context)!.editProfile),
-          style: OutlinedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size(double.infinity, 50),
+          ),
         ),
         const SizedBox(height: 24),
         const Divider(),
@@ -221,22 +243,37 @@ class _ProfileEditForm extends StatelessWidget {
       children: [
         TextField(
           controller: nameController,
-          decoration: InputDecoration(labelText: AppLocalizations.of(context)!.fullName, border: const OutlineInputBorder()),
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context)!.fullName,
+            border: const OutlineInputBorder(),
+          ),
         ),
         const SizedBox(height: 16),
         TextField(
           controller: bioController,
-          decoration: InputDecoration(labelText: AppLocalizations.of(context)!.bio, border: const OutlineInputBorder()),
+          decoration: InputDecoration(
+            labelText: AppLocalizations.of(context)!.bio,
+            border: const OutlineInputBorder(),
+          ),
           maxLines: 3,
         ),
         const SizedBox(height: 24),
         Row(
           children: [
             Expanded(
-              child: TextButton(onPressed: onCancel, child: Text(AppLocalizations.of(context)!.cancel)),
+              child: TextButton(
+                onPressed: onCancel,
+                child: Text(AppLocalizations.of(context)!.cancel),
+              ),
             ),
             Expanded(
-              child: ElevatedButton(onPressed: isLoading ? null : onSave, child: isLoading ? const CircularProgressIndicator() : Text(AppLocalizations.of(context)!.save)),
+              child: ElevatedButton(
+                onPressed: isLoading ? null : onSave,
+                child:
+                    isLoading
+                        ? const CircularProgressIndicator()
+                        : Text(AppLocalizations.of(context)!.save),
+              ),
             ),
           ],
         ),
@@ -270,24 +307,38 @@ class _QuizHistorySection extends StatelessWidget {
             }
             final results = (snapshot.data ?? []).take(3).toList();
             if (results.isEmpty) {
-              return Center(child: Text(AppLocalizations.of(context)!.noQuizzesCompleted, style: const TextStyle(color: Colors.grey)));
+              return Center(
+                child: Text(
+                  AppLocalizations.of(context)!.noQuizzesCompleted,
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              );
             }
             return Column(
               children: [
-                ...results.map((r) => Card(
-                  margin: const EdgeInsets.only(bottom: 8),
-                  child: ListTile(
-                    title: Text(r.examTitle ?? AppLocalizations.of(context)!.generalQuiz),
-                    subtitle: Text(r.createdAt != null ? DateFormat('MMM d, y').format(r.createdAt!) : ''),
-                    trailing: Text(
-                      '${r.scorePercentage.toStringAsFixed(0)}%',
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: r.grade == 'F' ? Colors.red : Colors.green,
+                ...results.map(
+                  (r) => Card(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    child: ListTile(
+                      title: Text(
+                        r.examTitle ??
+                            AppLocalizations.of(context)!.generalQuiz,
+                      ),
+                      subtitle: Text(
+                        r.createdAt != null
+                            ? DateFormat('MMM d, y').format(r.createdAt!)
+                            : '',
+                      ),
+                      trailing: Text(
+                        '${r.scorePercentage.toStringAsFixed(0)}%',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: r.grade == 'F' ? Colors.red : Colors.green,
+                        ),
                       ),
                     ),
                   ),
-                )),
+                ),
                 TextButton(
                   onPressed: () => context.push('/student_results'),
                   child: Text(AppLocalizations.of(context)!.viewAllHistory),
@@ -315,7 +366,10 @@ class _LogoutButton extends StatelessWidget {
         context.go('/');
       },
       icon: const Icon(Icons.logout, color: Colors.red),
-      label: Text(l10n.localeName == 'ar' ? 'تسجيل خروج' : 'Logout', style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+      label: Text(
+        l10n.localeName == 'ar' ? 'تسجيل خروج' : 'Logout',
+        style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+      ),
       style: OutlinedButton.styleFrom(
         minimumSize: const Size(double.infinity, 54),
         side: const BorderSide(color: Colors.red),

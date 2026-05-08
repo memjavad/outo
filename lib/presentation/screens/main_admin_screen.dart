@@ -24,7 +24,7 @@ class _MainAdminScreenState extends State<MainAdminScreen> {
 
   final List<Widget> _screens = [
     const DashboardScreen(), // Question Bank
-    const ExamsScreen(),     // Exam Manager
+    const ExamsScreen(), // Exam Manager
     const CampaignAdminScreen(), // NEW: Campaign Manager
     const EssayAdminScreen(), // NEW: Essay Manager
     const PendingStudentsScreen(), // Student Approvals
@@ -41,7 +41,7 @@ class _MainAdminScreenState extends State<MainAdminScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
+
     final titles = [
       l10n.localeName == 'ar' ? 'بنك الأسئلة' : 'Question Bank',
       l10n.localeName == 'ar' ? 'الامتحانات' : 'Exams',
@@ -63,10 +63,7 @@ class _MainAdminScreenState extends State<MainAdminScreen> {
           ),
         ],
       ),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _screens,
-      ),
+      body: IndexedStack(index: _currentIndex, children: _screens),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: (index) => setState(() => _currentIndex = index),
@@ -105,5 +102,3 @@ class _MainAdminScreenState extends State<MainAdminScreen> {
     );
   }
 }
-
-

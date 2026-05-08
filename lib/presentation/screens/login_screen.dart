@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-    
+
     return Scaffold(
       backgroundColor: colorScheme.surface,
       body: Stack(
@@ -67,7 +67,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
           Center(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+                vertical: 32.0,
+              ),
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 400),
                 child: Column(
@@ -90,12 +93,13 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ),
-          
+
           PositionedDirectional(
             top: MediaQuery.of(context).padding.top + 8,
             start: 16,
             child: IconButton(
               icon: Icon(Icons.close, color: colorScheme.primary, size: 32),
+              tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
               onPressed: () => context.pop(),
             ),
           ),
@@ -246,7 +250,10 @@ class _LoginForm extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 16.0),
               child: Text(
                 l10n.invalidLogin,
-                style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -286,10 +293,7 @@ class _LoginForm extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  colorScheme.primary,
-                  colorScheme.primaryContainer,
-                ],
+                colors: [colorScheme.primary, colorScheme.primaryContainer],
               ),
             ),
             child: ElevatedButton(
@@ -298,13 +302,17 @@ class _LoginForm extends StatelessWidget {
                 backgroundColor: Colors.transparent,
                 shadowColor: Colors.transparent,
               ),
-              child: isLoading
-                  ? const SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
-                    )
-                  : Text(l10n.login),
+              child:
+                  isLoading
+                      ? const SizedBox(
+                        height: 24,
+                        width: 24,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                      : Text(l10n.login),
             ),
           ),
         ],

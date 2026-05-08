@@ -38,40 +38,41 @@ class _ExamsScreenState extends State<ExamsScreen> {
 
     final result = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Create New Exam'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: titleController,
-              decoration: const InputDecoration(
-                labelText: 'Exam Title',
-                border: OutlineInputBorder(),
-              ),
+      builder:
+          (ctx) => AlertDialog(
+            title: const Text('Create New Exam'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: titleController,
+                  decoration: const InputDecoration(
+                    labelText: 'Exam Title',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TextField(
+                  controller: descController,
+                  decoration: const InputDecoration(
+                    labelText: 'Description (Optional)',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 2,
+                ),
+              ],
             ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: descController,
-              decoration: const InputDecoration(
-                labelText: 'Description (Optional)',
-                border: OutlineInputBorder(),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text('Cancel'),
               ),
-              maxLines: 2,
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text('Create'),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Create'),
-          ),
-        ],
-      ),
     );
 
     if (result == true && titleController.text.isNotEmpty) {
@@ -99,24 +100,25 @@ class _ExamsScreenState extends State<ExamsScreen> {
   Future<void> _deleteExam(Exam exam) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Delete Exam'),
-        content: Text('Delete "${exam.title}"? This cannot be undone.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
+      builder:
+          (ctx) => AlertDialog(
+            title: const Text('Delete Exam'),
+            content: Text('Delete "${exam.title}"? This cannot be undone.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text('Delete'),
+              ),
+            ],
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
     );
 
     if (confirmed == true) {
@@ -145,84 +147,89 @@ class _ExamsScreenState extends State<ExamsScreen> {
     }
 
     return Scaffold(
-      body: _exams.isEmpty
-          ? Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.assignment_outlined,
-                    size: 80,
-                    color: Colors.grey[400],
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'No exams created yet',
-                    style: TextStyle(fontSize: 20, color: Colors.grey[600]),
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton.icon(
-                    onPressed: _showAddExamDialog,
-                    icon: const Icon(Icons.add),
-                    label: const Text('Create First Exam'),
-                  ),
-                ],
-              ),
-            )
-          : RefreshIndicator(
-              onRefresh: _loadExams,
-              child: ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: _exams.length,
-                itemBuilder: (context, index) {
-                  final exam = _exams[index];
-                  return Card(
-                    elevation: 2,
-                    margin: const EdgeInsets.only(bottom: 12),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(16),
-                      leading: CircleAvatar(
-                        backgroundColor: Colors.blue.withValues(alpha: 0.1),
-                        child: const Icon(Icons.assignment, color: Colors.blue),
-                      ),
-                      title: Text(
-                        exam.title,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                      subtitle:
-                          exam.description != null &&
-                              exam.description!.isNotEmpty
-                          ? Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: Text(exam.description!),
-                            )
-                          : null,
-                      trailing: IconButton(
-                        icon: const Icon(
-                          Icons.delete_outline,
-                          color: Colors.red,
-                        ),
-                        tooltip: 'Delete Exam',
-                        onPressed: () => _deleteExam(exam),
-                      ),
-                      onTap: () {
-                        // Navigate to Question Bank filtered by this exam (stretch goal)
-                      },
+      body:
+          _exams.isEmpty
+              ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.assignment_outlined,
+                      size: 80,
+                      color: Colors.grey[400],
                     ),
-                  );
-                },
+                    const SizedBox(height: 16),
+                    Text(
+                      'No exams created yet',
+                      style: TextStyle(fontSize: 20, color: Colors.grey[600]),
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton.icon(
+                      onPressed: _showAddExamDialog,
+                      icon: const Icon(Icons.add),
+                      label: const Text('Create First Exam'),
+                    ),
+                  ],
+                ),
+              )
+              : RefreshIndicator(
+                onRefresh: _loadExams,
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: _exams.length,
+                  itemBuilder: (context, index) {
+                    final exam = _exams[index];
+                    return Card(
+                      elevation: 2,
+                      margin: const EdgeInsets.only(bottom: 12),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(16),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.blue.withValues(alpha: 0.1),
+                          child: const Icon(
+                            Icons.assignment,
+                            color: Colors.blue,
+                          ),
+                        ),
+                        title: Text(
+                          exam.title,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        subtitle:
+                            exam.description != null &&
+                                    exam.description!.isNotEmpty
+                                ? Padding(
+                                  padding: const EdgeInsets.only(top: 8.0),
+                                  child: Text(exam.description!),
+                                )
+                                : null,
+                        trailing: IconButton(
+                          icon: const Icon(
+                            Icons.delete_outline,
+                            color: Colors.red,
+                          ),
+                          tooltip: 'Delete Exam',
+                          onPressed: () => _deleteExam(exam),
+                        ),
+                        onTap: () {
+                          // Navigate to Question Bank filtered by this exam (stretch goal)
+                        },
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-      floatingActionButton: _exams.isNotEmpty
-          ? FloatingActionButton(
-              onPressed: _showAddExamDialog,
-              tooltip: 'Create New Exam',
-              child: const Icon(Icons.add),
-            )
-          : null,
+      floatingActionButton:
+          _exams.isNotEmpty
+              ? FloatingActionButton(
+                onPressed: _showAddExamDialog,
+                tooltip: 'Create New Exam',
+                child: const Icon(Icons.add),
+              )
+              : null,
     );
   }
 }

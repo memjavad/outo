@@ -29,6 +29,10 @@ class QuizLoadingState extends StatelessWidget {
                     children: [
                       IconButton(
                         icon: const Icon(Icons.close),
+                        tooltip:
+                            MaterialLocalizations.of(
+                              context,
+                            ).closeButtonTooltip,
                         color: theme.primaryColor,
                         style: IconButton.styleFrom(
                           backgroundColor:
@@ -40,8 +44,8 @@ class QuizLoadingState extends StatelessWidget {
                       Text(
                         exam?.examType == 'essay'
                             ? (l10n.localeName == 'ar'
-                                  ? 'بوابة الواجبات'
-                                  : 'Essay Homework')
+                                ? 'بوابة الواجبات'
+                                : 'Essay Homework')
                             : 'Examination Portal',
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.bold,

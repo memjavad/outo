@@ -39,7 +39,7 @@ class _CampaignAdminScreenState extends State<CampaignAdminScreen> {
     final descController = TextEditingController();
     final unlockCostController = TextEditingController(text: '0');
     String? prerequisiteExamId;
-    
+
     final result = await showDialog<bool>(
       context: context,
       builder: (ctx) {
@@ -53,43 +53,68 @@ class _CampaignAdminScreenState extends State<CampaignAdminScreen> {
                   children: [
                     TextField(
                       controller: titleController,
-                      decoration: const InputDecoration(labelText: 'Level Title', border: OutlineInputBorder()),
+                      decoration: const InputDecoration(
+                        labelText: 'Level Title',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                     const SizedBox(height: 12),
                     TextField(
                       controller: descController,
-                      decoration: const InputDecoration(labelText: 'Description (Optional)', border: OutlineInputBorder()),
+                      decoration: const InputDecoration(
+                        labelText: 'Description (Optional)',
+                        border: OutlineInputBorder(),
+                      ),
                       maxLines: 2,
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<String?>(
                       value: prerequisiteExamId,
-                      decoration: const InputDecoration(labelText: 'Prerequisite Level', border: OutlineInputBorder()),
+                      decoration: const InputDecoration(
+                        labelText: 'Prerequisite Level',
+                        border: OutlineInputBorder(),
+                      ),
                       items: [
-                        const DropdownMenuItem(value: null, child: Text("None (First Level)")),
-                        ..._campaigns.map((c) => DropdownMenuItem(value: c.id, child: Text(c.title))),
+                        const DropdownMenuItem(
+                          value: null,
+                          child: Text("None (First Level)"),
+                        ),
+                        ..._campaigns.map(
+                          (c) => DropdownMenuItem(
+                            value: c.id,
+                            child: Text(c.title),
+                          ),
+                        ),
                       ],
-                      onChanged: (val) => setDialogState(() => prerequisiteExamId = val),
+                      onChanged:
+                          (val) =>
+                              setDialogState(() => prerequisiteExamId = val),
                     ),
                     const SizedBox(height: 12),
                     TextField(
                       controller: unlockCostController,
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      decoration: const InputDecoration(labelText: 'Unlock Cost (XP)', border: OutlineInputBorder()),
+                      decoration: const InputDecoration(
+                        labelText: 'Unlock Cost (XP)',
+                        border: OutlineInputBorder(),
+                      ),
                     ),
                   ],
                 ),
               ),
               actions: [
-                TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+                TextButton(
+                  onPressed: () => Navigator.pop(ctx, false),
+                  child: const Text('Cancel'),
+                ),
                 ElevatedButton(
                   onPressed: () => Navigator.pop(ctx, true),
                   child: const Text('Create'),
                 ),
               ],
             );
-          }
+          },
         );
       },
     );
@@ -99,18 +124,23 @@ class _CampaignAdminScreenState extends State<CampaignAdminScreen> {
       final service = Provider.of<QuizService>(context, listen: false);
       final messenger = ScaffoldMessenger.of(context);
       int cost = int.tryParse(unlockCostController.text) ?? 0;
-      
+
       final success = await service.addExam(
-        titleController.text, 
+        titleController.text,
         description: descController.text,
         examType: 'campaign',
         prerequisiteExamId: prerequisiteExamId,
-        unlockCost: cost
+        unlockCost: cost,
       );
       if (success) {
         _loadCampaigns();
         if (mounted) {
-          messenger.showSnackBar(const SnackBar(content: Text('Campaign level created successfully'), backgroundColor: Colors.purple));
+          messenger.showSnackBar(
+            const SnackBar(
+              content: Text('Campaign level created successfully'),
+              backgroundColor: Colors.purple,
+            ),
+          );
         }
       }
     }
@@ -119,18 +149,25 @@ class _CampaignAdminScreenState extends State<CampaignAdminScreen> {
   Future<void> _deleteCampaign(Exam exam) async {
     final confirmed = await showDialog<bool>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Delete Campaign Level'),
-        content: Text('Delete "${exam.title}"? This cannot be undone.'),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red, foregroundColor: Colors.white),
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Delete'),
+      builder:
+          (ctx) => AlertDialog(
+            title: const Text('Delete Campaign Level'),
+            content: Text('Delete "${exam.title}"? This cannot be undone.'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx, false),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.red,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () => Navigator.pop(ctx, true),
+                child: const Text('Delete'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
 
     if (confirmed == true) {
@@ -141,7 +178,12 @@ class _CampaignAdminScreenState extends State<CampaignAdminScreen> {
       if (success) {
         _loadCampaigns();
         if (mounted) {
-          messenger.showSnackBar(const SnackBar(content: Text('Campaign level deleted'), backgroundColor: Colors.purple));
+          messenger.showSnackBar(
+            const SnackBar(
+              content: Text('Campaign level deleted'),
+              backgroundColor: Colors.purple,
+            ),
+          );
         }
       }
     }
@@ -150,78 +192,120 @@ class _CampaignAdminScreenState extends State<CampaignAdminScreen> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator(color: Colors.purple));
+      return const Center(
+        child: CircularProgressIndicator(color: Colors.purple),
+      );
     }
 
     return Scaffold(
-      body: _campaigns.isEmpty
-        ? Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(LucideIcons.map, size: 80, color: Colors.grey[400]),
-                const SizedBox(height: 16),
-                Text('No campaign levels yet', style: TextStyle(fontSize: 20, color: Colors.grey[600])),
-                const SizedBox(height: 24),
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.purple, foregroundColor: Colors.white),
-                  onPressed: _showAddCampaignDialog,
-                  icon: const Icon(Icons.add),
-                  label: const Text('Create First Level'),
+      body:
+          _campaigns.isEmpty
+              ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(LucideIcons.map, size: 80, color: Colors.grey[400]),
+                    const SizedBox(height: 16),
+                    Text(
+                      'No campaign levels yet',
+                      style: TextStyle(fontSize: 20, color: Colors.grey[600]),
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.purple,
+                        foregroundColor: Colors.white,
+                      ),
+                      onPressed: _showAddCampaignDialog,
+                      icon: const Icon(Icons.add),
+                      label: const Text('Create First Level'),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          )
-        : RefreshIndicator(
-            onRefresh: _loadCampaigns,
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: _campaigns.length,
-              itemBuilder: (context, index) {
-                final exam = _campaigns[index];
-                final prerequisiteName = _campaigns.where((c) => c.id == exam.prerequisiteExamId).firstOrNull?.title ?? "None";
-                
-                return Card(
-                  elevation: 2,
-                  margin: const EdgeInsets.only(bottom: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(16),
-                    leading: CircleAvatar(
-                      backgroundColor: Colors.purple.withValues(alpha: 0.1),
-                      child: const Icon(LucideIcons.mapPin, color: Colors.purple),
-                    ),
-                    title: Text(exam.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (exam.description != null && exam.description!.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
-                            child: Text(exam.description!),
+              )
+              : RefreshIndicator(
+                onRefresh: _loadCampaigns,
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: _campaigns.length,
+                  itemBuilder: (context, index) {
+                    final exam = _campaigns[index];
+                    final prerequisiteName =
+                        _campaigns
+                            .where((c) => c.id == exam.prerequisiteExamId)
+                            .firstOrNull
+                            ?.title ??
+                        "None";
+
+                    return Card(
+                      elevation: 2,
+                      margin: const EdgeInsets.only(bottom: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.all(16),
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.purple.withValues(alpha: 0.1),
+                          child: const Icon(
+                            LucideIcons.mapPin,
+                            color: Colors.purple,
                           ),
-                        Text('Requires: $prerequisiteName • Cost: ${exam.unlockCost} XP', style: TextStyle(color: Colors.purple.shade300, fontWeight: FontWeight.bold, fontSize: 13)),
-                      ],
-                    ),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete_outline, color: Colors.red),
-                      onPressed: () => _deleteCampaign(exam),
-                    ),
-                    onTap: () {
-                      // Navigate to Question Bank filtered by this exam (stretch goal)
-                    },
-                  ),
-                );
-              },
-            ),
-          ),
-      floatingActionButton: _campaigns.isNotEmpty ? FloatingActionButton(
-        backgroundColor: Colors.purple,
-        foregroundColor: Colors.white,
-        onPressed: _showAddCampaignDialog,
-        tooltip: 'Create New Campaign Level',
-        child: const Icon(Icons.add),
-      ) : null,
+                        ),
+                        title: Text(
+                          exam.title,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (exam.description != null &&
+                                exam.description!.isNotEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 8.0,
+                                  bottom: 4.0,
+                                ),
+                                child: Text(exam.description!),
+                              ),
+                            Text(
+                              'Requires: $prerequisiteName • Cost: ${exam.unlockCost} XP',
+                              style: TextStyle(
+                                color: Colors.purple.shade300,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                        trailing: IconButton(
+                          icon: const Icon(
+                            Icons.delete_outline,
+                            color: Colors.red,
+                          ),
+                          onPressed: () => _deleteCampaign(exam),
+                        ),
+                        onTap: () {
+                          // Navigate to Question Bank filtered by this exam (stretch goal)
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+      floatingActionButton:
+          _campaigns.isNotEmpty
+              ? FloatingActionButton(
+                backgroundColor: Colors.purple,
+                foregroundColor: Colors.white,
+                onPressed: _showAddCampaignDialog,
+                tooltip: 'Create New Campaign Level',
+                child: const Icon(Icons.add),
+              )
+              : null,
     );
   }
 }

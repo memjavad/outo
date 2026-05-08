@@ -546,6 +546,7 @@ class _StudentLoginScreenState extends State<StudentLoginScreen> {
               start: 16,
               child: IconButton(
                 icon: Icon(Icons.close, color: colorScheme.primary, size: 32),
+                tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
                 onPressed: () => context.pop(),
               ),
             ),
